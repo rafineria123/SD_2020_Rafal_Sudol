@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<button type="button" data-filter="all">All</button>
+<button type="button" data-filter=".category-a">Category A</button>
+<button type="button" data-filter=".category-b">Category B</button>
+<button type="button" data-filter=".category-c">Category C</button>
+
+<div class="container mix-container">
+    <div class="mix category-a" data-order="1">cata</div>
+    <div class="mix category-b" data-order="2">catb</div>
+    <div class="mix category-b category-c" data-order="3">catb</div>
+    <div class="mix category-a category-d" data-order="4">cata</div>
+</div>
+
+
+
+
+<script src="js/mixitup/dist/mixitup.min.js"></script>
+<script>
+    const jd = document.querySelector(".mix-container")
+    var mixer = mixitup(jd)
+</script>
+</body>
+</html>

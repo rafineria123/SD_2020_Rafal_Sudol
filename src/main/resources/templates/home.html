@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
+    <link type="text/css" href="css/obuwie-meskie.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div style="padding-bottom: 35px"></div>
+<div class="container-fluid" style="width: 95%">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">
+        <div class="navbar-brand" href="#">
+            <div class="row">
+                <div class="col-md-4 dj text-center"><h1>NG</h1></div>
+                <div class="col-md-6">NORGIE</div>
+            </div>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="nav navbar-nav ml-auto"style="padding-right: 250px">
+                <li class="nav_items">Kategorie</li>
+                <li class="nav_items">Sklepy</li>
+                <li><button type="button" style="white-space:pre" class="btn add_button"><span class="fas fa-plus" style="font-size: 12px;"></span> DODAJ KUPON</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="row" style="width: 100%;margin-top: -25px">
+            <div class="col-md-6 offset-md-3">
+                <input class="form-control mr-sm-0 input nav_search" id="szukajform"
+                   data-ref="input-search" type="search" placeholder="np. Adidas, Neonet, Telefon, CCC"
+                   aria-label="Search">
+            </div>
+    </div>
+
+</div>
+<div class="container" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
+    <span class="over_items">Najlepsze kody, kupony i promocje! </span>
+    <div style="height: 15px"></div>
+</div>
+
+
+
+
+<!--menu glowne-->
+<div class="container" style="padding-top: 25px;">
+    <div class="row" style="padding-left: 15px;padding-right: 15px;">
+        <div class="col-md-12 sort_div" style="padding-top: 10px;padding-bottom: 10px;">
+            <button type="button" data-sort="number-rate:asc" style="white-space:pre" class="btn sort_button">Najlepiej oceniane</button>
+            <button type="button" style="white-space:pre" data-sort="number-comment:asc" class="btn sort_button">Najczęściej komentowane</button>
+            <button type="button" style="white-space:pre" class="btn sort_button">Niedawno dodane</button>
+        </div>
+    </div>
+<!--    okazje-->
+    <div class="row mix-container" style="padding-top: 20px">
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-b" style="padding-bottom: 30px" data-number-rate="25" data-number-comment="42">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-rate="27" data-comment="57">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mix category-a" style="padding-bottom: 30px" data-number-rate="24" data-number-comment="45">
+            <div class="col-md-12 item_div" >
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a href="jd"> <img src="images/2.png" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+                    <div class="col-md-12">
+                        <img src="images/2.jpg" class="item_image_discount"><img>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a href="jd"> <span class="item_title">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                                                                                        style="font-weight: 900; font-size: 15px;color: black">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right">
+                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre">  255  </span><span
+                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="jd" class="no_text_decoration"><span class="fas fa-comments"
+                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+    </div>
+</div>
+
+<script
+        src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="js/mixitup/dist/mixitup.min.js"></script>
+<script src="js/home.js"></script>
+<script>
+    const miks = document.querySelector(".mix-container")
+    var mixer = mixitup(miks);
+
+    var inputSearch = document.querySelector('[data-ref="input-search"]');
+    var keyupTimeout;
+    inputSearch.getElementsByTagName()
+    // Set up a handler to listen for "keyup" events from the search input
+    inputSearch.addEventListener('keyup', function() {
+        var searchValue;
+        if (inputSearch.value.length < 3) {
+            // If the input value is less than 3 characters, don't send
+            searchValue = '';
+        } else {
+            searchValue = inputSearch.value.toLowerCase().trim();
+        }
+        // Very basic throttling to prevent mixer thrashing. Only search
+        // once 350ms has passed since the last keyup event
+        clearTimeout(keyupTimeout);
+        keyupTimeout = setTimeout(function() {
+            filterByString(searchValue);
+        }, 350);
+    });
+
+    function filterByString(searchValue) {
+        if (searchValue) {
+            // Use an attribute wildcard selector to check for matches
+            mixer.filter('[class*="' + searchValue + '"]');
+        } else {
+            // If no searchValue, treat as filter('all')
+            mixer.filter('all');
+        }
+    }
+</script>
+
+</body>
+</html>
