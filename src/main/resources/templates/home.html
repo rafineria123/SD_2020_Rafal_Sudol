@@ -12,12 +12,49 @@
           href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
           integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
           crossorigin="anonymous">
-    <link type="text/css" href="css/obuwie-meskie.css" rel="stylesheet"/>
+    <link type="text/css" href="css/home.css" rel="stylesheet"/>
 
 </head>
 <body>
 <div style="padding-bottom: 35px"></div>
 <div class="container-fluid" style="width: 95%">
+<!--    <div class="row" style="padding-right: 15px;padding-left: 15px">-->
+
+<!--        <div class="col-md-12" style="background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">-->
+
+<!--            <div class="row">-->
+
+<!--                <div class="col-md-2 offset-md-1 float-right">-->
+
+<!--                    <div class="row">-->
+<!--                        <div class="col-md-3 dj text-center" style="font-family: fantasy!important;-->
+<!--    color: white!important;font-size: 25px;"><h1>NG</h1></div>-->
+<!--                        <div class="col-md-6" style="font-family: fantasy!important;color: white!important;font-size: 30px!important;font-weight: 500!important;">NORGIE</div>-->
+<!--                    </div>-->
+
+<!--                </div>-->
+
+<!--            </div>-->
+
+<!--        </div>-->
+
+<!--    </div>-->
+
+<!--    <div class="pos-f-t">-->
+<!--        <div class="collapse" id="navbarToggleExternalContent">-->
+<!--            <div class="bg-dark p-4">-->
+<!--                <h4 class="text-white">Collapsed content</h4>-->
+<!--                <span class="text-muted">Toggleable via the navbar brand.</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <nav class="navbar navbar-dark bg-dark">-->
+<!--            <button class="navbar-toggler" type="button" data-toggle="collapse"-->
+<!--                    data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"-->
+<!--                    aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+<!--        </nav>-->
+<!--    </div>-->
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">
         <div class="navbar-brand" href="#">
@@ -32,8 +69,12 @@
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="nav navbar-nav ml-auto"style="padding-right: 250px">
+                <li class="nav_items"><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button> </li>
                 <li class="nav_items">Kategorie</li>
                 <li class="nav_items">Sklepy</li>
+                <li style="padding-right: 50px;"><button type="button" style="white-space:pre;" class="btn add_button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation"><span class="fas fa-user" style="font-size: 12px;"></span> ZALOGUJ SIĘ</button></li>
                 <li><button type="button" style="white-space:pre" class="btn add_button"><span class="fas fa-plus" style="font-size: 12px;"></span> DODAJ KUPON</button></li>
             </ul>
         </div>
@@ -60,8 +101,8 @@
 <div class="container" style="padding-top: 25px;">
     <div class="row" style="padding-left: 15px;padding-right: 15px;">
         <div class="col-md-12 sort_div" style="padding-top: 10px;padding-bottom: 10px;">
-            <button type="button" data-sort="number-rate:asc" style="white-space:pre" class="btn sort_button">Najlepiej oceniane</button>
-            <button type="button" style="white-space:pre" data-sort="number-comment:asc" class="btn sort_button">Najczęściej komentowane</button>
+            <button type="button" data-mixitup-control data-sort="number-rate:asc" style="white-space:pre" class="btn sort_button">Najlepiej oceniane</button>
+            <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-comment:asc" class="btn sort_button">Najczęściej komentowane</button>
             <button type="button" style="white-space:pre" class="btn sort_button">Niedawno dodane</button>
         </div>
     </div>
@@ -118,8 +159,8 @@
                 <!--Discount Button-->
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
                     <div class="col-md-12">
-                        <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
-                                class="fas fa-arrow-right"></span></button>
+                        <a href="/discount"><button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span
+                                class="fas fa-arrow-right"></span></button></a>
                     </div>
                 </div>
             </div>
@@ -1527,6 +1568,7 @@
     </div>
 </div>
 
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <script
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
@@ -1535,11 +1577,19 @@
 <script src="js/home.js"></script>
 <script>
     const miks = document.querySelector(".mix-container")
-    var mixer = mixitup(miks);
+
+    var mixer = mixitup(miks, {
+        animation : {
+            queueLimit:25,
+            duration : 350
+        },
+        selectors : {
+            control : '[data-mixitup-control]'
+        }
+    });
 
     var inputSearch = document.querySelector('[data-ref="input-search"]');
     var keyupTimeout;
-    inputSearch.getElementsByTagName()
     // Set up a handler to listen for "keyup" events from the search input
     inputSearch.addEventListener('keyup', function() {
         var searchValue;
@@ -1566,6 +1616,9 @@
             mixer.filter('all');
         }
     }
+
+
+
 </script>
 
 </body>

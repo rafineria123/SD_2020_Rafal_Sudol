@@ -16,11 +16,10 @@ public class MainController {
         return modelAndView;
     }
 
-    @GetMapping("/test")
+    @GetMapping("/discount")
     public ModelAndView testPage() {
-        ModelAndView modelAndView = new ModelAndView("test");
+        ModelAndView modelAndView = new ModelAndView("discount");
         return modelAndView;
-
     }
 
 
