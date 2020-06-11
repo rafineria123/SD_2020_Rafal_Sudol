@@ -15,6 +15,9 @@ public class Rating {
     private Comment comment;
 
     @OneToOne(mappedBy = "rating")
+    private User user;
+
+    @OneToOne(mappedBy = "rating")
     private Discount discount;
 
     public Rating() {

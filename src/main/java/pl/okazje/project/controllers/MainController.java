@@ -17,10 +17,28 @@ public class MainController {
     }
 
     @GetMapping("/discount")
-    public ModelAndView testPage() {
+    public ModelAndView discount() {
         ModelAndView modelAndView = new ModelAndView("discount");
         return modelAndView;
     }
+
+    @GetMapping("/add/discount")
+    public ModelAndView add_discount() {
+        ModelAndView modelAndView = new ModelAndView("add_discount");
+        return modelAndView;
+    }
+    @GetMapping("/login")
+    public ModelAndView login() {
+        ModelAndView modelAndView = new ModelAndView("login");
+        return modelAndView;
+    }
+
+    @GetMapping("/register")
+    public ModelAndView register() {
+        ModelAndView modelAndView = new ModelAndView("register");
+        return modelAndView;
+    }
+
 
 
 

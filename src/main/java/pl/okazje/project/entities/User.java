@@ -13,7 +13,6 @@ public class User {
     private Integer user_id;
     private String login;
     private String password;
-    private String nickname;
     private String email;
     private String status;
     private Date cr_date;
@@ -44,6 +43,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "message_id")
     )
     private Set<Message> messages;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "rating_id")
+    private Rating rating;
 
 
 

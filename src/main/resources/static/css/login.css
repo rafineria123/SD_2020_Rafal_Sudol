@@ -16,6 +16,7 @@
 
 }
 
+
 .sort_div{
 
     background-color: #f4f4f5;
@@ -82,33 +83,6 @@
 
 }
 
-.category_button{
-
-    color: #5e5e5e;
-    border-radius: 9px;
-    background-color: white;
-    font-size: 12px;
-    font-weight: 500;
-    padding-bottom: 10px;
-    padding-top: 10px;
-
-}
-
-.nav_items_clickable{
-
-    color: white;
-    font-weight: 500;
-
-
-}
-
-.nav_items_clickable:hover{
-
-    text-decoration: none;
-    color: white;
-
-}
-
 h1{
 
     font-size: 25px;
@@ -156,7 +130,7 @@ h1{
 
 .item_image_discount{
 
-    width: 70%;
+    width: 75%;
     height: 100%;
     box-shadow: 0px 5px 8px 3px rgba(220,220,220,1);
 
@@ -192,26 +166,32 @@ h1{
 
 }
 
+.item_desc{
+
+
+}
+
 .item_title{
 
     font-family: Calibri;
     font-weight: 900;
-    font-size: 16px;
-    color: #383737e8;
+    font-size: 22px;
+    color: rgba(22, 21, 21, 0.91);
+    padding-bottom: 5px;
 
 }
 
+.comment_like:hover{
+
+    color: blue!important;
+
+}
 .no_text_decoration:hover{
 
     text-decoration: none;
 
 }
 
-.item_title:hover{
-
-    text-decoration: underline;
-
-}
 
 .item_date{
 
@@ -239,4 +219,64 @@ body {
     border-radius: 2px;
 
     box-shadow: 0px 0px 10px 0px #999;
+}
+
+.card{
+    height: 380px;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 400px;
+    background-color: rgba(0,0,0,0.5) !important;
+}
+
+
+.card-header h3{
+    color: white;
+    font-weight:800;
+}
+
+
+.input-group-prepend span{
+    width: 50px;
+    background: linear-gradient(45deg,#e42d31,#ff0065);
+    color: black;
+    border:0 !important;
+}
+
+input:focus{
+    outline: 0 0 0 0  !important;
+    box-shadow: 0 0 0 0 !important;
+
+}
+
+.remember{
+    color: white;
+}
+
+.remember input
+{
+    width: 20px;
+    height: 20px;
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.login_btn{
+    color: black;
+    background: linear-gradient(45deg,#e42d31,#ff0065);
+    width: 100px;
+    font-weight:800;
+}
+
+.login_btn:hover{
+    color: black;
+    background: white;
+}
+
+.links{
+    color: white;
+}
+
+.links a{
+    margin-left: 4px;
 }

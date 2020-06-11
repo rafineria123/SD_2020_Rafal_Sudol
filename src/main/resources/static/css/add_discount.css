@@ -16,6 +16,51 @@
 
 }
 
+.add_input{
+
+    width: 100%;
+    border-radius: 8px;
+    background-color: #f4f4f5;
+    border: 1px solid #7a7474;
+    font-size: 18px;
+
+}
+
+.category_button{
+
+    color: #5e5e5e;
+    border-radius: 9px;
+    background-color: white;
+    font-size: 12px;
+    font-weight: 500;
+    width: 100%;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+}
+
+.category_button:hover{
+
+    border: 1px solid #7a7474;
+
+}
+
+
+
+.add_big{
+
+    color: #524962;
+    font-size: 22px;
+    font-weight: 600;
+
+}
+
+.add_input:focus{
+
+    border: 2px solid #7a7474;
+
+}
+
 .sort_div{
 
     background-color: #f4f4f5;
@@ -82,33 +127,6 @@
 
 }
 
-.category_button{
-
-    color: #5e5e5e;
-    border-radius: 9px;
-    background-color: white;
-    font-size: 12px;
-    font-weight: 500;
-    padding-bottom: 10px;
-    padding-top: 10px;
-
-}
-
-.nav_items_clickable{
-
-    color: white;
-    font-weight: 500;
-
-
-}
-
-.nav_items_clickable:hover{
-
-    text-decoration: none;
-    color: white;
-
-}
-
 h1{
 
     font-size: 25px;
@@ -156,7 +174,7 @@ h1{
 
 .item_image_discount{
 
-    width: 70%;
+    width: 75%;
     height: 100%;
     box-shadow: 0px 5px 8px 3px rgba(220,220,220,1);
 
@@ -192,26 +210,32 @@ h1{
 
 }
 
+.item_desc{
+
+
+}
+
 .item_title{
 
     font-family: Calibri;
     font-weight: 900;
-    font-size: 16px;
-    color: #383737e8;
+    font-size: 22px;
+    color: rgba(22, 21, 21, 0.91);
+    padding-bottom: 5px;
 
 }
 
+.comment_like:hover{
+
+    color: blue!important;
+
+}
 .no_text_decoration:hover{
 
     text-decoration: none;
 
 }
 
-.item_title:hover{
-
-    text-decoration: underline;
-
-}
 
 .item_date{
 
