@@ -16,6 +16,33 @@
 
 }
 
+.nav_items_clickable{
+
+    color: white;
+    font-weight: 500;
+
+
+}
+
+.nav_items_clickable:hover{
+
+    text-decoration: none;
+    color: white;
+
+}
+
+.category_button{
+
+    color: #5e5e5e;
+    border-radius: 9px;
+    background-color: white;
+    font-size: 12px;
+    font-weight: 500;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+}
+
 
 .sort_div{
 

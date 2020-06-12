@@ -19,4 +19,42 @@ public class Tag {
 
     public Tag() {
     }
+
+    public Tag(String name) {
+
+        this.name = name;
+
+    }
+
+    public Integer getTag_id() {
+        return tag_id;
+    }
+
+    public void setTag_id(Integer tag_id) {
+        this.tag_id = tag_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
+    }
+
+    public Set<Discount> getDiscounts() {
+        return discounts;
+    }
+
+    public void setDiscounts(Set<Discount> discounts) {
+        this.discounts = discounts;
+    }
 }

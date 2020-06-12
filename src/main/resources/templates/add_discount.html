@@ -15,7 +15,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background: linear-gradient(45deg,#e42d31,#ff0065);">
-    <div class="navbar-brand" href="#">
+    <div class="navbar-brand" style="cursor: pointer;" onclick="window.location='/';">
         <div class="row">
             <div class="col-md-4 dj text-center"><h1>NG</h1></div>
             <div class="col-md-6">NORGIE</div>
@@ -28,23 +28,72 @@
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="nav navbar-nav ml-auto" style="padding-right: 250px">
-            <li class="nav_items">Kategorie</li>
-            <li class="nav_items">Sklepy</li>
+            <li class="nav_items" data-toggle="collapse"
+                data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a></li>
+            <li class="nav_items" data-toggle="collapse"
+                data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a></li>
             <li style="padding-right: 50px;">
-                <button type="button" style="" class="btn add_button"><span class="fas fa-user"
-                                                                            style="font-size: 12px;"></span>
+                <a href="/login"><button type="button" style="" class="btn add_button"><span class="fas fa-user"
+                                                                                             style="font-size: 12px;"></span>
                     ZALOGUJ SIĘ
                 </button>
+                </a>
             </li>
             <li>
-                <button type="button" style="" class="btn add_button"><span class="fas fa-plus"
-                                                                            style="font-size: 12px;"></span>
-                    DODAJ KUPON
-                </button>
+                <a href="/add/discount"> <button type="button" style="" class="btn add_button"><span class="fas fa-plus"
+                                                                                                     style="font-size: 12px;"></span>
+                    DODAJ OKAZJE
+                </button></a>
             </li>
         </ul>
     </div>
 </nav>
+<div class="container-fluid" style="padding-right: 0px;padding-left: 0px">
+
+    <div class="row collapse"  id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
+        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
+            <div class="row">
+
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row collapse"  id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
+        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
+            <div class="row">
+
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+                <div class="col-md-2" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button">DODAJ KUPON</button></div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
 
 <div class="container-fluid">
     <div class="col-md-6 offset-md-3" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
@@ -219,14 +268,10 @@
 </div>
 
 
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <script
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="js/mixitup/dist/mixitup.min.js"></script>
-<script>
-    const miks = document.querySelector(".mix-container")
-    var mixer = mixitup(miks);
-</script>
 </body>
 </html>

@@ -26,6 +26,21 @@
 
 }
 
+.nav_items_clickable{
+
+    color: white;
+    font-weight: 500;
+
+
+}
+
+.nav_items_clickable:hover{
+
+    text-decoration: none;
+    color: white;
+
+}
+
 .category_button{
 
     color: #5e5e5e;
@@ -33,18 +48,10 @@
     background-color: white;
     font-size: 12px;
     font-weight: 500;
-    width: 100%;
     padding-bottom: 10px;
     padding-top: 10px;
 
 }
-
-.category_button:hover{
-
-    border: 1px solid #7a7474;
-
-}
-
 
 
 .add_big{
