@@ -51,14 +51,20 @@
                     <li class="nav_items" data-toggle="collapse"
                         data-target="#sklepy" aria-controls="navbarToggleExternalContent"
                         aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a></li>
-                    <li style="padding-right: 50px;">
+                    <li style="padding-right: 50px;"sec:authorize="!isAuthenticated()">
                         <a href="/login"><button type="button" style="white-space:pre;" class="btn add_button"><span class="fas fa-user"
                                                                                                                      style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
+                    </li>
+                    <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post">
+                        <button style="white-space:pre;" class="btn add_button" type="submit"
+                                                 value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                        </form>
                     </li>
                     <li>
                         <a href="/add/discount">
                         <button type="button" style="white-space:pre" class="btn add_button"><span class="fas fa-plus"
-                                                                                                   style="font-size: 12px;"></span>DODAJ KUPON</button></a>
+                                                                                                   style="font-size: 12px;"></span>DODAJ OKAZJE</button></a>
                     </li>
                 </ul>
             </div>
@@ -125,7 +131,7 @@
                 <!-- Brand icon-->
                 <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                     <div class="col-md-12">
-                        <a href="jd"> <img th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
                     </div>
                 </div>
                 <!-- Discount image-->
@@ -137,7 +143,7 @@
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
-                        <a href="jd"> <span class="item_title" th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>
                 <!-- Date-->
@@ -151,16 +157,37 @@
                 <!-- User-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
-                        <span class="item_user">Dodane przez: </span><a href="jd"><span class="item_user"
+                        <span class="item_user">Dodane przez: </span><a href="/"><span class="item_user"
                                                                                         style="font-weight: 900; font-size: 15px;color: black" th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
                     </div>
                 </div>
                 <!-- Rate + Comments-->
                 <div class="row item_parts_padding" style="padding-top: 10px">
-                    <div class="col-md-6 float-right">
-                        <span class="fas fa-plus" style="color: #f14648;font-size: 14px;"></span><span
-                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|  ${discount.getRatingsSize()}  |">  255  </span><span
-                            class="fas fa-minus" style="font-size: 14px;color: #9e9ea4"></span>
+                    <div class="col-md-6 float-right" style="padding-left: 40px">
+                        <div class="row" sec:authorize="isAuthenticated()">
+                        <form th:action="@{/addrate}" method="post">
+                            <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
+                                                                                                                     th:value="${discount.getDiscount_id()}">
+                        </form>
+                        <span
+                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
+                        <form th:action="@{/removerate}" method="post"><input
+                            class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
+                        </form>
+                        </div>
+                        <div class="row" sec:authorize="!isAuthenticated()">
+                            <form th:action="@{/login}" method="get"
+                                  sec:authorize="!isAuthenticated()">
+                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit">
+                            </form>
+                            <span
+                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
+                            <form th:action="@{/login}" method="get"
+                                  sec:authorize="!isAuthenticated()"><input
+                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit">
+                            </form>
+                        </div>
+
                     </div>
                     <div class="col-md-6">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span class="fas fa-comments"
@@ -182,25 +209,6 @@
 
     </div>
 
-    <a href="" th:href="@{/login}" sec:authorize="!isAuthenticated()">
-        <button type="button" class="btn btn-sm logowanieprzycisk">
-            <span class="fas fa-user"></span> <span> Gość </span>
-        </button>
-    </a>
-    <form th:action="@{/logout}" method="post"
-          sec:authorize="isAuthenticated()">
-        <div class="btn-group">
-            <button type="button" class="btn  btn-sm logowanieprzycisk"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="fas fa-user"></span> <span>
-								[[${#httpServletRequest.remoteUser}]] </span>
-            </button>
-                <button class="dropdown-item text-center" type="submit"
-                        value="Sign Out">Wyloguj</button>
-
-            </div>
-        </div>
-    </form>
 </div>
 
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>

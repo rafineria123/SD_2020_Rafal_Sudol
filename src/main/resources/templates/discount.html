@@ -39,12 +39,15 @@
             <li class="nav_items" data-toggle="collapse"
                 data-target="#sklepy" aria-controls="navbarToggleExternalContent"
                 aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a></li>
-            <li style="padding-right: 50px;">
-                <a href="/login"><button type="button" style="" class="btn add_button"><span class="fas fa-user"
-                                                                            style="font-size: 12px;"></span>
-                    ZALOGUJ SIĘ
-                </button>
-                </a>
+            <li style="padding-right: 50px;"sec:authorize="!isAuthenticated()">
+                <a href="/login"><button type="button" style="white-space:pre;" class="btn add_button"><span class="fas fa-user"
+                                                                                                             style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
+            </li>
+            <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post">
+                    <button style="white-space:pre;" class="btn add_button" type="submit"
+                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                </form>
             </li>
             <li>
                 <a href="/add/discount"> <button type="button" style="" class="btn add_button"><span class="fas fa-plus"
@@ -178,27 +181,50 @@
             </div>
         </div>
         <div class="col-md-8 offset-md-2" style="height: 15px;"></div>
-        <div class="col-md-8 offset-md-2 sort_div" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
+        <div class="col-md-8 offset-md-2 sort_div" sec:authorize="isAuthenticated()" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
+            <form th:action="@{/addcomment}" method="post">
             <div class="row text-center" style="padding-top: 5px;padding-bottom: 5px;">
                 <div class="col-md-12" style="padding-top: 5px">
 
-                     <textarea rows="5" cols="33" style="width: 100%;border-radius: 6px"></textarea>
+                     <textarea rows="5" cols="33" id="comment" name="comment" style="width: 100%;border-radius: 6px"></textarea>
+                    <input type="hidden" name="discountidaddcomment" id="discountidaddcomment"
+                           th:value="${discount.getDiscount_id()}">
 
                 </div>
 
             </div>
             <div class="row">
                 <div class="col-md-2 offset-md-10" style="padding-bottom: 10px">
-                    <button type="button" style="width: 100%" class="btn add_button" >SKOMENTUJ</button>
+                    <button type="submit" style="width: 100%" class="btn add_button" >SKOMENTUJ</button>
                 </div>
             </div>
+            </form>
+        </div>
+        <div class="col-md-8 offset-md-2 sort_div" sec:authorize="!isAuthenticated()" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
+            <form th:action="@{/login}" method="get">
+                <div class="row text-center" style="padding-top: 5px;padding-bottom: 5px;">
+                    <div class="col-md-12" style="padding-top: 5px">
+
+                        <textarea rows="5" cols="33" id="asad" name="comment" style="width: 100%;border-radius: 6px"></textarea>
+                        <input type="hidden" name="asd" id="asd"
+                               th:value="${discount.getDiscount_id()}">
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-2 offset-md-10" style="padding-bottom: 10px">
+                        <button type="submit" style="width: 100%" class="btn add_button" >SKOMENTUJ</button>
+                    </div>
+                </div>
+            </form>
         </div>
 
 
-        <div class="mix" th:each="comment : ${discount.getComments()}" th:attr="data-number-rate=${comment.getRatingsSize()}, data-number-date=${comment.getDataToNumber()}" data-number-rate="5">
+        <div class="mix w-100" th:each="comment : ${discount.getComments()}" th:attr="data-number-rate=${comment.getRatingsSize()}, data-number-date=${comment.getDataToNumber()}" data-number-rate="5">
             <div class="col-md-8 offset-md-2" style="height: 15px;"></div>
-            <div class="col-md-8 offset-md-2 sort_div"
-                 style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);padding-top: 10px;">
+            <div class="col-md-8 offset-md-2 sort_div w-100"
+                 style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);padding-top: 10px;width: 100%">
 
                 <div class="row">
                     <div class="col-md-12">

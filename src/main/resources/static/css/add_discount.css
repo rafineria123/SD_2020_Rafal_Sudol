@@ -41,6 +41,37 @@
 
 }
 
+.radio-toolbar {
+    margin: 10px;
+}
+
+.radio-toolbar input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+}
+
+.radio-toolbar label {
+    display: inline-block;
+    background-color: white;
+    padding: 10px 20px;
+    color: #5e5e5e;
+    font-family: sans-serif, Arial;
+    font-size: 12px;
+    border-radius: 9px;
+}
+
+.radio-toolbar label:hover {
+    background: linear-gradient(45deg, #ff8780, #ff5a8a);
+}
+
+.radio-toolbar input[type="radio"]:focus + label {
+}
+
+.radio-toolbar input[type="radio"]:checked + label {
+    background: linear-gradient(45deg,#e42d31,#ff0065);
+}
+
 .category_button{
 
     color: #5e5e5e;

@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
 .item_image_brand{
+    border-radius: 25px;
     padding-top: 10px;
     width: 160px;
     height: 65px;
@@ -157,9 +158,10 @@ h1{
 
 .item_image_discount{
 
+    border-radius: 40px;
     width: 200px;
     height: 220px;
-    box-shadow: 0px 5px 8px 3px rgba(220,220,220,1);
+    box-shadow: 0px 5px 7px 3px rgb(173, 173, 173);
 
 
 }
@@ -167,6 +169,31 @@ h1{
 
     text-align: center;
     padding-bottom: 10px;
+
+}
+
+.plus_minus{
+
+    background-color: #f4f4f5;
+    border: 0;
+    outline: none;
+
+
+}
+
+.plus_minus:hover{
+
+    background-color: #f4f4f5;
+    outline: none;
+
+}
+
+.plus_minus:focus{
+
+    border: 0;
+    text-decoration: none;
+    background-color: #f4f4f5;
+    outline: none;
 
 }
 
