@@ -8,7 +8,7 @@ public class Shop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer shop_id;
+    private Long shop_id;
     private String name;
     private String image_url;
 
@@ -25,11 +25,11 @@ public class Shop {
 
     }
 
-    public Integer getShop_id() {
+    public Long getShop_id() {
         return shop_id;
     }
 
-    public void setShop_id(Integer shop_id) {
+    public void setShop_id(Long shop_id) {
         this.shop_id = shop_id;
     }
 

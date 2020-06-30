@@ -84,10 +84,18 @@
     </div>
     <div style="height: 15px"></div>
 </div>
+<div class="container-fluid" th:if="${error}">
+    <div class="col-md-6 offset-md-3" style="padding-left: 0px;padding-right: 0px">
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <strong>Wypełnij wszystkie pola!</strong>
+        </div>
+    </div>
+</div>
 
 <div class="container-fluid ">
     <div class="row">
-        <form th:action="@{/register}" class="w-100" method="post">
+        <form th:action="@{/add/discount}" class="w-100" method="post" enctype="multipart/form-data">
         <div class="col-md-6 offset-md-3 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
             <div class="row">
 

@@ -11,7 +11,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer comment_id;
+    private Long comment_id;
     @Column(length = 700)
     private String content;
     private Integer upper_comment_id;
@@ -42,11 +42,11 @@ public class Comment {
 
     }
 
-    public Integer getComment_id() {
+    public Long getComment_id() {
         return comment_id;
     }
 
-    public void setComment_id(Integer comment_id) {
+    public void setComment_id(Long comment_id) {
         this.comment_id = comment_id;
     }
 

@@ -123,7 +123,7 @@
             <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-date:asc" class="btn sort_button">Niedawno dodane</button>
         </div>
     </div>
-    <!--    okazje-->
+    <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
         <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"style="padding-bottom: 30px;"
              th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">

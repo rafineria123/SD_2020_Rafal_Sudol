@@ -16,6 +16,31 @@
 
 }
 
+.plus_minus{
+
+    background-color: #f4f4f5;
+    border: 0;
+    outline: none;
+
+
+}
+
+.plus_minus:hover{
+
+    background-color: #f4f4f5;
+    outline: none;
+
+}
+
+.plus_minus:focus{
+
+    border: 0;
+    text-decoration: none;
+    background-color: #f4f4f5;
+    outline: none;
+
+}
+
 .nav_items_clickable{
 
     color: white;

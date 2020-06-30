@@ -5,16 +5,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.*;
 
 import javax.jws.soap.SOAPBinding;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -102,12 +105,61 @@ public class MainController {
 
 
     @GetMapping("/add/discount")
-    public ModelAndView add_discount() {
+    public ModelAndView add_discount_get() {
         ModelAndView modelAndView = new ModelAndView("add_discount");
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("error", false);
         return modelAndView;
     }
+
+    @PostMapping(path="/add/discount", consumes = {"multipart/form-data"})
+    public ModelAndView add_discount(
+            @ModelAttribute("url") String url, @ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop,
+            @ModelAttribute("title") String title, @ModelAttribute("old_price") String old_price, @ModelAttribute("current_price") String current_price,
+            @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
+            @ModelAttribute("expire_date") String expire_date, @RequestParam("image_url")
+                    MultipartFile file, HttpServletRequest request
+    ) throws ParseException, IOException {
+        Discount discount = new Discount();
+        try {
+
+            String uploadDir = "/static/images";
+            String realPath = request.getServletContext().getRealPath(uploadDir);
+
+            File transferFile = new File("C:/projekt inz/project/src/main/resources/static/images/" + file.getOriginalFilename());
+            file.transferTo(transferFile);
+
+            discount.setContent(content);
+            discount.setCr_date(new Date());
+            discount.setCurrent_price(Double.parseDouble(current_price));
+            discount.setOld_price(Double.parseDouble(old_price));
+            discount.setShipment_price(Double.parseDouble(shipment_price));
+            discount.setDiscount_link(url);
+            discount.setTag(tagRepository.findById(Long.parseLong(tag)).get());
+            discount.setShop(shopRepository.findById(Long.parseLong(shop)).get());
+            discount.setTitle(title);
+            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(expire_date);
+            discount.setExpire_date(date1);
+            discount.setStatus("");
+            discount.setUser(uzytkownik);
+            discount.setImage_url("images/"+file.getOriginalFilename());
+            discountRepository.save(discount);
+
+        }catch (Exception e){
+
+            ModelAndView modelAndView = new ModelAndView("add_discount");
+            modelAndView.addObject("list_of_tags", tagRepository.findAll());
+            modelAndView.addObject("list_of_shops", shopRepository.findAll());
+            modelAndView.addObject("error", true);
+            return modelAndView;
+        }
+
+        ModelAndView modelAndView = new ModelAndView("redirect:/discount/"+discount.getDiscount_id());
+
+        return modelAndView;
+    }
+
     @GetMapping("/login")
     public ModelAndView login() {
         ModelAndView modelAndView = new ModelAndView("login");
@@ -194,6 +246,28 @@ public class MainController {
         userRepository.save(user1);
 
         return "redirect:/login";
+    }
+
+    @PostMapping("/ratecomment")
+    public String ratecomment(@ModelAttribute("commentid") String commentid){
+
+        Comment comment = commentRepository.findById((Long.parseLong(commentid))).get();
+        for(Rating r:comment.getRatings()){
+
+            if(r.getUser().getUser_id().equals(uzytkownik.getUser_id())){
+                return "redirect:/discount/"+comment.getDiscount().getDiscount_id().toString();
+
+            }
+
+        }
+
+        Rating newrating = new Rating();
+        newrating.setUser(uzytkownik);
+        newrating.setComment(comment);
+        ratingRepository.save(newrating);
+
+        return "redirect:/discount/"+comment.getDiscount().getDiscount_id().toString();
+
     }
 
 }
