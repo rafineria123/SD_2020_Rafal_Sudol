@@ -1,6 +1,9 @@
 package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,14 +48,35 @@ public class MainController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         uzytkownik = userRepository.findUserByLogin(authentication.getName());
-
+        Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
+        Page<Discount> allProducts = discountRepository.findAll(firstPageWithTwoElements);
 
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("list_of_discounts", discountRepository.findAll());
+        modelAndView.addObject("list_of_discounts", allProducts.getContent());
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", allProducts.getTotalPages());
+        modelAndView.addObject("number_of_page", 1);
         return modelAndView;
     }
+
+    @GetMapping("/page/{id}")
+    public ModelAndView homePage(@PathVariable("id") String id) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        Pageable firstPageWithTwoElements = PageRequest.of(Integer.parseInt(id)-1, 2);
+        Page<Discount> allProducts = discountRepository.findAll(firstPageWithTwoElements);
+
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("list_of_discounts", allProducts.getContent());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", allProducts.getTotalPages());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        return modelAndView;
+    }
+
 
     @GetMapping("/categories/{id}")
     public ModelAndView category(@PathVariable("id") String id) {
@@ -71,10 +95,6 @@ public class MainController {
 
     }
 
-    @GetMapping("/accessdenied")
-    public ModelAndView accessdenied() {
-        return new ModelAndView("accessdenied");
-    }
 
     @GetMapping("/shops/{id}")
     public ModelAndView shop(@PathVariable("id") String id) {

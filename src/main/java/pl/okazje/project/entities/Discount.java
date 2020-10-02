@@ -26,6 +26,24 @@ public class Discount {
     private Double shipment_price;
     private String discount_link;
 
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
+
+    @OneToMany(mappedBy="discount")
+    private Set<Comment> comments;
+
+    @OneToMany(mappedBy="discount")
+    private Set<Rating> ratings;
+
+    @ManyToOne
+    @JoinColumn(name="tag_id", nullable=false)
+    private Tag tag;
+
+    @ManyToOne
+    @JoinColumn(name="shop_id", nullable=false)
+    private Shop shop;
+
     public Discount(String title, String content, String image_url, Double old_price, Double current_price, Double shipment_price, String discount_link, User user, Tag tag, Shop shop) {
 
         this.title = title;
@@ -44,24 +62,6 @@ public class Discount {
 
 
     }
-
-    @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
-    private User user;
-
-    @OneToMany(mappedBy="discount")
-    private Set<Comment> comments;
-
-    @OneToMany(mappedBy="discount")
-    private Set<Rating> ratings;
-
-    @ManyToOne
-    @JoinColumn(name="tag_id", nullable=false)
-    private Tag tag;
-
-    @ManyToOne
-    @JoinColumn(name="shop_id", nullable=false)
-    private Shop shop;
 
     public Discount() {
     }

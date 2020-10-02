@@ -64,7 +64,9 @@
      padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
         <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
             <div class="row">
-                <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></div>
+            <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></a>
+            </div>
             </div>
         </div>
 
@@ -73,7 +75,9 @@
      padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
         <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
             <div class="row">
-                <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></div>
+            <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></a>
+            </div>
             </div>
         </div>
 
@@ -90,7 +94,7 @@
 </div>
 
 <div class="container-fluid ">
-    <div class="row mix-container">
+    <div class="row mix-container w-100">
         <div class="col-md-8 offset-md-2 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
             <div class="row text-left" style="display: flex;
                 align-items: center;
@@ -121,7 +125,7 @@
             <div class="row" style="padding-bottom: 10px;padding-left: 17px;">
                 <div class="col-md-2 text-center" >
                     <div class="col-md-8 offset-md-2" style="border-radius: 15px;border: 2px solid #ff0065;">
-                    <div class="row" style="padding-left: 36px" sec:authorize="isAuthenticated()">
+                    <div class="row" style="padding-left: 30px" sec:authorize="isAuthenticated()">
                     <form th:action="@{/addrate}" method="post">
                         <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
                                                                                                                                             th:value="${discount.getDiscount_id()}">
@@ -132,7 +136,7 @@
                             class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
                     </form>
                     </div>
-                        <div class="row" style="padding-left: 36px" sec:authorize="!isAuthenticated()">
+                        <div class="row" style="padding-left: 30px" sec:authorize="!isAuthenticated()">
                             <form th:action="@{/login}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
                                                                                                                                                     th:value="${discount.getDiscount_id()}">
@@ -202,12 +206,12 @@
                 </div>
                 <div class="col-md-2"
                      style="font-family: Calibri;font-weight: 900;font-size: 19px;color: rgba(22, 21, 21, 0.91);">
-                    <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-rate:asc" class="btn sort_button">najnowsze</button>
+                    <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-date:asc" class="btn sort_button">najnowsze</button>
 
                 </div>
                 <div class="col-md-2"
                      style="font-family: Calibri;font-weight: 900;font-size: 19px;color: rgba(22, 21, 21, 0.91);">
-                    <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-date:asc" class="btn sort_button">najstarsze</button>
+                    <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-date:desc" class="btn sort_button">najstarsze</button>
 
                 </div>
             </div>
@@ -218,7 +222,7 @@
             <div class="row text-center" style="padding-top: 5px;padding-bottom: 5px;">
                 <div class="col-md-12" style="padding-top: 5px">
 
-                     <textarea rows="5" cols="33" id="comment" name="comment" style="width: 100%;border-radius: 6px"></textarea>
+                     <textarea rows="5" COLS="72" id="comment" maxlength="200" name="comment" WRAP="comment" style="width: 100%;border-radius: 6px"></textarea>
                     <input type="hidden" name="discountidaddcomment" id="discountidaddcomment"
                            th:value="${discount.getDiscount_id()}">
 
@@ -252,7 +256,6 @@
             </form>
         </div>
 
-
         <div class="mix w-100" th:each="comment : ${discount.getComments()}" th:attr="data-number-rate=${comment.getRatingsSize()}, data-number-date=${comment.getDataToNumber()}" data-number-rate="5">
             <div class="col-md-8 offset-md-2" style="height: 15px;"></div>
             <div class="col-md-8 offset-md-2 sort_div w-100"
@@ -277,7 +280,8 @@
                 <div class="row">
                     <div class="col-md-12" style="padding-top: 7px;padding-bottom: 10px">
                         <div class="row">
-                            <div class="col-md-10 offset-md-1" style="font-size: 14px;font-weight: 500" th:text="${comment.getContent()}">
+                            <div class="col-md-10 offset-md-1" style="font-size: 14px;font-weight: 500;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                             word-wrap: break-word;" th:text="${comment.getContent()}">
                                 Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
                                 wypadła im jedna z najlepszych
                                 w historii portalu, za Sennheiserami (6300 zł) i HiFiManami x3 (1500 zł / 3800 zł / 5000
@@ -328,7 +332,7 @@
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="js/mixitup/dist/mixitup.min.js"></script>
+<script src="/js/mixitup/dist/mixitup.min.js"></script>
 <script>
     const miks = document.querySelector(".mix-container")
 

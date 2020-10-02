@@ -17,7 +17,6 @@
     <link type="text/css" href="/css/home.css" rel="stylesheet"/>
 
 
-
 </head>
 <body>
 <div style="padding-bottom: 35px"></div>
@@ -25,7 +24,7 @@
     <div class="row" style="width: 100%">
         <nav class="navbar navbar-expand-lg navbar-light bg-light"
              style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">
-            <div class="navbar-brand" href="#">
+            <div class="navbar-brand" style="cursor: pointer;" onclick="window.location='/';">
                 <div class="row">
                     <div class="col-md-4 dj text-center"><h1>NG</h1></div>
                     <div class="col-md-6">NORGIE</div>
@@ -47,48 +46,79 @@
                     </li>
                     <li class="nav_items" data-toggle="collapse"
                         data-target="#kategorie" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a></li>
+                        aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a>
+                    </li>
                     <li class="nav_items" data-toggle="collapse"
                         data-target="#sklepy" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a></li>
-                    <li style="padding-right: 50px;"sec:authorize="!isAuthenticated()">
-                        <a href="/login"><button type="button" style="white-space:pre;" class="btn add_button"><span class="fas fa-user"
-                                                                                                                     style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
+                        aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a>
                     </li>
-                    <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                        <button style="white-space:pre;" class="btn add_button" type="submit"
-                                                 value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
-                        </form>
+                    <li style="padding-right: 50px;" sec:authorize="!isAuthenticated()">
+                        <a href="/login">
+                            <button type="button" style="" class="btn add_button"><span
+                                    class="fas fa-user"
+                                    style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                            </button>
+                        </a>
+                    </li>
+                    <li style="padding-right: 50px;" sec:authorize="isAuthenticated()">
+                        <button style="" class="btn add_button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false"
+                        ><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO
+                        </button>
+                        <div class="col-md-2" style="margin-top: -12px">
+                            <div class="dropdown-menu" style="background-color: rgb(176, 25, 59);">
+                                <a class="dropdown-item text-left" href="/dane">Moje Dane</a>
+                                <a class="dropdown-item text-left" href="/zakupy">Moje Zakupy</a>
+                                <a class="dropdown-item text-left" href="/uzytkownicy"
+                                   sec:authorize="hasAuthority('ADMIN')">Panel Admina</a>
+                                <button class="dropdown-item text-center" type="submit"
+                                        value="Sign Out">Wyloguj
+                                </button>
+
+                            </div>
+                        </div>
                     </li>
                     <li>
                         <a href="/add/discount">
-                        <button type="button" style="white-space:pre" class="btn add_button"><span class="fas fa-plus"
-                                                                                                   style="font-size: 12px;"></span>DODAJ OKAZJE</button></a>
+                            <button type="button"  class="btn add_button"><span
+                                    class="fas fa-plus"
+                                    style="font-size: 12px;"></span>DODAJ OKAZJE
+                            </button>
+                        </a>
                     </li>
                 </ul>
             </div>
         </nav>
     </div>
-    <div class="row collapse"  id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
+    <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
      padding-bottom: 30px;padding-top: 30px;margin-top: -25px">
         <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -20px;">
             <div class="row">
-                <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
-                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></a>
+                <div class="col-md-2" th:each="shop : ${list_of_shops}"
+                     style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <button type="button" style="width: 100%" class="btn category_button"
+                                th:text="${shop.getName()}">DODAJ KUPON
+                        </button>
+                    </a>
                 </div>
 
             </div>
         </div>
 
     </div>
-    <div class="row collapse"  id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
+    <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
      padding-bottom: 30px;padding-top: 30px;margin-top: -25px">
         <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -20px;">
             <div class="row">
 
-                <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
-                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></a>
+                <div class="col-md-2" th:each="tag : ${list_of_tags}"
+                     style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <button type="button" style="width: 100%" class="btn category_button"
+                                th:text="${tag.getName()}">DODAJ KUPON
+                        </button>
+                    </a>
                 </div>
 
 
@@ -116,22 +146,29 @@
 <div class="container" style="padding-top: 25px;">
     <div class="row" style="padding-left: 15px;padding-right: 15px;">
         <div class="col-md-12 sort_div" style="padding-top: 10px;padding-bottom: 10px;">
-            <button type="button" data-mixitup-control data-sort="number-rate:desc" style="white-space:pre"
-                    class="btn sort_button">Najlepiej oceniane</button>
-            <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-comment:desc"
-                    class="btn sort_button">Najczęściej komentowane</button>
-            <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-date:asc" class="btn sort_button">Niedawno dodane</button>
+            <button type="button" data-mixitup-control data-sort="number-rate:desc"
+                    class="btn sort_button">Najlepiej oceniane
+            </button>
+            <button type="button"  data-mixitup-control data-sort="number-comment:desc"
+                    class="btn sort_button">Najczęściej komentowane
+            </button>
+            <button type="button"  data-mixitup-control data-sort="number-date:asc"
+                    class="btn sort_button">Niedawno dodane
+            </button>
         </div>
     </div>
     <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
-        <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"style="padding-bottom: 30px;"
+        <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}"
+             th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
+             style="padding-bottom: 30px;"
              th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
             <div class="col-md-12 item_div">
                 <!-- Brand icon-->
                 <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
+                                th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
                     </div>
                 </div>
                 <!-- Discount image-->
@@ -143,14 +180,16 @@
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title"
+                                                                                                  th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>
                 <!-- Date-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
                         <span class="item_date">Oferta wygasa: </span><span class="item_user"
-                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34" th:text="${discount.getExpire_date_formated()}">25.06.20</span>
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34"
+                                                                            th:text="${discount.getExpire_date_formated()}">25.06.20</span>
                     </div>
 
                 </div>
@@ -158,56 +197,102 @@
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
                         <span class="item_user">Dodane przez: </span><a href="/"><span class="item_user"
-                                                                                        style="font-weight: 900; font-size: 15px;color: black" th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
+                                                                                       style="font-weight: 900; font-size: 15px;color: black"
+                                                                                       th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
                     </div>
                 </div>
                 <!-- Rate + Comments-->
                 <div class="row item_parts_padding" style="padding-top: 10px">
                     <div class="col-md-6 float-right" style="padding-left: 40px">
                         <div class="row" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/addrate}" method="post">
-                            <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
-                                                                                                                     th:value="${discount.getDiscount_id()}">
-                        </form>
-                        <span
-                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
-                        <form th:action="@{/removerate}" method="post"><input
-                            class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
-                        </form>
+                            <form th:action="@{/addrate}" method="post">
+                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
+                                       value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
+                                                                             id="discountidadd"
+                                                                             th:value="${discount.getDiscount_id()}">
+                            </form>
+                            <span
+                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
+                                    th:text="|${discount.getRatingsSize()}|">  255  </span>
+                            <form th:action="@{/removerate}" method="post"><input
+                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
+                                    value="&#xf068;" type="submit"><input type="hidden" name="discountidremove"
+                                                                          id="discountidremove"
+                                                                          th:value="${discount.getDiscount_id()}">
+                            </form>
                         </div>
                         <div class="row" sec:authorize="!isAuthenticated()">
                             <form th:action="@{/login}" method="get"
                                   sec:authorize="!isAuthenticated()">
-                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit">
+                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
+                                       value="&#xf067;" type="submit">
                             </form>
                             <span
-                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
+                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
+                                    th:text="|${discount.getRatingsSize()}|">  255  </span>
                             <form th:action="@{/login}" method="get"
                                   sec:authorize="!isAuthenticated()"><input
-                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit">
+                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
+                                    value="&#xf068;" type="submit">
                             </form>
                         </div>
 
                     </div>
                     <div class="col-md-6">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span class="fas fa-comments"
-                                                                      style="color: #9e9ea4;font-size: 14px;"></span><span
-                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre" th:text="|   ${discount.getCommentsSize()}|">  255</span></a>
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span
+                                class="fas fa-comments"
+                                style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre"
+                                th:text="|   ${discount.getCommentsSize()}|">  255</span></a>
                     </div>
                 </div>
                 <!--Discount Button-->
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
                     <div class="col-md-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
-                            <button type="button" style="white-space:pre" class="btn item_button">Przejdz do oferty <span class="fas fa-arrow-right"></span></button>
+                            <button type="button"  class="btn item_button">Przejdz do oferty
+                                <span class="fas fa-arrow-right"></span></button>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-
     </div>
+    <nav aria-label="Page navigation example" style="padding-top: 50px">
+        <ul class="pagination justify-content-center">
+
+
+            <li th:if="${number_of_page == 1}" class="page-item disabled" style="padding-left: 5px">
+                <a class="page-link" href="/page/1" tabindex="-1">Poprzednia</a>
+            </li>
+            <li th:if="${number_of_page != 1}" class="page-item" style="padding-left: 5px">
+
+                <a class="page-link" th:href="@{|/page/${number_of_page - 1}|}">Poprzednia</a>
+            </li>
+
+            <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
+                <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
+                    <a class="page-link" th:href="@{|/page/${i}|}" th:text="${i}">1</a>
+                </li>
+                <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
+                    <a class="page-link" th:href="@{|/page/${i}|}" th:text="${i}">1</a>
+                </li>
+            </div>
+
+
+
+            <li th:if="${number_of_page == quantity_of_pages}" class="page-item disabled" style="padding-left: 5px">
+                <a class="page-link" href="/page/1" tabindex="-1">Następna</a>
+            </li>
+            <li th:if="${number_of_page != quantity_of_pages}" class="page-item" style="padding-left: 5px">
+
+                <a class="page-link" th:href="@{|/page/${number_of_page + 1}|}">Następna</a>
+            </li>
+
+
+        </ul>
+    </nav>
 
 </div>
 

@@ -61,7 +61,9 @@
      padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
         <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
             <div class="row">
-                <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></div>
+                <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></a>
+                </div>
             </div>
         </div>
 
@@ -70,13 +72,16 @@
      padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
         <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
             <div class="row">
-                <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></div>
+                <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></a>
+                </div>
             </div>
         </div>
 
     </div>
 
 </div>
+
 
 <div class="container-fluid">
     <div class="col-md-6 offset-md-3" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
@@ -94,7 +99,7 @@
 </div>
 
 <div class="container-fluid ">
-    <div class="row">
+    <div class="row" sec:authorize="isAuthenticated()">
         <form th:action="@{/add/discount}" class="w-100" method="post" enctype="multipart/form-data">
         <div class="col-md-6 offset-md-3 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
             <div class="row">
@@ -239,6 +244,153 @@
 
         </div>
         <div style="height: 50px;width: 100%"></div>
+        </form>
+    </div>
+    <div class="row" sec:authorize="!isAuthenticated()">
+        <form th:action="@{/login}" class="w-100" method="get" enctype="multipart/form-data">
+            <div class="col-md-6 offset-md-3 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
+                <div class="row">
+
+                    <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Link</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" class="add_input" id="url" name="url" placeholder=" http://www.example.com/greatdeal...">
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Kategoria</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+
+                            <div class="col-md-2 radio-toolbar text-center" th:each="tag : ${list_of_tags}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;"><input type="radio" th:id="|tag_${tag.getTag_id()}|" name="tag" th:value="${tag.getTag_id()}">
+                                <label th:for="|tag_${tag.getTag_id()}|" class="w-100" th:text="${tag.getName()}">Apple</label>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Sklep</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+
+                            <div class="col-md-2 radio-toolbar text-center" th:each="shop : ${list_of_shops}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;"><input type="radio" th:id="|shop_${shop.getShop_id()}|" name="shop" th:value="${shop.getShop_id()}">
+                                <label th:for="|shop_${shop.getShop_id()}|" class="w-100" th:text="${shop.getName()}">Apple</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Tytuł</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" class="add_input" id="6" name="title" placeholder=" Tytuł opisujący znalezioną oferte">
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-4 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Cena regularna</span>
+                    </div>
+                    <div class="col-md-4 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Cena oferty</span>
+                    </div>
+                    <div class="col-md-4 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Koszt dostawy</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="number" class="add_input" id="4" name="old_price" placeholder=" 0.00">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" class="add_input" id="5" name="current_price" placeholder=" 0.00">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" class="add_input" id="6" name="shipment_price" placeholder=" 0.00">
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Opis</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea rows="5" cols="33" style="width: 100%;border-radius: 6px" id="1" name="content"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Data zakonczenia</span>
+                    </div>
+
+                    <div class="col-md-6 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Dodaj obrazek</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="date" class="add_input" id="2" name="expire_date" placeholder="DD.MM.YYYY">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="file" class="add_input" id="3" name="image_url" placeholder="DD.MM.YYYY">
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12 offset-md-" style="padding-top: 15px;">
+                        <button type="submit" style="white-space:pre;font-size: 18px;border-radius: 10px" class="btn item_button">Dodaj Oferte</button>
+                    </div>
+
+                </div>
+                <div style="height: 20px"></div>
+
+
+
+            </div>
+            <div style="height: 50px;width: 100%"></div>
         </form>
     </div>
 </div>

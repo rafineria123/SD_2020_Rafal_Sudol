@@ -7,7 +7,6 @@ import java.util.Set;
 @Entity
 public class Comment {
 
-    Date data = new Date();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -127,7 +126,7 @@ public class Comment {
 
     public long getDataToNumber(){
 
-        long daysBetween = data.getTime() - this.cr_date.getTime();
+        long daysBetween = new Date().getTime() - this.cr_date.getTime();
         return daysBetween;
 
     }

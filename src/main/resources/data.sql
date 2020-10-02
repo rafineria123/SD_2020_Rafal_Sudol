@@ -29,8 +29,8 @@ INSERT INTO `discount` (`discount_id`, `content`, `cr_date`, `current_price`, `d
 (5, 'Dostawa gratis Przecena z 129.99$ na 84.99$. Wersja S kosztuje po przecenie 55.24$.', '2020-06-16 08:52:39', 350, 'https://www2.pl.avon.com/pl-home', '2020-06-16 08:52:39', 'images/discount_5.jpg', 500, 10, 'active', 'IPRee namiot 3 w 1 dla 5-8 osób', 4, 6, 2),
 (6, 'W Tesco w Jarosławiu przecena płynu zimowego Borygo. Zostało jeszcze minimum 10 sztuk. Oferta lokalna. Małe miasto, ale może komuś się przyda ta informacja.', '2020-06-16 08:52:39', 17, 'https://www2.pl.avon.com/pl-home', '2020-06-16 08:52:39', 'images/discount_6.jpg', 35, 0, 'active', 'Płyn do chłodnic samochodowych', 2, 2, 2);
 
-INSERT INTO `comment` (`comment_id`, `content`, `cr_date`, `data`, `upper_comment_id`, `discount_id`, `post_id`, `user_id`) VALUES
-(1, 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', '2020-06-16 08:52:39', NULL, 3, NULL, 1);
+INSERT INTO `comment` (`comment_id`, `content`, `cr_date`, `upper_comment_id`, `discount_id`, `post_id`, `user_id`) VALUES
+(1, 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', NULL, 3, NULL, 1);
 
 
 
