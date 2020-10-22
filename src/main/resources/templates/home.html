@@ -21,6 +21,7 @@
 <body>
 <div style="padding-bottom: 35px"></div>
 <div class="container-fluid" style="width: 95%">
+
     <div class="row" style="width: 100%">
         <nav class="navbar navbar-expand-lg navbar-light bg-light"
              style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">
@@ -127,13 +128,17 @@
 
     </div>
 
-    <div class="row" style="width: 100%;margin-top: -25px">
-        <div class="col-md-6 offset-md-3">
-            <input class="form-control mr-sm-0 input nav_search" id="szukajform"
-                   data-ref="input-search" type="search" placeholder="np. Adidas, Neonet, Telefon, CCC"
-                   aria-label="Search">
+        <div class="row" style="width: 100%;margin-top: -25px">
+            <div class="col-md-6 offset-md-3">
+                <form th:action="@{/search}" method="post">
+                    <input class="form-control mr-sm-0 input nav_search" minlength="3"  id="searchform" name="searchform"
+                           data-ref="input-search" type="search" placeholder="np. Adidas, Neonet, Telefon, CCC"
+                           aria-label="Search">
+                    <input type="submit" style="height: 0px; width: 0px; border: none; padding: 0px;" hidefocus="true" />
+                </form>
+
+            </div>
         </div>
-    </div>
 
 </div>
 <div class="container" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
@@ -146,15 +151,31 @@
 <div class="container" style="padding-top: 25px;">
     <div class="row" style="padding-left: 15px;padding-right: 15px;">
         <div class="col-md-12 sort_div" style="padding-top: 10px;padding-bottom: 10px;">
-            <button type="button" data-mixitup-control data-sort="number-rate:desc"
-                    class="btn sort_button">Najlepiej oceniane
-            </button>
-            <button type="button"  data-mixitup-control data-sort="number-comment:desc"
-                    class="btn sort_button">Najczęściej komentowane
-            </button>
-            <button type="button"  data-mixitup-control data-sort="number-date:asc"
-                    class="btn sort_button">Niedawno dodane
-            </button>
+            <a th:href="|${sort_buttons_prefix +'top-rated'}|">
+
+                <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                        class="btn sort_button sort_button_activated">Najlepiej oceniane
+                </button>
+                <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                        class="btn sort_button ">Najlepiej oceniane
+                </button>
+            </a>
+            <a th:href="|${sort_buttons_prefix +'most-comments'}|">
+                <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
+                        class="btn sort_button">Najczęściej komentowane
+                </button>
+                <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
+                        class="btn sort_button sort_button_activated">Najczęściej komentowane
+                </button>
+            </a>
+            <a th:href="|${sort_buttons_prefix +'date'}|">
+                <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
+                        class="btn sort_button sort_button_activated">Niedawno dodane
+                </button>
+                <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
+                        class="btn sort_button">Niedawno dodane
+                </button>
+            </a>
         </div>
     </div>
     <!-- discounts-->
@@ -268,15 +289,15 @@
             </li>
             <li th:if="${number_of_page != 1}" class="page-item" style="padding-left: 5px">
 
-                <a class="page-link" th:href="@{|/page/${number_of_page - 1}|}">Poprzednia</a>
+                <a class="page-link" th:href="@{|${next_and_previous.replaceFirst('id',number_of_page -1)}|}">Poprzednia</a>
             </li>
 
             <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
                 <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
-                    <a class="page-link" th:href="@{|/page/${i}|}" th:text="${i}">1</a>
+                    <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
                 </li>
                 <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
-                    <a class="page-link" th:href="@{|/page/${i}|}" th:text="${i}">1</a>
+                    <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
                 </li>
             </div>
 
@@ -287,7 +308,7 @@
             </li>
             <li th:if="${number_of_page != quantity_of_pages}" class="page-item" style="padding-left: 5px">
 
-                <a class="page-link" th:href="@{|/page/${number_of_page + 1}|}">Następna</a>
+                <a class="page-link" th:href="@{${next_and_previous.replaceFirst('id',number_of_page+1)}}">Następna</a>
             </li>
 
 
@@ -301,52 +322,7 @@
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="js/mixitup/dist/mixitup.min.js"></script>
 <script src="js/home.js"></script>
-<script>
-    const miks = document.querySelector(".mix-container")
-
-    var mixer = mixitup(miks, {
-        animation: {
-            queueLimit: 25,
-            duration: 350
-        },
-        selectors: {
-            control: '[data-mixitup-control]'
-        }
-    });
-
-    var inputSearch = document.querySelector('[data-ref="input-search"]');
-    var keyupTimeout;
-    // Set up a handler to listen for "keyup" events from the search input
-    inputSearch.addEventListener('keyup', function () {
-        var searchValue;
-        if (inputSearch.value.length < 3) {
-            // If the input value is less than 3 characters, don't send
-            searchValue = '';
-        } else {
-            searchValue = inputSearch.value.toLowerCase().trim();
-        }
-        // Very basic throttling to prevent mixer thrashing. Only search
-        // once 350ms has passed since the last keyup event
-        clearTimeout(keyupTimeout);
-        keyupTimeout = setTimeout(function () {
-            filterByString(searchValue);
-        }, 350);
-    });
-
-    function filterByString(searchValue) {
-        if (searchValue) {
-            // Use an attribute wildcard selector to check for matches
-            mixer.filter('[class*="' + searchValue + '"]');
-        } else {
-            // If no searchValue, treat as filter('all')
-            mixer.filter('all');
-        }
-    }
-
-
-</script>
 
 </body>
 </html>

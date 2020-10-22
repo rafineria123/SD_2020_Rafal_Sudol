@@ -70,6 +70,7 @@
 
 .radio-toolbar input[type="radio"]:checked + label {
     background: linear-gradient(45deg,#e42d31,#ff0065);
+    color: white;
 }
 
 .alert {

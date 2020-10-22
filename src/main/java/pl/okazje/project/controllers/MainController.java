@@ -1,9 +1,8 @@
 package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,11 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.*;
 
-import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +54,81 @@ public class MainController {
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         modelAndView.addObject("quantity_of_pages", allProducts.getTotalPages());
         modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("next_and_previous","/page/id");
+        modelAndView.addObject("picked_sort", 3);
+        modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=allProducts.getTotalPages();i++){
+
+            listOfAdresses.add("/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+    }
+
+
+    @GetMapping("/page/{id}/sort/{sort}")
+    public ModelAndView homePageSort(@PathVariable("id") String id,@PathVariable("sort") String sort) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        Pageable pageable = null;
+        ModelAndView modelAndView = new ModelAndView("home");
+        if(sort.equals("date")){
+            pageable = PageRequest.of(Integer.parseInt(id)-1, 2, Sort.by("creationdate").descending());
+            Page<Discount> allProducts = discountRepository.findAll(pageable);
+            modelAndView.addObject("list_of_discounts", allProducts.getContent());
+            modelAndView.addObject("quantity_of_pages", allProducts.getTotalPages());
+            List<String> listOfAdresses = new ArrayList<>();
+            for (int i = 1;i<=allProducts.getTotalPages();i++){
+
+                listOfAdresses.add("/page/"+i+"/sort/"+sort);
+
+            }
+            modelAndView.addObject("list_of_adresses", listOfAdresses);
+            modelAndView.addObject("next_and_previous","/page/id/sort/date");
+            modelAndView.addObject("picked_sort", 3);
+
+        }
+        if(sort.equals("most-comments")){
+            PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByComments());
+            page.setPageSize(2); // number of items per page
+            page.setPage(Integer.parseInt(id)-1);      // set to first page
+            modelAndView.addObject("list_of_discounts", page.getPageList());
+            modelAndView.addObject("quantity_of_pages", page.getPageCount());
+            modelAndView.addObject("picked_sort", 2);
+            List<String> listOfAdresses = new ArrayList<>();
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/page/"+i+"/sort/"+sort);
+
+            }
+            modelAndView.addObject("list_of_adresses", listOfAdresses);
+            modelAndView.addObject("next_and_previous","/page/id/sort/most-comments");
+        }
+        if(sort.equals("top-rated")){
+            PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByRating());
+            page.setPageSize(2); // number of items per page
+            page.setPage(Integer.parseInt(id)-1);      // set to first page
+            modelAndView.addObject("list_of_discounts", page.getPageList());
+            modelAndView.addObject("quantity_of_pages", page.getPageCount());
+            modelAndView.addObject("picked_sort", 1);
+            List<String> listOfAdresses = new ArrayList<>();
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/page/"+i+"/sort/"+sort);
+
+            }
+            modelAndView.addObject("list_of_adresses", listOfAdresses);
+            modelAndView.addObject("next_and_previous","/page/id/sort/top-rated");
+        }
+
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        System.out.println(id);
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
         return modelAndView;
     }
 
@@ -74,40 +146,228 @@ public class MainController {
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         modelAndView.addObject("quantity_of_pages", allProducts.getTotalPages());
         modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous","/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=allProducts.getTotalPages();i++){
+
+            listOfAdresses.add("/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+
         return modelAndView;
     }
 
 
-    @GetMapping("/categories/{id}")
-    public ModelAndView category(@PathVariable("id") String id) {
+    @GetMapping("/categories/{category}")
+    public ModelAndView category(@PathVariable("category") String category) {
+        PagedListHolder page = new PagedListHolder(discountRepository.discountByTag(category));
+        page.setPageSize(1); // number of items per page
+        page.setPage(0);
 
-        List<Discount> list = new ArrayList<>();
-        for (Discount discount: discountRepository.findAll()) {
-            if(discount.getTag().getName().toLowerCase().equals(id.toLowerCase())){
-                list.add(discount);
-            }
-        }
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("list_of_discounts", list);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("next_and_previous","/categories/"+category+"/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/categories/"+category+"/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=page.getPageCount();i++){
+
+            listOfAdresses.add("/categories/"+category+"/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+
+    @GetMapping("/categories/{category}/page/{id}")
+    public ModelAndView categoryPage(@PathVariable("category") String category, @PathVariable("id") String id) {
+        PagedListHolder page = new PagedListHolder(discountRepository.discountByTag(category));
+        page.setPageSize(1); // number of items per page
+        page.setPage(Integer.parseInt(id)-1);
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous","/categories/"+category+"/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/categories/"+category+"/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=page.getPageCount();i++){
+
+            listOfAdresses.add("/categories/"+category+"/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+    @GetMapping("/categories/{category}/page/{id}/sort/{sort}")
+    public ModelAndView categoryPageSort(@PathVariable("category") String category, @PathVariable("id") String id, @PathVariable("sort") String sort) {
+        List<String> listOfAdresses = new ArrayList<>();
+        ModelAndView modelAndView = new ModelAndView("home");
+        PagedListHolder page = null;
+        if(sort.equals("date")){
+            modelAndView.addObject("picked_sort", 3);
+            modelAndView.addObject("next_and_previous","/categories/"+category+"/page/id/sort/date");
+            page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenTag(category));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/categories/"+category+"/page/"+i+"/sort/date");
+
+            }
+        }
+
+        if(sort.equals("most-comments")){
+            modelAndView.addObject("picked_sort", 2);
+            modelAndView.addObject("next_and_previous","/categories/"+category+"/page/id/sort/most-comments");
+            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenTag(category));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/categories/"+category+"/page/"+i+"/sort/most-comments");
+
+            }
+        }
+
+        if(sort.equals("top-rated")){
+            modelAndView.addObject("picked_sort", 1);
+            modelAndView.addObject("next_and_previous","/categories/"+category+"/page/id/sort/top-rated");
+            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenTag(category));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/categories/"+category+"/page/"+i+"/sort/top-rated");
+
+            }
+        }
+
+        page.setPage(Integer.parseInt(id)-1);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+
+        modelAndView.addObject("sort_buttons_prefix", "/categories/"+category+"/page/1/sort/");
+
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
         return modelAndView;
 
     }
 
 
-    @GetMapping("/shops/{id}")
-    public ModelAndView shop(@PathVariable("id") String id) {
-        List<Discount> list = new ArrayList<>();
-        for (Discount discount: discountRepository.findAll()) {
-            if(discount.getShop().getName().toLowerCase().equals(id.toLowerCase())){
-                list.add(discount);
-            }
-        }
+    @GetMapping("/shops/{shop}")
+    public ModelAndView shop(@PathVariable("shop") String shop) {
+        PagedListHolder page = new PagedListHolder(discountRepository.discountByShop(shop));
+        page.setPageSize(1); // number of items per page
+        page.setPage(0);
+
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("list_of_discounts", list);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("next_and_previous","/shops/"+shop+"/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/shops/"+shop+"/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=page.getPageCount();i++){
+
+            listOfAdresses.add("/shops/"+shop+"/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+    }
+
+    @GetMapping("/shops/{shop}/page/{id}")
+    public ModelAndView shopPage(@PathVariable("shop") String shop, @PathVariable("id") String id) {
+        PagedListHolder page = new PagedListHolder(discountRepository.discountByShop(shop));
+        page.setPageSize(1); // number of items per page
+        page.setPage(Integer.parseInt(id)-1);
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous","/shops/"+shop+"/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/shops/"+shop+"/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=page.getPageCount();i++){
+
+            listOfAdresses.add("/shops/"+shop+"/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+
+    @GetMapping("/shops/{shop}/page/{id}/sort/{sort}")
+    public ModelAndView shopPageSort(@PathVariable("shop") String shop, @PathVariable("id") String id, @PathVariable("sort") String sort) {
+        List<String> listOfAdresses = new ArrayList<>();
+        ModelAndView modelAndView = new ModelAndView("home");
+        PagedListHolder page = null;
+        if(sort.equals("date")){
+            modelAndView.addObject("picked_sort", 3);
+            modelAndView.addObject("next_and_previous","/shops/"+shop+"/page/id/sort/date");
+            page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenShop(shop));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/shops/"+shop+"/page/"+i+"/sort/date");
+
+            }
+        }
+
+        if(sort.equals("most-comments")){
+            modelAndView.addObject("picked_sort", 2);
+            modelAndView.addObject("next_and_previous","/shops/"+shop+"/page/id/sort/most-comments");
+            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenShop(shop));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/shops/"+shop+"/page/"+i+"/sort/most-comments");
+
+            }
+        }
+
+        if(sort.equals("top-rated")){
+            modelAndView.addObject("picked_sort", 1);
+            modelAndView.addObject("next_and_previous","/shops/"+shop+"/page/id/sort/top-rated");
+            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenShop(shop));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/shops/"+shop+"/page/"+i+"/sort/top-rated");
+
+            }
+        }
+
+        page.setPage(Integer.parseInt(id)-1);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+
+        modelAndView.addObject("sort_buttons_prefix", "/shops/"+shop+"/page/1/sort/");
+
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
         return modelAndView;
 
     }
@@ -151,7 +411,7 @@ public class MainController {
             file.transferTo(transferFile);
 
             discount.setContent(content);
-            discount.setCr_date(new Date());
+            discount.setCreationdate(new Date());
             discount.setCurrent_price(Double.parseDouble(current_price));
             discount.setOld_price(Double.parseDouble(old_price));
             discount.setShipment_price(Double.parseDouble(shipment_price));
@@ -187,6 +447,71 @@ public class MainController {
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         return modelAndView;
     }
+
+    @PostMapping("/search")
+    public String searchForm(@ModelAttribute("searchform") String searchform){
+        System.out.println(searchform+ "aaaaa");
+
+        searchform = "redirect:/search/"+searchform;
+        return searchform;
+
+    }
+
+    @GetMapping("/search/{search}")
+    public ModelAndView search(@PathVariable("search") String search){
+
+        System.out.println(search+"bbbb");
+
+        PagedListHolder page = new PagedListHolder(discountRepository.discountBySearchInput("%"+search+"%"));
+        page.setPageSize(1); // number of items per page
+        page.setPage(0);
+
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("next_and_previous","/search/"+search+"/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/search/"+search+"/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=page.getPageCount();i++){
+
+            listOfAdresses.add("/search/"+search+"/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+
+    @GetMapping("/search/{search}/page/{id}")
+    public ModelAndView searchPage(@PathVariable("search") String search, @PathVariable("id") String id) {
+        PagedListHolder page = new PagedListHolder(discountRepository.discountBySearchInput("%"+search+"%"));
+        page.setPageSize(1); // number of items per page
+        page.setPage(Integer.parseInt(id)-1);
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous","/search/"+search+"/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/search/"+search+"/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=page.getPageCount();i++){
+
+            listOfAdresses.add("/search/"+search+"/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+
+
 
     @GetMapping("/register")
     public ModelAndView register() {

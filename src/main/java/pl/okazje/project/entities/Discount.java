@@ -3,7 +3,6 @@ package pl.okazje.project.entities;
 import javax.persistence.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Date;
 import java.util.Set;
 
@@ -18,7 +17,7 @@ public class Discount {
     private String title;
     private String content;
     private String image_url;
-    private Date cr_date;
+    private Date creationdate;
     private Date expire_date;
     private String status;
     private Double old_price;
@@ -49,7 +48,7 @@ public class Discount {
         this.title = title;
         this.content = content;
         this.image_url = image_url;
-        this.cr_date = new Date();
+        this.creationdate = new Date();
         this.expire_date = new Date();
         this.status = "active";
         this.old_price = old_price;
@@ -100,12 +99,12 @@ public class Discount {
         this.image_url = image_url;
     }
 
-    public Date getCr_date() {
-        return cr_date;
+    public Date getCreationdate() {
+        return creationdate;
     }
 
-    public void setCr_date(Date cr_date) {
-        this.cr_date = cr_date;
+    public void setCreationdate(Date cr_date) {
+        this.creationdate = cr_date;
     }
 
     public Date getExpire_date() {
@@ -228,7 +227,7 @@ public class Discount {
 
     public long getDataToNumber(){
 
-            long daysBetween = data.getTime() - this.cr_date.getTime();
+            long daysBetween = data.getTime() - this.creationdate.getTime();
             return daysBetween;
 
     }

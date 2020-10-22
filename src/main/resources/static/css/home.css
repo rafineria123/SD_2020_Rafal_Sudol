@@ -120,19 +120,13 @@
     color: white;
     background: linear-gradient(45deg,#e42d31,#ff0065);
 }
-.pagination > .active > a
-{
-    color: white;
-    background-color: purple;
-    border: solid 1px purple;
-}
 
-.pagination > .active > a:hover
-{
-    background-color: purple;
-    border: solid 1px purple;
-}
+.active>a{
 
+    background: linear-gradient(45deg,#e42d31,#ff0065)!important;
+    border: 0;
+
+}
 
 
 .category_button{
@@ -195,6 +189,16 @@ h1{
     color: white;
     outline: none !important;
     box-shadow: 0px 2px 3px 1px rgba(220,220,220,1);
+
+}
+
+.sort_button_activated{
+
+    background: linear-gradient(45deg,#e42d31,#ff0065);
+    color: white;
+    outline: none !important;
+    box-shadow: 0px 2px 3px 1px rgba(220,220,220,1);
+
 
 }
 
