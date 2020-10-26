@@ -10,12 +10,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -182,6 +185,8 @@ public class MainController {
             listOfAdresses.add("/categories/"+category+"/page/"+i);
 
         }
+        modelAndView.addObject("additional_results_info", category);
+        modelAndView.addObject("additional_results_info_more", " kategorii");
         modelAndView.addObject("list_of_adresses", listOfAdresses);
         return modelAndView;
 
@@ -207,6 +212,8 @@ public class MainController {
             listOfAdresses.add("/categories/"+category+"/page/"+i);
 
         }
+        modelAndView.addObject("additional_results_info", category);
+        modelAndView.addObject("additional_results_info_more", " kategorii");
         modelAndView.addObject("list_of_adresses", listOfAdresses);
         return modelAndView;
 
@@ -260,7 +267,8 @@ public class MainController {
         modelAndView.addObject("number_of_page", Integer.parseInt(id));
 
         modelAndView.addObject("sort_buttons_prefix", "/categories/"+category+"/page/1/sort/");
-
+        modelAndView.addObject("additional_results_info", category);
+        modelAndView.addObject("additional_results_info_more", " kategorii");
         modelAndView.addObject("list_of_adresses", listOfAdresses);
         return modelAndView;
 
@@ -289,6 +297,8 @@ public class MainController {
 
         }
         modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", shop);
+        modelAndView.addObject("additional_results_info_more", " sklepu");
         return modelAndView;
     }
 
@@ -313,6 +323,8 @@ public class MainController {
 
         }
         modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", shop);
+        modelAndView.addObject("additional_results_info_more", " sklepu");
         return modelAndView;
 
     }
@@ -368,6 +380,8 @@ public class MainController {
         modelAndView.addObject("sort_buttons_prefix", "/shops/"+shop+"/page/1/sort/");
 
         modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", shop);
+        modelAndView.addObject("additional_results_info_more", " sklepu");
         return modelAndView;
 
     }
@@ -449,11 +463,10 @@ public class MainController {
     }
 
     @PostMapping("/search")
-    public String searchForm(@ModelAttribute("searchform") String searchform){
-        System.out.println(searchform+ "aaaaa");
-
-        searchform = "redirect:/search/"+searchform;
-        return searchform;
+    public ModelAndView searchForm(@ModelAttribute("searchform") String searchform) throws UnsupportedEncodingException {
+        String encodedId = URLEncoder.encode(searchform, "UTF-8");
+        ModelAndView m = new ModelAndView(new RedirectView("/search/" + encodedId, true, true, false));
+        return m;
 
     }
 
@@ -482,6 +495,7 @@ public class MainController {
 
         }
         modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", search);
         return modelAndView;
 
     }
@@ -507,6 +521,63 @@ public class MainController {
 
         }
         modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", search);
+        return modelAndView;
+
+    }
+
+    @GetMapping("/search/{search}/page/{id}/sort/{sort}")
+    public ModelAndView searchPageSort(@PathVariable("search") String search, @PathVariable("id") String id, @PathVariable("sort") String sort) {
+        List<String> listOfAdresses = new ArrayList<>();
+        ModelAndView modelAndView = new ModelAndView("home");
+        PagedListHolder page = null;
+        if(sort.equals("date")){
+            modelAndView.addObject("picked_sort", 3);
+            modelAndView.addObject("next_and_previous","/search/"+search+"/page/id/sort/date");
+            page = new PagedListHolder(discountRepository.discountBySearchInput("%"+search+"%"));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/search/"+search+"/page/"+i+"/sort/date");
+
+            }
+        }
+
+        if(sort.equals("most-comments")){
+            modelAndView.addObject("picked_sort", 2);
+            modelAndView.addObject("next_and_previous","/search/"+search+"/page/id/sort/most-comments");
+            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenSearchInput("%"+search+"%"));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/search/"+search+"/page/"+i+"/sort/most-comments");
+
+            }
+        }
+
+        if(sort.equals("top-rated")){
+            modelAndView.addObject("picked_sort", 1);
+            modelAndView.addObject("next_and_previous","/search/"+search+"/page/id/sort/top-rated");
+            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenSearchInput("%"+search+"%"));
+            page.setPageSize(1);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/search/"+search+"/page/"+i+"/sort/top-rated");
+
+            }
+        }
+
+        page.setPage(Integer.parseInt(id)-1);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+
+        modelAndView.addObject("sort_buttons_prefix", "/search/"+search+"/page/1/sort/");
+
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", search);
         return modelAndView;
 
     }
@@ -614,5 +685,27 @@ public class MainController {
         return "redirect:/discount/"+comment.getDiscount().getDiscount_id().toString();
 
     }
+
+    @GetMapping("/settings")
+    public ModelAndView settings(){
+
+        ModelAndView modelAndView = new ModelAndView("user_profile_main");
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
+
+    }
+
+    @GetMapping("/settings/discounts")
+    public ModelAndView settingsDiscounts(){
+
+        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
+
+    }
+
+
 
 }

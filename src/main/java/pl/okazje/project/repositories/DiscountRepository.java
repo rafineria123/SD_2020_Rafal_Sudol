@@ -71,9 +71,27 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
             " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
             " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
             " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
-            " from discount where discount.content LIKE ?1) ORDER BY c.disc_count DESC" ,
+            " from discount where discount.content LIKE ?1) ORDER BY d.creationdate DESC" ,
             nativeQuery = true)
     public List<Discount> discountBySearchInput(String search);
+
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
+            " AS disc_count FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
+            " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
+            " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
+            " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
+            " from discount where discount.content LIKE ?1) ORDER BY c.disc_count DESC" ,
+            nativeQuery = true)
+    public List<Discount> sortDiscountByCommentsWithGivenSearchInput(String search);
+
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
+            " AS disc_count FROM rating GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
+            " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
+            " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
+            " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
+            " from discount where discount.content LIKE ?1) ORDER BY c.disc_count DESC" ,
+            nativeQuery = true)
+    public List<Discount> sortDiscountByRatingWithGivenSearchInput(String search);
 
 
 }

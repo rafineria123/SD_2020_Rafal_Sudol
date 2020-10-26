@@ -89,15 +89,6 @@
     border: 1px solid #545454;
     background: linear-gradient(45deg,#e42d31,#ff0065);
 }
-.add_button:focus{
-    outline:0!important;
-    box-shadow: none;
-    background: linear-gradient(45deg,#e42d31,#ff0065);
-    border-top: 1px solid #545454;
-    border-left: 1px solid #545454;
-    border-right: 1px solid #545454;
-
-}
 
 .page-link{
 

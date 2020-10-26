@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
+    <link type="text/css" href="/css/user_profile.css" rel="stylesheet"/>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background: linear-gradient(45deg,#e42d31,#ff0065);">
+    <div class="navbar-brand" style="cursor: pointer;" onclick="window.location='/';">
+        <div class="row">
+            <div class="col-md-4 dj text-center"><h1>NG</h1></div>
+            <div class="col-md-6">NORGIE</div>
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="nav navbar-nav ml-auto" style="padding-right: 250px">
+            <li class="nav_items" data-toggle="collapse"
+                data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a></li>
+            <li class="nav_items" data-toggle="collapse"
+                data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a></li>
+            <li style="padding-right: 50px;"sec:authorize="!isAuthenticated()">
+                <a href="/login"><button type="button" style="white-space:pre;" class="btn add_button"><span class="fas fa-user"
+                                                                                                             style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
+            </li>
+            <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post">
+                    <button style="white-space:pre;" class="btn add_button" type="submit"
+                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                </form>
+            </li>
+            <li>
+                <a href="/add/discount"> <button type="button" style="" class="btn add_button"><span class="fas fa-plus"
+                                                                                                     style="font-size: 12px;"></span>
+                    DODAJ OKAZJE
+                </button></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container-fluid" style="padding-right: 0px;padding-left: 0px">
+
+    <div class="row collapse"  id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
+        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
+            <div class="row">
+                <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row collapse"  id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
+        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
+            <div class="row">
+                <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container" style="padding-top: 70px">
+
+    <div class="row">
+
+        <div class="col-3" style="font-weight: 400;font-size: 14px;">
+            <div class="row">
+                <span style="padding-left: 25px">Cześć,</span>
+            </div>
+            <div class="row" style="font-size: 20px;font-weight: 600;padding-bottom: 15px">
+                <span style="padding-left: 25px">Rafał</span>
+            </div>
+            <div class="row">
+                <a href="/settings" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="fas fa-cog" style="font-size: 16px;padding-left:18px"></span></div>
+                            <div class="col-10"><span>Ustawienia konta</span></div>
+                        </div>
+                    </button>
+                </a>
+            </div>
+            <div class="row">
+                <a href="/settings/discounts" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="far fa-clipboard" style="font-size: 16px;padding-left: 20px"></span></div>
+                            <div class="col-10"><span>Moje okazje</span></div>
+
+                        </div>
+
+                    </button>
+                </a>
+            </div>
+            <div class="row">
+                <a href="/settings/messages" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="far fa-envelope" style="font-size: 16px;padding-left: 17px"></span></div>
+                            <div class="col-10"><span>Moje wiadomości</span></div>
+
+                        </div>
+
+                    </button>
+                </a>
+            </div>
+
+        </div>
+        <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
+            <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
+                Ustawienia konta
+            </div>
+            <div class="row" style="font-size:20px;font-weight:600;padding-bottom: 20px">
+                Dane konta
+            </div>
+            <div class="row" style="font-size:15px;font-weight: 500">
+                Twoje dane
+            </div>
+            <div class="row"  style="font-size:14px;padding-top: 10px;">
+                <div class="col-9" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                    <div class="row">
+                        <div class="col-4" style="font-weight: 600;">Rafał Sudoł</div>
+                        <div class="col-1 offset-7" style="padding-left: 0;padding-right: 0">
+                            <button class="edit_button" data-toggle="modal" data-target="#dane"
+                                    aria-haspopup="true" aria-expanded="false" style="padding-left: 0;width: 100%;padding-bottom: 7px;padding-top:7px">
+                                <span class="far fa-edit" style="padding-left: 6px"></span>
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom: 10px;margin-top:-12px">
+                        <div class="col-4">rafineria123@gmail.com</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="font-size:15px;font-weight: 500;padding-top: 20px">
+                Opis
+            </div>
+            <div class="row"  style="font-size:14px;padding-top: 10px;">
+                <div class="col-9" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                    <div class="row">
+                        <div class="col-11">Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł</div>
+                        <div class="col-1" style="padding-left: 0;padding-right: 0">
+                            <button class="edit_button" data-toggle="modal" data-target="#opis"
+                                    aria-haspopup="true" aria-expanded="false" style="padding-left: 0;width: 100%;padding-bottom: 7px;padding-top:7px">
+                                <span class="far fa-edit" style="padding-left: 6px"></span>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="font-size:15px;font-weight: 500;padding-top: 20px">
+                Hasło
+            </div>
+            <div class="row"  style="font-size:14px;padding-top: 10px;">
+                <div class="col-9" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                    <div class="row">
+                        <div class="col-4" style="font-weight: 900;padding-top:10px">*********</div>
+                        <div class="col-1 offset-7" style="padding-left: 0;padding-right: 0">
+                            <button class="edit_button" data-toggle="modal" data-target="#haslo"
+                                    aria-haspopup="true" aria-expanded="false" style="padding-left: 0;width: 100%;padding-bottom: 7px;padding-top:7px">
+                                <span class="far fa-edit" style="padding-left: 6px"></span>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="dane" tabindex="-1" role="dialog" aria-labelledby="daneTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                <h5 class="modal-title" id="daneLongTitle" style="padding-left: 15px">Twoje dane</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Imię</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="text" class="add_input" id="name" name="name" placeholder="Jan" value="Rafał" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.61)">Nazwisko</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="text" class="add_input" id="surname" name="surname" placeholder="Kowalski" value="Sudoł" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Email</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="text" class="add_input" id="email" name="email" placeholder="JanKowalski@gmail.com" value="rafineria123@gmail.com" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zapisz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="opis" tabindex="-1" role="dialog" aria-labelledby="opisTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                <h5 class="modal-title" id="opisLongTitle" style="padding-left: 15px">Zmiana opisu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Opis</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <textarea rows="3" COLS="72" id="description" maxlength="200" name="description" WRAP="description" placeholder="Twoj opis..." style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">Twoj opis...</textarea>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zapisz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="haslo" tabindex="-1" role="dialog" aria-labelledby="hasloTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                <h5 class="modal-title" id="hasloLongTitle" style="padding-left: 15px">Zmiana hasła</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.61)">Obecne hasło</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="password" class="add_input" id="currentpassword" name="currentpassword" placeholder="Jankowalski" value="JanKowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.61)">Nowe hasło</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="password" class="add_input" id="newpassword" name="newpassword" placeholder="Jankowalski" value="Jankowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Potwierdź hasło</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="password" class="add_input" id="newpasswordconfirmation" name="newpasswordconfirmation" placeholder="Jankowalski" value="Jankowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zmień hasło</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script
+        src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
