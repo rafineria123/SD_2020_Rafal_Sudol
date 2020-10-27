@@ -1,10 +1,419 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
+    <link type="text/css" href="/css/user_profile.css" rel="stylesheet"/>
+
 </head>
 <body>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background: linear-gradient(45deg,#e42d31,#ff0065);">
+    <div class="navbar-brand" style="cursor: pointer;" onclick="window.location='/';">
+        <div class="row">
+            <div class="col-md-4 dj text-center"><h1>NG</h1></div>
+            <div class="col-md-6">NORGIE</div>
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="nav navbar-nav ml-auto" style="padding-right: 250px">
+            <li class="nav_items" data-toggle="collapse"
+                data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a></li>
+            <li class="nav_items" data-toggle="collapse"
+                data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a></li>
+            <li style="padding-right: 50px;"sec:authorize="!isAuthenticated()">
+                <a href="/login"><button type="button" style="white-space:pre;" class="btn add_button"><span class="fas fa-user"
+                                                                                                             style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
+            </li>
+            <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post">
+                    <button style="white-space:pre;" class="btn add_button" type="submit"
+                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                </form>
+            </li>
+            <li>
+                <a href="/add/discount"> <button type="button" style="" class="btn add_button"><span class="fas fa-plus"
+                                                                                                     style="font-size: 12px;"></span>
+                    DODAJ OKAZJE
+                </button></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container-fluid" style="padding-right: 0px;padding-left: 0px">
+
+    <div class="row collapse"  id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
+        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
+            <div class="row">
+                <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row collapse"  id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
+        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
+            <div class="row">
+                <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
+                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container" style="padding-top: 70px">
+
+    <div class="row">
+
+        <div class="col-3" style="font-weight: 400;font-size: 14px;">
+            <div class="row">
+                <span style="padding-left: 25px">Cześć,</span>
+            </div>
+            <div class="row" style="font-size: 20px;font-weight: 600;padding-bottom: 15px">
+                <span style="padding-left: 25px">Rafał</span>
+            </div>
+            <div class="row">
+                <a href="/settings" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="fas fa-cog" style="font-size: 16px;padding-left:18px"></span></div>
+                            <div class="col-10"><span>Ustawienia konta</span></div>
+                        </div>
+                    </button>
+                </a>
+            </div>
+            <div class="row">
+                <a href="/settings/discounts" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="far fa-clipboard" style="font-size: 16px;padding-left: 20px"></span></div>
+                            <div class="col-10"><span>Moje okazje</span></div>
+
+                        </div>
+
+                    </button>
+                </a>
+            </div>
+            <div class="row">
+                <a href="/settings/messages" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="far fa-envelope" style="font-size: 16px;padding-left: 17px"></span></div>
+                            <div class="col-10"><span>Moje wiadomości</span></div>
+
+                        </div>
+
+                    </button>
+                </a>
+            </div>
+
+        </div>
+        <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
+            <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
+                Moje okazje
+            </div>
+            <div class="row" style="padding-top: 10px;padding-bottom: 10px;padding-left:10px;background-color: #f4f4f5;border-radius: 6px;">
+
+                <a th:href="|${sort_buttons_prefix +'top-rated'}|" style="padding-left: 7px">
+
+                    <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                            class="btn sort_button sort_button_activated">Najlepiej oceniane
+                    </button>
+                    <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                            class="btn sort_button ">Najlepiej oceniane
+                    </button>
+                </a>
+                <a th:href="|${sort_buttons_prefix +'most-comments'}|" style="padding-left: 7px">
+                    <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
+                            class="btn sort_button">Najczęściej komentowane
+                    </button>
+                    <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
+                            class="btn sort_button sort_button_activated">Najczęściej komentowane
+                    </button>
+                </a>
+                <a th:href="|${sort_buttons_prefix +'date'}|" style="padding-left: 7px">
+                    <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button_activated">Niedawno dodane
+                    </button>
+                    <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button">Niedawno dodane
+                    </button>
+                </a>
+            </div>
+            <div style="height: 15px"></div>
+            <div  th:each="discount : ${list_of_discounts}">
+            <div style="height: 25px"></div>
+            <div class="row" style="box-shadow: 0px 2px 6px 1px rgb(173, 173, 173);border-radius: 15px">
+
+                <div class="col-4" style="border-radius: 15px 0px 0px 15px;background-color: #e5e5e6">
+
+                    <div class="row" style="padding-left: 20px;padding-top:20px;">
+
+                        <span style="font-weight: 600;font-size: 16px" th:text="${discount.getStatus()}">Zatwierdzone</span>
+
+                    </div>
+
+                    <div class="row" style="padding-left: 20px;padding-top:10px;">
+
+                        <span style="font-weight: 400;font-size: 13px;">Wygasa:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getExpire_date_formated()}"> 29.10.2020</span>
+
+                    </div>
+
+                    <div class="row" style="padding-left: 20px;">
+                        <div class="col-4" style="padding-left: 0"><span class="fas fa-comments" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" th:text="${discount.getCommentsSize()}">5</span></div>
+                        <div class="col-4" style="padding-left: 0"><span class="fas fa-plus" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" th:text="${discount.getRatingsSize()}">25</span></div>
+
+                    </div>
+
+                    <div class="row" style="padding-left: 20px;padding-bottom: 20px;padding-top:10px">
+
+
+                        <span style="font-weight: 500;font-size: 15px">id: </span><span style="font-weight: 500;font-size: 15px"th:text="${discount.getDiscount_id()}">3324176</span>
+
+                    </div>
+
+                </div>
+                <div class="col-8">
+                    <div class="row" style="height: 100%">
+
+                        <div class="col-2 align-self-center" style="height: 66px">
+
+                            <img src="/images/discount_6.jpg" th:src="|/${discount.getImage_url()}|" class="item_image_discount"><img>
+
+                        </div>
+
+                        <div class="col-9 align-self-center">
+
+                            <span style="font-weight: 400;font-size: 16px;color: rgba(0,0,0,0.71)" th:text="${discount.getTitle()}">Płyn do chłodnic samochodowych</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            </div>
+
+            <nav aria-label="Page navigation example" style="padding-top: 50px">
+                <ul class="pagination justify-content-center">
+
+
+                    <li th:if="${number_of_page == 1}" class="page-item disabled" style="padding-left: 5px">
+                        <a class="page-link" href="/page/1" tabindex="-1">Poprzednia</a>
+                    </li>
+                    <li th:if="${number_of_page != 1}" class="page-item" style="padding-left: 5px">
+
+                        <a class="page-link" th:href="@{|${next_and_previous.replaceFirst('id',number_of_page -1)}|}">Poprzednia</a>
+                    </li>
+
+                    <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
+                        <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
+                            <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
+                        </li>
+                        <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
+                            <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
+                        </li>
+                    </div>
+
+
+
+                    <li th:if="${number_of_page == quantity_of_pages}" class="page-item disabled" style="padding-left: 5px">
+                        <a class="page-link" href="/page/1" tabindex="-1">Następna</a>
+                    </li>
+                    <li th:if="${number_of_page != quantity_of_pages}" class="page-item" style="padding-left: 5px">
+
+                        <a class="page-link" th:href="@{${next_and_previous.replaceFirst('id',number_of_page+1)}}">Następna</a>
+                    </li>
+
+
+                </ul>
+            </nav>
+
+        </div>
+
+
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="dane" tabindex="-1" role="dialog" aria-labelledby="daneTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                <h5 class="modal-title" id="daneLongTitle" style="padding-left: 15px">Twoje dane</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Imię</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="text" class="add_input" id="name" name="name" placeholder="Jan" value="Rafał" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.61)">Nazwisko</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="text" class="add_input" id="surname" name="surname" placeholder="Kowalski" value="Sudoł" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Email</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="text" class="add_input" id="email" name="email" placeholder="JanKowalski@gmail.com" value="rafineria123@gmail.com" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zapisz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="opis" tabindex="-1" role="dialog" aria-labelledby="opisTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                <h5 class="modal-title" id="opisLongTitle" style="padding-left: 15px">Zmiana opisu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Opis</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <textarea rows="3" COLS="72" id="description" maxlength="200" name="description" WRAP="description" placeholder="Twoj opis..." style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">Twoj opis...</textarea>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zapisz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="haslo" tabindex="-1" role="dialog" aria-labelledby="hasloTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                <h5 class="modal-title" id="hasloLongTitle" style="padding-left: 15px">Zmiana hasła</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.61)">Obecne hasło</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="password" class="add_input" id="currentpassword" name="currentpassword" placeholder="Jankowalski" value="JanKowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.61)">Nowe hasło</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="password" class="add_input" id="newpassword" name="newpassword" placeholder="Jankowalski" value="Jankowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Potwierdź hasło</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="password" class="add_input" id="newpasswordconfirmation" name="newpasswordconfirmation" placeholder="Jankowalski" value="Jankowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zmień hasło</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script
+        src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>

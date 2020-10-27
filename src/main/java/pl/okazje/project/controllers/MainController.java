@@ -48,8 +48,8 @@ public class MainController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
-        Page<Discount> allProducts = discountRepository.findAll(firstPageWithTwoElements);
+        Pageable pageable = PageRequest.of(0, 2, Sort.by("creationdate").descending());
+        Page<Discount> allProducts = discountRepository.findAll(pageable);
 
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("list_of_discounts", allProducts.getContent());
@@ -140,8 +140,10 @@ public class MainController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        Pageable firstPageWithTwoElements = PageRequest.of(Integer.parseInt(id)-1, 2);
-        Page<Discount> allProducts = discountRepository.findAll(firstPageWithTwoElements);
+
+        Pageable pageable = PageRequest.of(Integer.parseInt(id)-1, 2, Sort.by("creationdate").descending());
+        Page<Discount> allProducts = discountRepository.findAll(pageable);
+
 
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("list_of_discounts", allProducts.getContent());
@@ -417,6 +419,8 @@ public class MainController {
     ) throws ParseException, IOException {
         Discount discount = new Discount();
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
             String uploadDir = "/static/images";
             String realPath = request.getServletContext().getRealPath(uploadDir);
@@ -596,6 +600,8 @@ public class MainController {
     public String addrate(@ModelAttribute("discountidadd") String discountid){
 
         System.out.println(discountid);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
         Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
         for(Rating r:discount.getRatings()){
@@ -623,6 +629,8 @@ public class MainController {
     public String removerate(@ModelAttribute("discountidremove") String discountid){
 
         Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
         for(Rating r:discount.getRatings()){
 
             if(r.getUser().getUser_id().equals(uzytkownik.getUser_id())){
@@ -639,7 +647,8 @@ public class MainController {
 
     @PostMapping("/addcomment")
     public String addcomment(@ModelAttribute("discountidaddcomment") String discountaddcomment, @ModelAttribute("comment") String comment){
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
         Comment comment1 = new Comment();
         comment1.setDiscount(discountRepository.findById(Long.parseLong(discountaddcomment)).get());
         comment1.setUser(uzytkownik);
@@ -666,7 +675,8 @@ public class MainController {
 
     @PostMapping("/ratecomment")
     public String ratecomment(@ModelAttribute("commentid") String commentid){
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
         Comment comment = commentRepository.findById((Long.parseLong(commentid))).get();
         for(Rating r:comment.getRatings()){
 
@@ -700,8 +710,113 @@ public class MainController {
     public ModelAndView settingsDiscounts(){
 
         ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        PagedListHolder page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
+        page.setPageSize(2); // number of items per page
+        page.setPage(0);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("next_and_previous","/settings/discounts/page/id");
+        modelAndView.addObject("picked_sort", 3);
+        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=page.getPageCount();i++){
+
+            listOfAdresses.add("/settings/discounts/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+
+    }
+
+    @GetMapping("/settings/discounts/page/{id}")
+    public ModelAndView pageSettingsDiscounts(@PathVariable("id") String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        PagedListHolder page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
+        page.setPageSize(2); // number of items per page
+        page.setPage(Integer.parseInt(id)-1);
+        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous","/settings/discounts/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1;i<=page.getPageCount();i++){
+
+            listOfAdresses.add("/settings/discounts/page/"+i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+
+    @GetMapping("/settings/discounts/page/{id}/sort/{sort}")
+    public ModelAndView pageSettingsDiscountsSort( @PathVariable("id") String id, @PathVariable("sort") String sort) {
+        List<String> listOfAdresses = new ArrayList<>();
+        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        PagedListHolder page = null;
+        if(sort.equals("date")){
+            modelAndView.addObject("picked_sort", 3);
+            modelAndView.addObject("next_and_previous","/settings/discounts/page/id/sort/date");
+            page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
+            page.setPageSize(2);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/settings/discounts/page/"+i+"/sort/date");
+
+            }
+        }
+
+        if(sort.equals("most-comments")){
+            modelAndView.addObject("picked_sort", 2);
+            modelAndView.addObject("next_and_previous","/settings/discounts/page/id/sort/most-comments");
+            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenUserId(uzytkownik.getUser_id()));
+            page.setPageSize(2);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/settings/discounts/page/"+i+"/sort/most-comments");
+
+            }
+        }
+
+        if(sort.equals("top-rated")){
+            modelAndView.addObject("picked_sort", 1);
+            modelAndView.addObject("next_and_previous","/settings/discounts/page/id/sort/top-rated");
+            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenUserId(uzytkownik.getUser_id()));
+            page.setPageSize(2);
+            for (int i = 1;i<=page.getPageCount();i++){
+
+                listOfAdresses.add("/settings/discounts/page/"+i+"/sort/top-rated");
+
+            }
+        }
+
+        page.setPage(Integer.parseInt(id)-1);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+
+        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
+
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
         return modelAndView;
 
     }

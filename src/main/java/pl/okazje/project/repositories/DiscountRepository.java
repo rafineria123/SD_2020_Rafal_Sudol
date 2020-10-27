@@ -1,5 +1,7 @@
 package pl.okazje.project.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -92,6 +94,27 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
             " from discount where discount.content LIKE ?1) ORDER BY c.disc_count DESC" ,
             nativeQuery = true)
     public List<Discount> sortDiscountByRatingWithGivenSearchInput(String search);
+
+    @Query(value = "Select * from discount where user_id=?1" ,
+            nativeQuery = true)
+    public List<Discount> discountByUserId(Integer id);
+
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
+            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY d.creation_date DESC" ,
+            nativeQuery = true)
+    public List<Discount> sortDiscountByDateWithGivenUserId(Integer id);
+
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
+            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY c.disc_count DESC" ,
+            nativeQuery = true)
+    public List<Discount> sortDiscountByCommentsWithGivenUserId(Integer id);
+
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM rating" +
+            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY c.disc_count DESC" ,
+            nativeQuery = true)
+    public List<Discount> sortDiscountByRatingWithGivenUserId(Integer id);
+
+
 
 
 }
