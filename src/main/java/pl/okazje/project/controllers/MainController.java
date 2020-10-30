@@ -597,7 +597,7 @@ public class MainController {
     }
 
     @PostMapping("/addrate")
-    public String addrate(@ModelAttribute("discountidadd") String discountid){
+    public String addrate(@ModelAttribute("discountidadd") String discountid, @ModelAttribute("redirect") String redirect){
 
         System.out.println(discountid);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -621,12 +621,12 @@ public class MainController {
         newrating.setDiscount(discount);
         ratingRepository.save(newrating);
 
-        return "redirect:/";
+        return "redirect:/"+redirect;
 
     }
 
     @PostMapping("/removerate")
-    public String removerate(@ModelAttribute("discountidremove") String discountid){
+    public String removerate(@ModelAttribute("discountidremove") String discountid,@ModelAttribute("redirect_remove") String redirect){
 
         Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -641,7 +641,7 @@ public class MainController {
 
         }
 
-        return "redirect:/";
+        return "redirect:/"+redirect;
 
     }
 
@@ -714,7 +714,7 @@ public class MainController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
+        PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenUserId(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
         modelAndView.addObject("list_of_discounts", page.getPageList());
@@ -774,7 +774,7 @@ public class MainController {
         if(sort.equals("date")){
             modelAndView.addObject("picked_sort", 3);
             modelAndView.addObject("next_and_previous","/settings/discounts/page/id/sort/date");
-            page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
+            page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenUserId(uzytkownik.getUser_id()));
             page.setPageSize(2);
             for (int i = 1;i<=page.getPageCount();i++){
 
@@ -820,6 +820,18 @@ public class MainController {
         return modelAndView;
 
     }
+
+    @GetMapping("/settings/messages")
+    public ModelAndView messages(){
+
+        ModelAndView modelAndView = new ModelAndView("user_profile_messages");
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
+
+    }
+
+
 
 
 

@@ -230,6 +230,9 @@
                                        value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
                                                                              id="discountidadd"
                                                                              th:value="${discount.getDiscount_id()}">
+                                <input type="hidden" name="redirect"
+                                       id="redirect"
+                                       value="">
                             </form>
                             <span
                                     style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
@@ -239,6 +242,9 @@
                                     value="&#xf068;" type="submit"><input type="hidden" name="discountidremove"
                                                                           id="discountidremove"
                                                                           th:value="${discount.getDiscount_id()}">
+                                <input type="hidden" name="redirect_remove"
+                                       id="redirect_remove"
+                                       value="">
                             </form>
                         </div>
                         <div class="row" sec:authorize="!isAuthenticated()">

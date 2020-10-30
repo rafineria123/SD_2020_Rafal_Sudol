@@ -108,7 +108,7 @@
             </div>
             <div class="row">
                 <a href="/settings/discounts" style="width: 100%">
-                    <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
                         <div class="row">
                             <div class="col-2 text-center"><span class="far fa-clipboard" style="font-size: 16px;padding-left: 20px"></span></div>
                             <div class="col-10"><span>Moje okazje</span></div>
@@ -120,7 +120,7 @@
             </div>
             <div class="row">
                 <a href="/settings/messages" style="width: 100%">
-                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
                         <div class="row">
                             <div class="col-2 text-center"><span class="far fa-envelope" style="font-size: 16px;padding-left: 17px"></span></div>
                             <div class="col-10"><span>Moje wiadomości</span></div>
@@ -134,127 +134,58 @@
         </div>
         <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
             <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
-                Moje okazje
+                Moje wiadomości
             </div>
-            <div class="row" style="padding-top: 10px;padding-bottom: 10px;padding-left:10px;background-color: #f4f4f5;border-radius: 6px;">
 
-                <a th:href="|${sort_buttons_prefix +'top-rated'}|" style="padding-left: 7px">
-
-                    <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                            class="btn sort_button sort_button_activated">Najlepiej oceniane
-                    </button>
-                    <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                            class="btn sort_button ">Najlepiej oceniane
-                    </button>
-                </a>
-                <a th:href="|${sort_buttons_prefix +'most-comments'}|" style="padding-left: 7px">
-                    <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
-                            class="btn sort_button">Najczęściej komentowane
-                    </button>
-                    <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
-                            class="btn sort_button sort_button_activated">Najczęściej komentowane
-                    </button>
-                </a>
-                <a th:href="|${sort_buttons_prefix +'date'}|" style="padding-left: 7px">
-                    <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button_activated">Niedawno dodane
-                    </button>
-                    <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button">Niedawno dodane
-                    </button>
-                </a>
-            </div>
-            <div style="height: 15px"></div>
-            <div  th:each="discount : ${list_of_discounts}">
-            <div style="height: 25px"></div>
-            <a href="" th:href="@{|/discount/${discount.getDiscount_id()}|}" style="text-decoration:none;color: black">
-            <div class="row" style="box-shadow: 0px 2px 6px 1px rgb(173, 173, 173);border-radius: 15px">
-
-                <div class="col-4" style="border-radius: 15px 0px 0px 15px;background-color: #e5e5e6">
-
-                    <div class="row" style="padding-left: 20px;padding-top:20px;">
-
-                        <span style="font-weight: 600;font-size: 16px" th:text="${discount.getStatus()}">Zatwierdzone</span>
-
+            <div class="row"  style="font-size:14px;padding-top: 10px;">
+                <div class="col-7" style="border: 2px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                    <div class="row" style="padding-left: 8px">
+                        <div class="" style="width:auto;margin-top: -26px;z-index: 2;background-color: white;color: rgba(8,8,8,0.72)">Nowa wiadomość</div>
                     </div>
+                    <div class="row">
+                        <div class="col-3 align-self-center"><img src="/images/user.png"class="user_image"><img></div>
+                        <div class="col-8 align-self-center" style="font-weight: 600;">
+                            <div class="row">
 
-                    <div class="row" style="padding-left: 20px;padding-top:10px;">
+                                TrailBlazer
 
-                        <span style="font-weight: 400;font-size: 13px;">Wygasa:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getExpire_date_formated()}"> 29.10.2020</span>
+                            </div>
+                            <div class="row">
 
-                    </div>
+                                <span style="margin-top:-3px;font-size: 12px;color: rgba(8,8,8,0.72)">
+                                    Ty: hejka, co tam? Chcesz cos z Avon'u?
+                                </span>
 
-                    <div class="row" style="padding-left: 20px;">
-                        <div class="col-4" style="padding-left: 0"><span class="fas fa-comments" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" th:text="${discount.getCommentsSize()}">5</span></div>
-                        <div class="col-4" style="padding-left: 0"><span class="fas fa-plus" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" th:text="${discount.getRatingsSize()}">25</span></div>
-
-                    </div>
-
-                    <div class="row" style="padding-left: 20px;padding-bottom: 20px;padding-top:10px">
-
-
-                        <span style="font-weight: 500;font-size: 15px">id: </span><span style="font-weight: 500;font-size: 15px"th:text="${discount.getDiscount_id()}">3324176</span>
-
+                            </div>
+                        </div>
                     </div>
 
                 </div>
-                <div class="col-8">
-                    <div class="row" style="height: 100%">
+            </div>
 
-                        <div class="col-2 align-self-center" style="height: 66px">
+            <div class="row"  style="font-size:14px;padding-top: 10px;">
+                <div class="col-7" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                    <div class="row">
+                        <div class="col-3 align-self-center"><img src="/images/user.png"class="user_image"><img></div>
+                        <div class="col-8 align-self-center" style="font-weight: 600;">
+                            <div class="row">
 
-                            <img src="/images/discount_6.jpg" th:src="|/${discount.getImage_url()}|" class="item_image_discount"><img>
+                                JanzusKowalski123
 
+                            </div>
+                            <div class="row">
+
+                                <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56)">
+                                    Ty: rafineria123@gmail.com
+                                </span>
+
+                            </div>
                         </div>
-
-                        <div class="col-9 align-self-center">
-
-                            <span style="font-weight: 400;font-size: 16px;color: rgba(0,0,0,0.71)" th:text="${discount.getTitle()}">Płyn do chłodnic samochodowych</span>
-
-                        </div>
-
                     </div>
 
                 </div>
-
-            </div>
-            </a>
             </div>
 
-            <nav aria-label="Page navigation example" style="padding-top: 50px">
-                <ul class="pagination justify-content-center">
-
-
-                    <li th:if="${number_of_page == 1}" class="page-item disabled" style="padding-left: 5px">
-                        <a class="page-link" href="/page/1" tabindex="-1">Poprzednia</a>
-                    </li>
-                    <li th:if="${number_of_page != 1}" class="page-item" style="padding-left: 5px">
-
-                        <a class="page-link" th:href="@{|${next_and_previous.replaceFirst('id',number_of_page -1)}|}">Poprzednia</a>
-                    </li>
-
-                    <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
-                        <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
-                            <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
-                        </li>
-                        <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
-                            <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
-                        </li>
-                    </div>
-
-
-
-                    <li th:if="${number_of_page == quantity_of_pages}" class="page-item disabled" style="padding-left: 5px">
-                        <a class="page-link" href="/page/1" tabindex="-1">Następna</a>
-                    </li>
-                    <li th:if="${number_of_page != quantity_of_pages}" class="page-item" style="padding-left: 5px">
-
-                        <a class="page-link" th:href="@{${next_and_previous.replaceFirst('id',number_of_page+1)}}">Następna</a>
-                    </li>
-
-
-                </ul>
-            </nav>
 
         </div>
 
@@ -263,14 +194,6 @@
     </div>
 
 </div>
-
-
-
-
-
-
-
-
 
 
 

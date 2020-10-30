@@ -100,7 +100,7 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
     public List<Discount> discountByUserId(Integer id);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
-            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY d.creation_date DESC" ,
+            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY d.creationdate DESC" ,
             nativeQuery = true)
     public List<Discount> sortDiscountByDateWithGivenUserId(Integer id);
 
@@ -113,6 +113,8 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
             " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY c.disc_count DESC" ,
             nativeQuery = true)
     public List<Discount> sortDiscountByRatingWithGivenUserId(Integer id);
+
+
 
 
 

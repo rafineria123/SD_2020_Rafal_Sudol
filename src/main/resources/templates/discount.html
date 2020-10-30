@@ -129,11 +129,17 @@
                     <form th:action="@{/addrate}" method="post">
                         <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
                                                                                                                                             th:value="${discount.getDiscount_id()}">
+                        <input type="hidden" name="redirect"
+                               id="redirect"
+                               value="" th:value="|discount/${discount.getDiscount_id()}|">
                     </form>
                     <span
                             style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
                     <form th:action="@{/removerate}" method="post"><input
                             class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
+                        <input type="hidden" name="redirect_remove"
+                               id="redirect_remove"
+                               th:value="|discount/${discount.getDiscount_id()}|">
                     </form>
                     </div>
                         <div class="row" style="padding-left: 30px" sec:authorize="!isAuthenticated()">
@@ -149,19 +155,7 @@
                         </div>
                     </div>
                 </div>
-                <!--
-                <div class="row" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/addrate}" method="post">
-                            <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
-                                                                                                                     th:value="${discount.getDiscount_id()}">
-                        </form>
-                        <span
-                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
-                        <form th:action="@{/removerate}" method="post"><input
-                            class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
-                        </form>
-                        </div>
-                !-->
+
                 <div class="col-md-5 offset-md-1">
                     <span style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
                     <span style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
