@@ -822,7 +822,7 @@ public class MainController {
     }
 
     @GetMapping("/settings/messages")
-    public ModelAndView messages(){
+    public ModelAndView profileMessages(){
 
         ModelAndView modelAndView = new ModelAndView("user_profile_messages");
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -831,6 +831,15 @@ public class MainController {
 
     }
 
+    @GetMapping("/messages")
+    public ModelAndView messages(){
+
+        ModelAndView modelAndView = new ModelAndView("user_messages");
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
+
+    }
 
 
 
