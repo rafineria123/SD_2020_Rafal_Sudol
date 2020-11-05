@@ -841,6 +841,15 @@ public class MainController {
 
     }
 
+    @GetMapping("/profile")
+    public ModelAndView profile(){
+
+        ModelAndView modelAndView = new ModelAndView("profile");
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
+
+    }
 
 
 

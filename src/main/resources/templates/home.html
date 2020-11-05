@@ -176,18 +176,18 @@
     </div>
     <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
-        <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}"
-             th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
-             style="padding-bottom: 30px;"
-             th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
-            <div class="col-md-12 item_div">
-                <!-- Brand icon-->
-                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
-                    <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
-                                th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
-                    </div>
-                </div>
+                <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}"
+                     th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
+                     style="padding-bottom: 30px;"
+                     th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
+                    <div class="col-md-12 item_div">
+                        <!-- Brand icon-->
+                        <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                            <div class="col-md-12">
+                                <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
+                                        th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
+                            </div>
+                        </div>
                 <!-- Discount image-->
                 <div class="row item_parts_padding">
 
