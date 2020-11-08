@@ -6,10 +6,12 @@ import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.*;
@@ -40,6 +42,10 @@ public class MainController {
     RatingRepository ratingRepository;
     @Autowired
     CommentRepository commentRepository;
+    @Autowired
+    InformationRepository informationRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     private static User uzytkownik = null;
 
@@ -665,8 +671,7 @@ public class MainController {
         User user1 = new User();
         user1.setCr_date(new Date());
         user1.setLogin(login);
-        BCryptPasswordEncoder enkoder = new BCryptPasswordEncoder();
-        user1.setPassword(enkoder.encode(password));
+        user1.setPassword(passwordEncoder.encode(password));
         user1.setEmail(email);
         userRepository.save(user1);
 
@@ -699,9 +704,16 @@ public class MainController {
     @GetMapping("/settings")
     public ModelAndView settings(){
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        if (uzytkownik.getInformation()==null){
+            uzytkownik.setInformation(new Information());
+        }
+
         ModelAndView modelAndView = new ModelAndView("user_profile_main");
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("user",uzytkownik);
         return modelAndView;
 
     }
@@ -721,6 +733,7 @@ public class MainController {
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("number_of_page", 1);
         modelAndView.addObject("next_and_previous","/settings/discounts/page/id");
         modelAndView.addObject("picked_sort", 3);
@@ -752,6 +765,7 @@ public class MainController {
         modelAndView.addObject("number_of_page", Integer.parseInt(id));
         modelAndView.addObject("next_and_previous","/settings/discounts/page/id");
         modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
+        modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("picked_sort", 3);
         List<String> listOfAdresses = new ArrayList<>();
         for (int i = 1;i<=page.getPageCount();i++){
@@ -813,6 +827,7 @@ public class MainController {
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         modelAndView.addObject("quantity_of_pages", page.getPageCount());
         modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("user", uzytkownik);
 
         modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
 
@@ -824,7 +839,12 @@ public class MainController {
     @GetMapping("/settings/messages")
     public ModelAndView profileMessages(){
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+
+
         ModelAndView modelAndView = new ModelAndView("user_profile_messages");
+        modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         return modelAndView;
@@ -850,6 +870,90 @@ public class MainController {
         return modelAndView;
 
     }
+
+    @PostMapping("changeUserDetails")
+    public RedirectView changeUserDetails(@ModelAttribute("name") String name,@ModelAttribute("surname") String surname,@ModelAttribute("email") String email, RedirectAttributes redir) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+
+        uzytkownik.setEmail(email);
+        Information info = new Information();
+        if (uzytkownik.getInformation() == null) {
+
+            info.setName(name);
+            info.setSurname(surname);
+            info.setUser(uzytkownik);
+
+        } else {
+            info = uzytkownik.getInformation();
+            info.setName(name);
+            info.setSurname(surname);
+        }
+
+        informationRepository.save(info);
+        uzytkownik.setInformation(info);
+        userRepository.save(uzytkownik);
+
+        RedirectView redirectView= new RedirectView("/settings",true);
+        redir.addFlashAttribute("status","Zmiany pomyślnie zapisane.");
+        return redirectView;
+    }
+
+    @PostMapping("changeDescription")
+    public RedirectView changeDescription(@ModelAttribute("description") String description, RedirectAttributes redir) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+
+        Information info = new Information();
+        if (uzytkownik.getInformation() == null) {
+
+            info.setDescription(description);
+
+
+        } else {
+            info = uzytkownik.getInformation();
+            info.setDescription(description);
+        }
+
+        informationRepository.save(info);
+        uzytkownik.setInformation(info);
+        userRepository.save(uzytkownik);
+
+        RedirectView redirectView= new RedirectView("/settings",true);
+        redir.addFlashAttribute("status","Zmiany pomyślnie zapisane.");
+        return redirectView;
+    }
+
+    @PostMapping("changePassword")
+    public RedirectView changePassword(@ModelAttribute("currentpassword") String currentpassword, @ModelAttribute("newpassword") String newpassword, @ModelAttribute("newpasswordconfirmation") String newpasswordconfirmation, RedirectAttributes redir) {
+
+        RedirectView redirectView= new RedirectView("/settings",true);
+
+        if (!newpassword.equals(newpasswordconfirmation)){
+            redir.addFlashAttribute("bad_status","Hasła muszą się powtarzać w dwóch ostatnich polach.");
+            return redirectView;
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+
+        if(!passwordEncoder.matches(currentpassword,uzytkownik.getPassword())){
+
+            redir.addFlashAttribute("bad_status","Twoje obecne hasło się nie zgadza.");
+            return redirectView;
+
+        }
+
+        uzytkownik.setPassword(passwordEncoder.encode(newpassword));
+        userRepository.save(uzytkownik);
+        redir.addFlashAttribute("status","Twoje hasło zostało zmienione.");
+        return redirectView;
+
+    }
+
+
 
 
 

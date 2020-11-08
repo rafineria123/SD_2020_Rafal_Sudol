@@ -17,14 +17,59 @@
 
 }
 
-
-
 .user_image{
 
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
 
 }
+
+.left_message{
+
+    color: black;
+    font-size: 17px;
+    background-color: #eaeaea;
+    border: 0;
+    border-radius: 13px;
+    width: auto;
+    margin-top: 4px;
+    padding: 2px 15px;
+    max-width: 60%;
+    overflow-wrap: break-word;
+
+}
+
+.right_message{
+
+    color: white;
+    font-size: 17px;
+    background: linear-gradient(45deg,#e42d31,#ff0065);
+    border: 0;
+    border-radius: 13px;
+    width: auto;
+    margin-top: 4px;
+    padding: 2px 15px;
+    max-width: 60%;
+    overflow-wrap: break-word;
+
+}
+
+.add_input:focus{
+
+    outline:0!important;
+    box-shadow: none!important;
+
+}
+
+.over_items{
+
+    color: #524962;
+    text-align: left;
+    font-size: 25px;
+    font-weight: 900;
+
+}
+
 
 .page-link{
 
@@ -32,6 +77,27 @@
     color: #7a7a7a;
     background-color: #f4f4f5;
 
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: none;
+    border-radius: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg,#e42d31,#ff0065);
+    border-radius: 15px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #cd282c, #cd0046);
 }
 
 .page-item:focus{
@@ -235,35 +301,6 @@
 
 }
 
-.alert {
-    padding: 20px;
-    background-color: rgba(27, 133, 31, 0.45);
-    color: white;
-    border-radius: 10px;
-}
-
-.closebtn {
-    margin-left: 15px;
-    color: white;
-    font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.bad_alert {
-    border-radius: 10px;
-    padding: 20px;
-    background-color: #f44336;
-    color: white;
-}
-
-.closebtn:hover {
-    color: black;
-}
-
 .sort_button{
 
     border-radius: 20px;
@@ -272,6 +309,29 @@
     color: #989898;
     background-color: white;
     box-shadow: 0px 2px 3px 1px rgba(220,220,220,1);
+
+}
+
+.comm_disc_date{
+
+    font-weight: 600;
+    font-size: 15px;
+
+}
+
+.comm_disc_date_number{
+
+    padding-left: 5px;
+    font-weight: 600;
+
+
+}
+
+.sort_div{
+
+    border-radius: 6px;
+    width: 100%;
+    /*box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);*/
 
 }
 

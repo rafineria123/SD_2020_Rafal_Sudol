@@ -14,14 +14,14 @@ public class User {
     private String login;
     @Column(length = 700)
     private String password;
-    private String email;
+    private String email = "";
     private String status;
     private String ROLE = "USER";
     private Date cr_date;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "information_id")
-    private Information information;
+    private Information information = new Information();
 
     @ManyToOne
     @JoinColumn(name="rank_id", nullable=true)
@@ -40,14 +40,17 @@ public class User {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
-    @JoinTable(name = "User_Message",
+    @JoinTable(name = "User_Conversation",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "message_id")
+            inverseJoinColumns = @JoinColumn(name = "conversation_id")
     )
-    private Set<Message> messages;
+    private Set<Conversation> conversations;
 
     @OneToMany(mappedBy="user")
     private Set<Rating> ratings;
+
+    @OneToMany(mappedBy="user")
+    private Set<Message> messages;
 
 
 
@@ -148,6 +151,14 @@ public class User {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Set<Conversation> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(Set<Conversation> conversations) {
+        this.conversations = conversations;
     }
 
     public Set<Message> getMessages() {

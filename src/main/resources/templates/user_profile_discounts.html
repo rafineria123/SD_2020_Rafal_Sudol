@@ -94,13 +94,13 @@
                 <span style="padding-left: 25px">Cześć,</span>
             </div>
             <div class="row" style="font-size: 20px;font-weight: 600;padding-bottom: 15px">
-                <span style="padding-left: 25px">Rafał</span>
+                <span style="padding-left: 25px" th:text="${user.getLogin()}">Rafał</span>
             </div>
             <div class="row">
                 <a href="/settings" style="width: 100%">
                     <button type="button" style="width: 100%" class="text-left left_menu_button">
                         <div class="row">
-                            <div class="col-2 text-center"><span class="fas fa-cog" style="font-size: 16px;padding-left:18px"></span></div>
+                            <div class="col-2 text-center"><span class="fas fa-sliders-h" style="font-size: 16px;padding-left:18px"></span></div>
                             <div class="col-10"><span>Ustawienia konta</span></div>
                         </div>
                     </button>

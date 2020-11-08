@@ -94,13 +94,13 @@
                 <span style="padding-left: 25px">Cześć,</span>
             </div>
             <div class="row" style="font-size: 20px;font-weight: 600;padding-bottom: 15px">
-                <span style="padding-left: 25px">Rafał</span>
+                <span style="padding-left: 25px" th:text="${user.getLogin()}">Rafał</span>
             </div>
             <div class="row">
                 <a href="/settings" style="width: 100%">
                     <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
                         <div class="row">
-                            <div class="col-2 text-center"><span class="fas fa-cog" style="font-size: 16px;padding-left:18px"></span></div>
+                            <div class="col-2 text-center"><span class="fas fa-sliders-h" style="font-size: 16px;padding-left:18px"></span></div>
                             <div class="col-10"><span>Ustawienia konta</span></div>
                         </div>
                     </button>
@@ -132,10 +132,32 @@
             </div>
 
         </div>
+
         <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
+            <div class="row" th:if="${status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
+                    <div class="col-9" style="padding-left: 0px;padding-right: 0px">
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${status.toString()}"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" th:if="${bad_status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;">
+                    <div class="col-9" style="padding-left: 0px;padding-right: 0px;padding-bottom: 15px">
+                        <div class="bad_alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${bad_status.toString()}"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
                 Ustawienia konta
             </div>
+
             <div class="row" style="font-size:20px;font-weight:600;padding-bottom: 20px">
                 Dane konta
             </div>
@@ -145,7 +167,7 @@
             <div class="row"  style="font-size:14px;padding-top: 10px;">
                 <div class="col-9" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
                     <div class="row">
-                        <div class="col-4" style="font-weight: 600;">Rafał Sudoł</div>
+                        <div class="col-4" style="font-weight: 600;"th:text="|${user.getInformation().getName()} ${user.getInformation().getSurname()}|">Rafał Sudoł</div>
                         <div class="col-1 offset-7" style="padding-left: 0;padding-right: 0">
                             <button class="edit_button" data-toggle="modal" data-target="#dane"
                                     aria-haspopup="true" aria-expanded="false" style="padding-left: 0;width: 100%;padding-bottom: 7px;padding-top:7px">
@@ -155,7 +177,7 @@
                         </div>
                     </div>
                     <div class="row" style="padding-bottom: 10px;margin-top:-12px">
-                        <div class="col-4">rafineria123@gmail.com</div>
+                        <div class="col-4" th:text="${user.getEmail()}">rafineria123@gmail.com</div>
                     </div>
                 </div>
             </div>
@@ -165,7 +187,7 @@
             <div class="row"  style="font-size:14px;padding-top: 10px;">
                 <div class="col-9" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
                     <div class="row">
-                        <div class="col-11">Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł</div>
+                        <div class="col-11" th:text="${user.getInformation().getDescription()}">Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł</div>
                         <div class="col-1" style="padding-left: 0;padding-right: 0">
                             <button class="edit_button" data-toggle="modal" data-target="#opis"
                                     aria-haspopup="true" aria-expanded="false" style="padding-left: 0;width: 100%;padding-bottom: 7px;padding-top:7px">
@@ -205,22 +227,25 @@
 
 <div class="modal fade" id="dane" tabindex="-1" role="dialog" aria-labelledby="daneTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+
+        <form th:action="@{/changeUserDetails}" method="post" class="modal-content">
             <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
                 <h5 class="modal-title" id="daneLongTitle" style="padding-left: 15px">Twoje dane</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
                 <div class="container">
+
                     <div class="row" style="padding-left: 36px">
                         <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Imię</div>
 
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="name" name="name" placeholder="Jan" value="Rafał" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="text" class="add_input" id="name" name="name" placeholder="" th:value="${user.getInformation().getName()}" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -231,7 +256,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="surname" name="surname" placeholder="Kowalski" value="Sudoł" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="text" class="add_input" id="surname" name="surname" placeholder="" th:value="${user.getInformation().getSurname()}" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -242,7 +267,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="email" name="email" placeholder="JanKowalski@gmail.com" value="rafineria123@gmail.com" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="text" class="add_input" id="email" name="email" placeholder="JanKowalski@gmail.com" th:value="${user.getEmail()}" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -250,15 +275,16 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zapisz</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zapisz</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="opis" tabindex="-1" role="dialog" aria-labelledby="opisTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <form th:action="@{/changeDescription}" method="post" class="modal-content">
             <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
                 <h5 class="modal-title" id="opisLongTitle" style="padding-left: 15px">Zmiana opisu</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -274,7 +300,7 @@
                     <div class="row">
                         <div class="col-12" style="width:100%">
                             <textarea rows="3" COLS="72" id="description" maxlength="200" name="description" WRAP="description" placeholder="Twoj opis..." style="border: 1px solid rgba(82,73,98,0.2);
-                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">Twoj opis...</textarea>
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%" th:text="${user.getInformation().getDescription()}">Twoj opis...</textarea>
 
                         </div>
                     </div>
@@ -283,15 +309,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zapisz</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zapisz</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
 <div class="modal fade" id="haslo" tabindex="-1" role="dialog" aria-labelledby="hasloTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <form th:action="@{/changePassword}" method="post"class="modal-content">
             <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
                 <h5 class="modal-title" id="hasloLongTitle" style="padding-left: 15px">Zmiana hasła</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -306,7 +332,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="password" class="add_input" id="currentpassword" name="currentpassword" placeholder="Jankowalski" value="JanKowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="password" class="add_input" id="currentpassword" name="currentpassword" placeholder="Podaj obecne hasło" value="" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -317,7 +343,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="password" class="add_input" id="newpassword" name="newpassword" placeholder="Jankowalski" value="Jankowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="password" class="add_input" id="newpassword" name="newpassword" placeholder="Podaj nowe hasło" value="" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -328,7 +354,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="password" class="add_input" id="newpasswordconfirmation" name="newpasswordconfirmation" placeholder="Jankowalski" value="Jankowalski" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="password" class="add_input" id="newpasswordconfirmation" name="newpasswordconfirmation" placeholder="Powtórz hasło" value="" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -336,9 +362,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zmień hasło</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px">Zmień hasło</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
