@@ -193,7 +193,7 @@
 
                     <div class="col-md-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
-                        <img th:src="|/${discount.getImage_url()}|" class="item_image_discount"><img>
+                        <img th:src="|/${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount"><img>
                         </a>
                     </div>
                 </div>

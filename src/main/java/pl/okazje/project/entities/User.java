@@ -1,9 +1,7 @@
 package pl.okazje.project.entities;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class User {
@@ -11,6 +9,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
+    @Column(unique = true)
     private String login;
     @Column(length = 700)
     private String password;
@@ -183,5 +182,13 @@ public class User {
 
     public void setROLE(String ROLE) {
         this.ROLE = ROLE;
+    }
+
+    public ArrayList<Conversation> getConversationsSorted() {
+
+        ArrayList<Conversation> list = new ArrayList<>(conversations);
+        Collections.sort(list, (o1, o2) -> o2.getNewestMessageObject().getCr_date().compareTo(o1.getNewestMessageObject().getCr_date()));
+
+        return list;
     }
 }

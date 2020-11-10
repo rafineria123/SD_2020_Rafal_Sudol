@@ -93,6 +93,40 @@
     <div style="height: 15px"></div>
 </div>
 
+<div class="row" th:if="${param.error}">
+    <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
+        <div class="col-4 offset-4" style="padding-left: 0px;padding-right: 0px">
+            <div class="bad_alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <strong>Błędna nazwa użytkownika lub hasło.</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" th:if="${param.logout}">
+    <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
+        <div class="col-4 offset-4" style="padding-left: 0px;padding-right: 0px">
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <strong>Zostałeś pomyślnie wylogowany.</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" th:if="${good_status}!=null">
+    <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
+        <div class="col-4 offset-4" style="padding-left: 0px;padding-right: 0px">
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <strong th:text="${good_status.toString()}"></strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid ">
             <div class="d-flex justify-content-center h-100">
                 <div class="card">
@@ -119,11 +153,7 @@
                                 <input type="submit" value="Zaloguj" class="btn form-control login_btn">
                             </div>
                         </form>
-                        <div class="text-center warning" th:if="${param.error}">
-                            Błędna nazwa użytkownika lub hasło.</div>
 
-                        <div class="text-center warning" th:if="${param.logout}">
-                            Zostałeś pomyślnie wylogowany.</div>
 
                     </div>
                     <div class="card-footer">

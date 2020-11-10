@@ -96,62 +96,111 @@
 <div class="container-fluid ">
     <div class="row">
         <form th:action="@{/register}" class="w-100" method="post">
-        <div class="col-md-4 offset-md-4 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
-            <div class="row">
+        <div class="col-md-4 offset-md-4">
 
-                <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
-                    <span class="add_big">Login</span>
+            <div class="row" th:if="${good_status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
+                    <div class="col-8 offset-2" style="padding-left: 0px;padding-right: 0px">
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${good_status.toString()}"></strong>
+                        </div>
+                    </div>
                 </div>
-
             </div>
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <input type="text" class="add_input" id="login" name="login" placeholder=" jankowalski123">
+            <div class="row" th:if="${bad_status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;">
+                    <div class="col-8 offset-2" style="padding-left: 0px;padding-right: 0px;padding-bottom: 15px">
+                        <div class="bad_alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${bad_status.toString()}"></strong>
+                        </div>
+                    </div>
                 </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
-                    <span class="add_big">Haslo</span>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <input type="password" class="add_input" id="password" name="password" placeholder=" ********">
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
-                    <span class="add_big">Email</span>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <input type="text" class="add_input" id="email" name="email" placeholder=" jankowalski123@gmail.com">
-                </div>
-
             </div>
 
 
-
             <div class="row">
+                <div class="col-md-8 offset-2 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
+                    <div class="row" style="font-weight: bolder;color: #524962;font-size: 22px;padding-left: 35px;padding-top: 10px;padding-bottom: 15px">
 
-                <div class="col-md-12" style="padding-top: 15px;">
-                    <button type="submit" style="white-space:pre;font-size: 18px;border-radius: 10px" class="btn item_button">Stworz konto</button>
+                        Stwórz konto
+
+                    </div>
+                    <div class="row" style="font-weight: bold;color: #524962;font-size: 17px;padding-left: 35px;padding-bottom: 5px">
+
+                        Dane konta
+
+                    </div>
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: #f4f4f5;color: rgba(82,73,98,0.6)">Login</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="text" class="add_input" id="login" minlength="5" value="" name="login" placeholder="Login (wymagane)" style="border: 1px solid rgba(82,73,98,0.2);
+                                    padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: #f4f4f5;color: rgba(82,73,98,0.6)">Hasło</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="password" class="add_input" id="password" name="password" minlength="5" value="" placeholder="Hasło (wymagane)" style="border: 1px solid rgba(82,73,98,0.2);
+                                    padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: #f4f4f5;color: rgba(82,73,98,0.6)">Powtórz Hasło</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="password" class="add_input" id="repeated_password" name="repeated_password" placeholder="Powtórz hasło (wymagane)" style="border: 1px solid rgba(82,73,98,0.2);
+                                    padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-left: 36px">
+                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: #f4f4f5;color: rgba(82,73,98,0.6)">Email</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width:100%">
+                            <input type="text" class="add_input" id="email" name="email" placeholder="Email (wymagane)" minlength="5" value="" style="border: 1px solid rgba(82,73,98,0.2);
+                                    padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12" style="padding-top:15px;padding-left: 35px">
+
+                            <input type="checkbox" id="reg" name="reg" style="transform: scale(1.5)">
+                            <label for="reg" style="padding-left: 5px;font-size: 18px">Akceptuje <a href="/">regulamin</a> sklepu.</label>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="row">
+
+                        <div class="col-md-12" style="padding-top: 15px;">
+                            <button type="submit" style="white-space:pre;font-size: 18px;border-radius: 10px" class="btn item_button">Stworz konto</button>
+                        </div>
+
+                    </div>
+                    <div style="height: 20px"></div>
+
+
+
                 </div>
-
             </div>
-            <div style="height: 20px"></div>
-
-
-
         </div>
         <div style="height: 50px;width: 100%"></div>
         </form>

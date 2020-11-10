@@ -133,6 +133,26 @@
 
         </div>
         <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
+                <div class="row" th:if="${good_status}!=null">
+                    <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
+                        <div class="col-7" style="padding-left: 0px;padding-right: 0px">
+                            <div class="alert">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong th:text="${good_status.toString()}"></strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" th:if="${bad_status}!=null">
+                    <div class="container-fluid" style="padding-right: 0;padding-left: 0;">
+                        <div class="col-7" style="padding-left: 0px;padding-right: 0px;padding-bottom: 15px">
+                            <div class="bad_alert">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong th:text="${bad_status.toString()}"></strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <div class="row" style="font-weight: 400;font-size: 29px;padding-bottom: 20px">
                 <div class="col-4" style="font-weight:400;padding-left:0px">
                     Moje wiadomości
@@ -145,58 +165,66 @@
             <div class="row" style="font-size:16px;font-weight:500;padding-bottom: 10px;height: 30px">
             </div>
 
-            <div class="row" style="font-size:14px;padding-top: 10px;">
-                <div class="col-7" style="border: 2px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
-                    <div class="row" style="padding-left: 8px">
-                        <div class="" style="width:auto;margin-top: -26px;z-index: 2;background-color: white;color: rgba(8,8,8,0.72)">Nowa wiadomość</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
-                        <div class="col-8 align-self-center" style="font-weight: 600;">
-                            <div class="row">
+            <span th:each="conversation : ${list_of_conversations}">
+                <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${conversation.hasNewMessage(user)}">
+                    <a th:href="@{|/messages/${conversation.getConversation_id()}|}" style="width: 100%">
+                    <div class="col-7" style="border: 2px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                        <div class="row" style="padding-left: 8px">
+                            <div class="" style="width:auto;margin-top: -26px;z-index: 2;background-color: white;color: rgba(8,8,8,0.72)">Nowa wiadomość</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
+                            <div class="col-8 align-self-center" style="font-weight: 600;">
+                                <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
 
-                                TrailBlazer
+                                    TrailBlazer
 
-                            </div>
-                            <div class="row">
+                                </div>
+                                <div class="row">
 
-                                <span style="margin-top:-3px;font-size: 12px;color: rgba(8,8,8,0.72)">
-                                    Ty: hejka, co tam? Chcesz cos z Avon'u?
-                                </span>
+                                    <span style="margin-top:-3px;font-size: 12px;color: rgba(8,8,8,0.72)" th:text="${conversation.getNewestMessage(user)}">
+                                        Ty: hejka, co tam? Chcesz cos z Avon'u?
+                                    </span>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
+                    </a>
                 </div>
-            </div>
+
+            </span>
 
             <div class="row" style="font-size:16px;font-weight: 500;padding-bottom: 0px;padding-top:10px;color: #000000bf;">
                 Odczytane wiadomości
             </div>
+            <span th:each="conversation : ${list_of_conversations}">
+                <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${!conversation.hasNewMessage(user)}">
+                    <a th:href="@{|/messages/${conversation.getConversation_id()}|}" style="width: 100%">
+                    <div class="col-7" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                        <div class="row">
+                            <div class="col-3 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
+                            <div class="col-8 align-self-center" style="font-weight: 600;">
+                                <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
 
-            <div class="row" style="font-size:14px;padding-top: 10px;">
-                <div class="col-7" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
-                    <div class="row">
-                        <div class="col-3 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
-                        <div class="col-8 align-self-center" style="font-weight: 600;">
-                            <div class="row">
+                                    JanzusKowalski123
 
-                                JanzusKowalski123
+                                </div>
+                                <div class="row">
 
-                            </div>
-                            <div class="row">
+                                    <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56)"  th:text="${conversation.getNewestMessage(user)}">
+                                        Ty: rafineria123@gmail.com
+                                    </span>
 
-                                <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56)">
-                                    Ty: rafineria123@gmail.com
-                                </span>
-
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
+                    </a>
                 </div>
-            </div>
+            </span>
 
 
         </div>
@@ -210,6 +238,7 @@
 
 <div class="modal fade" id="dane" tabindex="-1" role="dialog" aria-labelledby="daneTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
+        <form th:action="@{/settings/messages}" method="post"class="modal-content">
         <div class="modal-content">
             <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
                 <h5 class="modal-title" id="daneLongTitle" style="padding-left: 15px">Nowa wiadomość</h5>
@@ -225,7 +254,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="name" name="name" placeholder="Wpisz nazwę osoby" value="" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="text" class="add_input" id="login" name="login" placeholder="Wpisz nazwę osoby" value="" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -236,7 +265,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <textarea rows="4" COLS="72" id="description" maxlength="400" name="description" WRAP="description" placeholder="Treść wiadomości" style="border: 1px solid rgba(82,73,98,0.2);
+                            <textarea rows="4" COLS="72" id="message" maxlength="400" name="message" WRAP="description" placeholder="Treść wiadomości" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
 
                         </div>
@@ -246,9 +275,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Napisz</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px">Napisz</button>
             </div>
         </div>
+        </form>
     </div>
 </div>
 

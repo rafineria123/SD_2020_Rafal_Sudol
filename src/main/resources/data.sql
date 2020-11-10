@@ -19,7 +19,8 @@ INSERT INTO `tag` (`tag_id`, `name`) VALUES
 
 INSERT INTO `user` (`user_id`, `role`, `cr_date`, `email`, `login`, `password`, `status`, `information_id`, `rank_id`) VALUES
 (1, 'USER', '2020-06-16 08:52:39', 'rafineria@gmail.com', 'rafineria', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL),
-(2, 'USER', '2020-06-16 08:52:39', 'rafineria123@gmail.com', 'rafineria123', '$2a$10$rehd0BIqzYtkm9KNGmZ8PuPgBqIIIfzGT/a29FCyHuNrtIZdIu1XS', 'Zatwierdzone', NULL, NULL);
+(2, 'USER', '2020-06-16 08:52:39', 'rafineria123@gmail.com', 'rafineria123', '$2a$10$rehd0BIqzYtkm9KNGmZ8PuPgBqIIIfzGT/a29FCyHuNrtIZdIu1XS', 'Zatwierdzone', NULL, NULL),
+(3, 'USER', '2020-06-16 08:52:39', 'artyleria@gmail.com', 'artyleria', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL);
 
 INSERT INTO `discount` (`discount_id`, `content`, `creationdate`, `current_price`, `discount_link`, `expire_date`, `image_url`, `old_price`, `shipment_price`, `status`, `title`, `shop_id`, `tag_id`, `user_id`) VALUES
 (1, 'W Kaufland dostępne w dobrej cenie baterie alkaliczne AA oraz AAA 10szt. (wychodzi 1zł za sztukę). Dostępna duża ilość. Znalezione w Pszczynie, ale z informacji innych użytkowników okazja ogólnopolska.', '2020-06-16 08:52:39', 220, 'https://www.biedronka.pl/pl/dom-nf-10-06', '2020-06-16 08:52:39', 'images/discount_1.jpg', 255, 15, 'Zatwierdzone', 'Baterie alkaliczne AA', 6, 1, 1),
@@ -31,6 +32,30 @@ INSERT INTO `discount` (`discount_id`, `content`, `creationdate`, `current_price
 
 INSERT INTO `comment` (`comment_id`, `content`, `cr_date`, `upper_comment_id`, `discount_id`, `post_id`, `user_id`) VALUES
 (1, 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', NULL, 3, NULL, 1);
+
+
+INSERT INTO `conversation` (`conversation_id`) VALUES
+(1),
+(2);
+
+INSERT INTO `user_conversation` (`user_id`,	`conversation_id`) VALUES
+(1,1),
+(2,1),
+(1,2),
+(3,2);
+
+
+
+
+INSERT INTO `message` (`message_id`, `content`, `cr_date`,	`status`, `conversation_id`, `user_id`) VALUES
+(1, 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem.Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu.', '2020-06-16 08:52:39', 'odczytane', 1, 1),
+(2, 'hehe xD', '2020-06-17 08:52:39', 'nieodczytane', 1, 2),
+(3, 'tak tak byczq', '2020-06-18 08:52:39', 'nieodczytane', 1, 2),
+(4, 'jak ja umiem c++', '2020-06-19 08:52:39', 'odczytane', 2, 3),
+(5, 'tylko ja chcę się rozwijać robiąc bardziej ambitne projekty', '2020-06-20 08:52:39', 'odczytane', 2, 3),
+(6, 'więc nie mam czasu na jakieś "projekty"', '2020-06-21 08:52:39', 'odczytane', 2, 3),
+(7, 'to se w assemblerze apke rob"', '2020-06-22 08:52:39', 'nieodczytane', 2, 1),
+(8, '!', '2020-06-23 08:52:39', 'nieodczytane', 2, 1);
 
 
 

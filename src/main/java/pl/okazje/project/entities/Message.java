@@ -11,7 +11,7 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer message_id;
-    private String content;
+    private String content = "";
     private Date cr_date;
     private String status = "nieodczytane";
 
@@ -24,6 +24,16 @@ public class Message {
     private User user;
 
     public Message() {
+    }
+
+    public Message(String content, Date cr_date, String status, Conversation conversation, User user) {
+
+        this.content = content;
+        this.cr_date = cr_date;
+        this.status = status;
+        this.conversation = conversation;
+        this.user = user;
+
     }
 
     public Integer getMessage_id() {
@@ -73,4 +83,6 @@ public class Message {
     public void setUser(User user) {
         this.user = user;
     }
+
+
 }

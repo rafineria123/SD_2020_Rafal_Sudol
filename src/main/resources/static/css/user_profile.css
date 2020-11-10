@@ -147,6 +147,11 @@
 
 }
 
+a:link, a:visited,a:hover, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
 
 
 .left_menu_button_picked{

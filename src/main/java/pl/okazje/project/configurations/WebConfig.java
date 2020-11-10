@@ -45,7 +45,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll().and()
                 .logout()
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/login?logout")
                 .permitAll().and().authorizeRequests().antMatchers("/settings/*","/settings","/messages").hasAuthority("USER");
 
     }

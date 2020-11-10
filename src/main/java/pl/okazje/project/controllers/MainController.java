@@ -5,7 +5,6 @@ import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -46,6 +46,10 @@ public class MainController {
     InformationRepository informationRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    ConversationRepository conversationRepository;
+    @Autowired
+    MessageRepository messageRepository;
 
     private static User uzytkownik = null;
 
@@ -135,7 +139,6 @@ public class MainController {
 
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        System.out.println(id);
         modelAndView.addObject("number_of_page", Integer.parseInt(id));
         modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
         return modelAndView;
@@ -483,7 +486,6 @@ public class MainController {
     @GetMapping("/search/{search}")
     public ModelAndView search(@PathVariable("search") String search){
 
-        System.out.println(search+"bbbb");
 
         PagedListHolder page = new PagedListHolder(discountRepository.discountBySearchInput("%"+search+"%"));
         page.setPageSize(1); // number of items per page
@@ -605,7 +607,6 @@ public class MainController {
     @PostMapping("/addrate")
     public String addrate(@ModelAttribute("discountidadd") String discountid, @ModelAttribute("redirect") String redirect){
 
-        System.out.println(discountid);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
@@ -613,14 +614,12 @@ public class MainController {
         for(Rating r:discount.getRatings()){
 
             if(r.getUser().getUser_id().equals(uzytkownik.getUser_id())){
-                System.out.println("2");
                 return "redirect:/";
 
             }
 
         }
 
-        System.out.println("3");
 
         Rating newrating = new Rating();
         newrating.setUser(uzytkownik);
@@ -666,7 +665,51 @@ public class MainController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("login") String login, @ModelAttribute("password") String password, @ModelAttribute("email") String email){
+    public RedirectView register(@ModelAttribute("login") String login, @ModelAttribute("password") String password,@ModelAttribute("repeated_password") String repeated_password,
+                                 RedirectAttributes redir, @ModelAttribute("email") String email, @ModelAttribute("reg") String reg){
+
+        RedirectView redirectView= new RedirectView("/register",true);
+
+        if(login.length()<5){
+
+            redir.addFlashAttribute("bad_status","Wprowadzony login jest za krótki.");
+            return redirectView;
+
+        }
+
+        if(password.length()<5){
+
+            redir.addFlashAttribute("bad_status","Wprowadzone hasło jest za krótkie.");
+            return redirectView;
+
+        }
+
+        if(userRepository.findUserByLogin(login)!=null){
+
+            redir.addFlashAttribute("bad_status","Ten login jest juz zajęty.");
+            return redirectView;
+
+        }
+
+
+
+        if(!password.equals(repeated_password)){
+            redir.addFlashAttribute("bad_status","Hasła muszą się powtarzać w obydwu polach.");
+            return redirectView;
+        }
+
+        System.out.println(reg);
+
+        if(!reg.equals("on")){
+
+            redir.addFlashAttribute("bad_status","Musisz zaakceptować regulamin.");
+            return redirectView;
+
+        }
+
+
+
+
 
         User user1 = new User();
         user1.setCr_date(new Date());
@@ -675,7 +718,11 @@ public class MainController {
         user1.setEmail(email);
         userRepository.save(user1);
 
-        return "redirect:/login";
+        redir.addFlashAttribute("good_status","Zostałeś pomyślnie zarejestrowany. Możesz sie teraz zalogować.");
+        redirectView= new RedirectView("/login",true);
+
+        return redirectView;
+
     }
 
     @PostMapping("/ratecomment")
@@ -844,12 +891,83 @@ public class MainController {
 
 
         ModelAndView modelAndView = new ModelAndView("user_profile_messages");
+        modelAndView.addObject("list_of_conversations",  uzytkownik.getConversationsSorted());
         modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         return modelAndView;
 
     }
+
+    @PostMapping("/settings/messages")
+    public RedirectView newMessageToUser(@ModelAttribute("login") String login,@ModelAttribute("message") String message, RedirectAttributes redir) {
+
+        RedirectView redirectView= new RedirectView("/settings/messages",true);
+
+        if(userRepository.findUserByLogin(login)==null){
+            redir.addFlashAttribute("bad_status","Użytkownik o takim loginie nie istnieje.");
+            return redirectView;
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+
+        if(login.equals(uzytkownik.getLogin())){
+
+            redir.addFlashAttribute("bad_status","Nie możesz pisac wiadomości do siebie.");
+            return redirectView;
+
+        }
+
+        ArrayList<User> uzytkownicy = new ArrayList<>();
+        uzytkownicy.add(uzytkownik);
+        uzytkownicy.add(userRepository.findUserByLogin(login));
+        Conversation conversation = conversationRepository.findConversationWhereUsers(uzytkownicy.get(0).getUser_id(),uzytkownicy.get(1).getUser_id());
+
+        if (conversation!=null){
+
+
+
+            Message messageobject = new Message(message, new Date(), "nieodczytane", conversation, uzytkownik);
+            messageRepository.save(messageobject);
+            Message newmessageobject = conversation.getOtherUserNewMessage(uzytkownik);
+            if(!newmessageobject.getContent().equals("")) {
+                newmessageobject.setStatus("odczytane");
+                messageRepository.save(newmessageobject);
+            }
+
+
+            redir.addFlashAttribute("good_status","Wiadomość została wysłana.");
+            return redirectView;
+
+
+        }
+
+        conversation = new Conversation();
+        HashSet<User> list_of_users = new HashSet<>();
+        list_of_users.add(uzytkownicy.get(0));
+        list_of_users.add(uzytkownicy.get(1));
+        ArrayList<Message> list_of_messages = new ArrayList<>();
+        conversationRepository.save(conversation);
+        Conversation finalConversation = conversation;
+        list_of_users.forEach(o -> o.getConversations().add(finalConversation));
+        ArrayList<User> lista_uzytkownikow = new ArrayList<>(list_of_users);
+        lista_uzytkownikow.forEach(o -> userRepository.save(o));
+        Message m = new Message(message, new Date(), "nieodczytane", conversation, uzytkownik);
+        messageRepository.save(m);
+
+
+
+
+
+
+        redir.addFlashAttribute("good_status","Wiadomość została wysłana.");
+        return redirectView;
+
+
+    }
+
+
 
     @GetMapping("/messages")
     public ModelAndView messages(){
@@ -953,8 +1071,72 @@ public class MainController {
 
     }
 
+    @GetMapping("/messages/{id}")
+    public ModelAndView pageMessages( @PathVariable("id") String id) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+
+        if (!conversationRepository.findById(Long.parseLong(id)).isPresent()){
+
+            ModelAndView modelAndView = new ModelAndView("error");
+            return modelAndView;
+
+        }
+
+
+        if(conversationRepository.findById(Long.parseLong(id)).get().getUsers().contains(uzytkownik)){
+
+            Message newmessageobject = conversationRepository.findById(Long.parseLong(id)).get().getOtherUserNewMessage(uzytkownik);
+            if(!newmessageobject.getContent().equals("")) {
+                newmessageobject.setStatus("odczytane");
+                messageRepository.save(newmessageobject);
+            }
 
 
 
 
-}
+            ModelAndView modelAndView = new ModelAndView("user_messages");
+            modelAndView.addObject("list_of_tags", tagRepository.findAll());
+            modelAndView.addObject("list_of_shops", shopRepository.findAll());
+            modelAndView.addObject( "list_of_conversations",  uzytkownik.getConversationsSorted());
+            modelAndView.addObject("current_conversation", conversationRepository.findById(Long.parseLong(id)));
+            modelAndView.addObject("user", uzytkownik);
+            modelAndView.addObject( "current_id",  Integer.parseInt(id));
+
+            return modelAndView;
+
+        }
+
+        ModelAndView modelAndView = new ModelAndView("error");
+        return modelAndView;
+
+
+    }
+
+    @PostMapping("sendMessage")
+    public String sendMessage(@ModelAttribute("new_message_conv_id") String new_message_conv_id, @ModelAttribute("new_message") String new_message) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+
+
+        Message message = new Message();
+        message.setStatus("nieodczytane");
+        message.setContent(new_message);
+        message.setConversation(conversationRepository.findById(Long.parseLong(new_message_conv_id)).get());
+        message.setCr_date(new Date());
+        message.setUser(uzytkownik);
+
+        messageRepository.save(message);
+
+
+        return "redirect:/messages/"+new_message_conv_id;
+    }
+
+
+
+
+
+
+    }
