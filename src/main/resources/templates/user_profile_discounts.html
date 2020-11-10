@@ -165,6 +165,18 @@
                 </a>
             </div>
             <div style="height: 15px"></div>
+            <div class="page-wrap d-flex flex-row align-items-center" th:if="${list_of_discounts.isEmpty()}" style="padding-top: 35px">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 text-center">
+                            <div class="mb-4 lead">
+                        <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Nie dodałes jeszcze żadnej okazji! :(</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div  th:each="discount : ${list_of_discounts}">
             <div style="height: 25px"></div>
             <a href="" th:href="@{|/discount/${discount.getDiscount_id()}|}" style="text-decoration:none;color: black">

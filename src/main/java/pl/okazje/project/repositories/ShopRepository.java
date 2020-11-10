@@ -5,4 +5,8 @@ import org.springframework.stereotype.Repository;
 import pl.okazje.project.entities.Shop;
 
 @Repository
-public interface ShopRepository extends CrudRepository<Shop, Long> {}
+public interface ShopRepository extends CrudRepository<Shop, Long> {
+
+    public Shop findFirstByName(String name);
+
+}

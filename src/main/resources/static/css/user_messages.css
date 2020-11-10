@@ -55,9 +55,9 @@
 }
 
 a:link, a:visited,a:hover, a:active {
-    color: inherit;
-    text-decoration: none;
-}
+     color: inherit;
+     text-decoration: none;
+ }
 
 
 .add_input:focus{

@@ -53,12 +53,16 @@ public class MainController {
 
     private static User uzytkownik = null;
 
+    private static int page_size_for_home = 8;
+
+    private static int page_size_for_cat_and_shops = 4;
+
     @GetMapping("/")
     public ModelAndView homePage() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        Pageable pageable = PageRequest.of(0, 2, Sort.by("creationdate").descending());
+        Pageable pageable = PageRequest.of(0, page_size_for_home, Sort.by("creationdate").descending());
         Page<Discount> allProducts = discountRepository.findAll(pageable);
 
         ModelAndView modelAndView = new ModelAndView("home");
@@ -89,7 +93,7 @@ public class MainController {
         Pageable pageable = null;
         ModelAndView modelAndView = new ModelAndView("home");
         if(sort.equals("date")){
-            pageable = PageRequest.of(Integer.parseInt(id)-1, 2, Sort.by("creationdate").descending());
+            pageable = PageRequest.of(Integer.parseInt(id)-1, page_size_for_home, Sort.by("creationdate").descending());
             Page<Discount> allProducts = discountRepository.findAll(pageable);
             modelAndView.addObject("list_of_discounts", allProducts.getContent());
             modelAndView.addObject("quantity_of_pages", allProducts.getTotalPages());
@@ -106,7 +110,7 @@ public class MainController {
         }
         if(sort.equals("most-comments")){
             PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByComments());
-            page.setPageSize(2); // number of items per page
+            page.setPageSize(page_size_for_home); // number of items per page
             page.setPage(Integer.parseInt(id)-1);      // set to first page
             modelAndView.addObject("list_of_discounts", page.getPageList());
             modelAndView.addObject("quantity_of_pages", page.getPageCount());
@@ -122,7 +126,7 @@ public class MainController {
         }
         if(sort.equals("top-rated")){
             PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByRating());
-            page.setPageSize(2); // number of items per page
+            page.setPageSize(page_size_for_home); // number of items per page
             page.setPage(Integer.parseInt(id)-1);      // set to first page
             modelAndView.addObject("list_of_discounts", page.getPageList());
             modelAndView.addObject("quantity_of_pages", page.getPageCount());
@@ -150,7 +154,7 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
-        Pageable pageable = PageRequest.of(Integer.parseInt(id)-1, 2, Sort.by("creationdate").descending());
+        Pageable pageable = PageRequest.of(Integer.parseInt(id)-1, page_size_for_home, Sort.by("creationdate").descending());
         Page<Discount> allProducts = discountRepository.findAll(pageable);
 
 
@@ -178,7 +182,7 @@ public class MainController {
     @GetMapping("/categories/{category}")
     public ModelAndView category(@PathVariable("category") String category) {
         PagedListHolder page = new PagedListHolder(discountRepository.discountByTag(category));
-        page.setPageSize(1); // number of items per page
+        page.setPageSize(page_size_for_cat_and_shops); // number of items per page
         page.setPage(0);
 
         ModelAndView modelAndView = new ModelAndView("home");
@@ -206,7 +210,7 @@ public class MainController {
     @GetMapping("/categories/{category}/page/{id}")
     public ModelAndView categoryPage(@PathVariable("category") String category, @PathVariable("id") String id) {
         PagedListHolder page = new PagedListHolder(discountRepository.discountByTag(category));
-        page.setPageSize(1); // number of items per page
+        page.setPageSize(page_size_for_cat_and_shops); // number of items per page
         page.setPage(Integer.parseInt(id)-1);
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("list_of_discounts", page.getPageList());
@@ -238,7 +242,7 @@ public class MainController {
             modelAndView.addObject("picked_sort", 3);
             modelAndView.addObject("next_and_previous","/categories/"+category+"/page/id/sort/date");
             page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenTag(category));
-            page.setPageSize(1);
+            page.setPageSize(page_size_for_cat_and_shops);
             for (int i = 1;i<=page.getPageCount();i++){
 
                 listOfAdresses.add("/categories/"+category+"/page/"+i+"/sort/date");
@@ -250,7 +254,7 @@ public class MainController {
             modelAndView.addObject("picked_sort", 2);
             modelAndView.addObject("next_and_previous","/categories/"+category+"/page/id/sort/most-comments");
             page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenTag(category));
-            page.setPageSize(1);
+            page.setPageSize(page_size_for_cat_and_shops);
             for (int i = 1;i<=page.getPageCount();i++){
 
                 listOfAdresses.add("/categories/"+category+"/page/"+i+"/sort/most-comments");
@@ -262,7 +266,7 @@ public class MainController {
             modelAndView.addObject("picked_sort", 1);
             modelAndView.addObject("next_and_previous","/categories/"+category+"/page/id/sort/top-rated");
             page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenTag(category));
-            page.setPageSize(1);
+            page.setPageSize(page_size_for_cat_and_shops);
             for (int i = 1;i<=page.getPageCount();i++){
 
                 listOfAdresses.add("/categories/"+category+"/page/"+i+"/sort/top-rated");
@@ -289,7 +293,7 @@ public class MainController {
     @GetMapping("/shops/{shop}")
     public ModelAndView shop(@PathVariable("shop") String shop) {
         PagedListHolder page = new PagedListHolder(discountRepository.discountByShop(shop));
-        page.setPageSize(1); // number of items per page
+        page.setPageSize(page_size_for_cat_and_shops); // number of items per page
         page.setPage(0);
 
         ModelAndView modelAndView = new ModelAndView("home");
@@ -316,7 +320,7 @@ public class MainController {
     @GetMapping("/shops/{shop}/page/{id}")
     public ModelAndView shopPage(@PathVariable("shop") String shop, @PathVariable("id") String id) {
         PagedListHolder page = new PagedListHolder(discountRepository.discountByShop(shop));
-        page.setPageSize(1); // number of items per page
+        page.setPageSize(page_size_for_cat_and_shops); // number of items per page
         page.setPage(Integer.parseInt(id)-1);
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("list_of_discounts", page.getPageList());
@@ -349,7 +353,7 @@ public class MainController {
             modelAndView.addObject("picked_sort", 3);
             modelAndView.addObject("next_and_previous","/shops/"+shop+"/page/id/sort/date");
             page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenShop(shop));
-            page.setPageSize(1);
+            page.setPageSize(page_size_for_cat_and_shops);
             for (int i = 1;i<=page.getPageCount();i++){
 
                 listOfAdresses.add("/shops/"+shop+"/page/"+i+"/sort/date");
@@ -361,7 +365,7 @@ public class MainController {
             modelAndView.addObject("picked_sort", 2);
             modelAndView.addObject("next_and_previous","/shops/"+shop+"/page/id/sort/most-comments");
             page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenShop(shop));
-            page.setPageSize(1);
+            page.setPageSize(page_size_for_cat_and_shops);
             for (int i = 1;i<=page.getPageCount();i++){
 
                 listOfAdresses.add("/shops/"+shop+"/page/"+i+"/sort/most-comments");
@@ -373,7 +377,7 @@ public class MainController {
             modelAndView.addObject("picked_sort", 1);
             modelAndView.addObject("next_and_previous","/shops/"+shop+"/page/id/sort/top-rated");
             page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenShop(shop));
-            page.setPageSize(1);
+            page.setPageSize(page_size_for_cat_and_shops);
             for (int i = 1;i<=page.getPageCount();i++){
 
                 listOfAdresses.add("/shops/"+shop+"/page/"+i+"/sort/top-rated");
@@ -937,7 +941,7 @@ public class MainController {
             }
 
 
-            redir.addFlashAttribute("good_status","Wiadomość została wysłana.");
+            redirectView= new RedirectView("/messages/"+conversation.getConversation_id(),true);
             return redirectView;
 
 
@@ -961,7 +965,7 @@ public class MainController {
 
 
 
-        redir.addFlashAttribute("good_status","Wiadomość została wysłana.");
+        redirectView= new RedirectView("/messages/"+conversation.getConversation_id(),true);
         return redirectView;
 
 
@@ -979,10 +983,26 @@ public class MainController {
 
     }
 
-    @GetMapping("/profile")
-    public ModelAndView profile(){
+    @GetMapping("/profile/{name}")
+    public ModelAndView profile(@PathVariable("name") String name){
 
         ModelAndView modelAndView = new ModelAndView("profile");
+        uzytkownik = userRepository.findUserByLogin(name);
+        modelAndView.addObject("user", uzytkownik);
+        modelAndView.addObject("comments_page", false);
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
+
+    }
+
+    @GetMapping("/profile/{name}/comments")
+    public ModelAndView profile_comments(@PathVariable("name") String name){
+
+        ModelAndView modelAndView = new ModelAndView("profile");
+        uzytkownik = userRepository.findUserByLogin(name);
+        modelAndView.addObject("user", uzytkownik);
+        modelAndView.addObject("comments_page", true);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         return modelAndView;

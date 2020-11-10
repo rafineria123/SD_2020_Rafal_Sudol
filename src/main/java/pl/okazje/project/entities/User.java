@@ -1,6 +1,8 @@
 package pl.okazje.project.entities;
 
 import javax.persistence.*;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Entity
@@ -190,5 +192,24 @@ public class User {
         Collections.sort(list, (o1, o2) -> o2.getNewestMessageObject().getCr_date().compareTo(o1.getNewestMessageObject().getCr_date()));
 
         return list;
+    }
+
+    public int getCommentsAmount(){
+
+        return new ArrayList<Comment>(comments).size();
+
+    }
+
+    public String getCr_date_formated() {
+
+        Format formatter = new SimpleDateFormat("dd.MM.yy");
+        String s = formatter.format(this.cr_date);
+        return s;
+    }
+
+    public int getDiscountsAmount(){
+
+        return new ArrayList<Discount>(discounts).size();
+
     }
 }

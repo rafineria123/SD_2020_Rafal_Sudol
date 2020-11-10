@@ -199,6 +199,19 @@
             <div class="row" style="font-size:16px;font-weight: 500;padding-bottom: 0px;padding-top:10px;color: #000000bf;">
                 Odczytane wiadomości
             </div>
+
+            <div class="page-wrap d-flex flex-row align-items-center" style="padding-top: 35px" th:if="${list_of_conversations.isEmpty()}">
+                <div class="container">
+                    <div class="row justify-content-left">
+                        <div class="col-md-6 text-center">
+                            <div class="mb-4 lead">
+                                <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Nie posiadasz żadnych wiadomości! :(</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
             <span th:each="conversation : ${list_of_conversations}">
                 <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${!conversation.hasNewMessage(user)}">
                     <a th:href="@{|/messages/${conversation.getConversation_id()}|}" style="width: 100%">

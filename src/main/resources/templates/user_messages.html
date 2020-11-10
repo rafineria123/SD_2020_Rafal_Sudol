@@ -44,9 +44,9 @@
                                                                                                              style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
             </li>
             <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
-                <form th:action="@{/logout}" method="post">
+                <form th:action="@{/settings}" method="get">
                     <button style="white-space:pre;" class="btn add_button" type="submit"
-                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO</button>
                 </form>
             </li>
             <li>

@@ -118,6 +118,13 @@ public class Discount {
         return s;
     }
 
+    public String getCreation_date_formated() {
+
+        Format formatter = new SimpleDateFormat("dd.MM.yy");
+        String s = formatter.format(this.creationdate);
+        return s;
+    }
+
     public int getDifference(){
 
         return (int)(100-(current_price/old_price * 100));

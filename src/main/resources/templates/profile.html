@@ -44,9 +44,9 @@
                                                                                                              style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
             </li>
             <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
-                <form th:action="@{/logout}" method="post">
+                <form th:action="@{/settings}" method="get">
                     <button style="white-space:pre;" class="btn add_button" type="submit"
-                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO</button>
                 </form>
             </li>
             <li>
@@ -88,7 +88,7 @@
 
 <div class="container-fluid">
     <div class="col-6 offset-3" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
-        <span class="over_items">Profil użytkownika <span style="color: #ed1d43;padding-left: 5px">rafineria123</span></span>
+        <span class="over_items">Profil użytkownika <span style="color: #ed1d43;padding-left: 5px" th:text="${user.getLogin()}">rafineria123</span></span>
     </div>
     <div style="height: 20px"></div>
 </div>
@@ -107,19 +107,24 @@
                         </div>
                         <div class="col-10">
                             <div class="row">
-                                <div class="col-4" style="padding-left: 0px;font-size:23px;font-weight: 600">
+                                <div class="col-4" style="padding-left: 0px;font-size:23px;font-weight: 600" th:text="${user.getLogin()}">
                                     rafineria123
                                 </div>
-                                <div class="col-1 offset-7" style="padding-left: 0px">
+                                <div class="col-1 offset-7" style="padding-left: 0px" sec:authorize="isAuthenticated()">
                                     <button type="button" style="" data-toggle="modal" data-target="#dane" class="btn new_msg"><span class="far fa-envelope" style="font-size: 15px;font-weight: 600;padding-right: 0px;"></span></button>
+                                </div>
+                                <div class="col-1 offset-7" style="padding-left: 0px" sec:authorize="!isAuthenticated()">
+                                    <a href="/login" style="width: 100%">
+                                        <button type="button" style="" data-toggle="modal" data-target="#dane" class="btn new_msg"><span class="far fa-envelope" style="font-size: 15px;font-weight: 600;padding-right: 0px;"></span></button>
+                                    </a>
                                 </div>
                             </div>
                             <div class="row d-flex justify-content-start">
-                                <div class="comm_disc_date">Okazje:<span class="comm_disc_date_number">15</span></div>
-                                <div class="comm_disc_date" style="padding-left: 10px">Komentarze:<span class="comm_disc_date_number">300</span></div>
+                                <div class="comm_disc_date">Okazje:<span class="comm_disc_date_number" th:text="${user.getDiscountsAmount()}">15</span></div>
+                                <div class="comm_disc_date" style="padding-left: 10px">Komentarze:<span class="comm_disc_date_number" th:text="${user.getCommentsAmount()}">300</span></div>
                             </div>
                             <div class="row d-flex justify-content-start">
-                                <div class="comm_disc_date">Dołaczyl:<span class="comm_disc_date_number">24.05.2020</span></div>
+                                <div class="comm_disc_date">Dołaczyl:<span class="comm_disc_date_number" th:text="${user.getCr_date_formated()}">24.05.2020</span></div>
 
                             </div>
 
@@ -133,45 +138,76 @@
 
                 <div class="col-6">
 
-                    <button type="button" style="width: 100%" data-toggle="modal" data-target="#dane" class="btn new_msg"> Okazje dodane przez użytkownika</button>
+                    <a th:href="@{|/profile/${user.getLogin()}|}" th:if="${comments_page}"> <button type="button" style="width: 100%;background-color: #bababa99;" data-toggle="modal" data-target="#dane" class="btn new_msg"> Okazje dodane przez użytkownika</button></a>
+                    <a th:href="@{|/profile/${user.getLogin()}|}" th:if="${!comments_page}"> <button type="button" style="width: 100%" data-toggle="modal" data-target="#dane" class="btn new_msg"> Okazje dodane przez użytkownika</button></a>
 
                 </div>
 
                 <div class="col-6">
 
-                    <button type="button" style="background-color: #bababa99;width: 100%" data-toggle="modal" data-target="#dane" class="btn new_msg">Komentarze dodane przez użytkownika</button>
+                    <a th:href="@{|/profile/${user.getLogin()}/comments|}" th:if="${comments_page}"><button type="button" style="width: 100%" data-toggle="modal" data-target="#dane" class="btn new_msg">Komentarze dodane przez użytkownika</button></a>
+                    <a th:href="@{|/profile/${user.getLogin()}/comments|}" th:if="${!comments_page}"><button type="button" style="background-color: #bababa99;width: 100%" data-toggle="modal" data-target="#dane" class="btn new_msg">Komentarze dodane przez użytkownika</button></a>
 
                 </div>
 
             </div>
-                <div style="width: 100%;padding-left: 15px;padding-right: 15px">
+
+
+            <div class="page-wrap d-flex flex-row align-items-center" th:if="${!comments_page&&user.getDiscounts().isEmpty()}" style="padding-top: 35px">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 text-center">
+                            <div class="mb-4 lead">
+                                <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Ten użytkownik nie dodał żadnych okazji! :(</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-wrap d-flex flex-row align-items-center" th:if="${comments_page&&user.getComments().isEmpty()}" style="padding-top: 35px">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 text-center">
+                            <div class="mb-4 lead">
+                                <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Ten użytkownik nie napisał żadnych komentarzy! :(</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div style="width: 100%;padding-left: 15px;padding-right: 15px;padding-bottom: 10px" th:if="${!comments_page}" th:each="discount:${user.getDiscounts()}" >
                     <div class="row" style="padding-top:10px"></div>
-                        <div class="row" style="box-shadow: 0px 2px 6px 1px rgb(173, 173, 173);border-radius: 15px">
+
+                    <a href="" th:href="@{|/discount/${discount.getDiscount_id()}|}" style="width: 100%">
+                    <div class="row" style="box-shadow: 0px 2px 6px 1px rgb(173, 173, 173);border-radius: 15px">
 
                             <div class="col-4" style="border-radius: 15px 0px 0px 15px;background-color: #e5e5e6">
 
                                 <div class="row" style="padding-left: 20px;padding-top:20px;">
 
-                                    <span style="font-weight: 600;font-size: 16px" >Zatwierdzone</span>
+                                    <span style="font-weight: 600;font-size: 16px">Dodano: <span style="font-weight: 600;font-size: 16px" th:text="${discount.getCreation_date_formated()}" >Zatwierdzone</span></span>
 
                                 </div>
 
                                 <div class="row" style="padding-left: 20px;padding-top:10px;">
 
-                                    <span style="font-weight: 400;font-size: 13px;">Wygasa:</span><span style="font-weight: 400;font-size: 14px;"> 29.10.2020</span>
+                                    <span style="font-weight: 400;font-size: 13px;">Wygasa:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getExpire_date_formated()}"> 29.10.2020</span>
 
                                 </div>
 
                                 <div class="row" style="padding-left: 20px;">
-                                    <div class="col-4" style="padding-left: 0"><span class="fas fa-comments" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" >5</span></div>
-                                    <div class="col-4" style="padding-left: 0"><span class="fas fa-plus" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" >25</span></div>
+                                    <div class="col-4" style="padding-left: 0"><span class="fas fa-comments" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" th:text="${discount.getCommentsSize()}">5</span></div>
+                                    <div class="col-4" style="padding-left: 0"><span class="fas fa-plus" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" th:text="${discount.getRatingsSize()}">25</span></div>
 
                                 </div>
 
                                 <div class="row" style="padding-left: 20px;padding-bottom: 20px;padding-top:10px">
 
 
-                                    <span style="font-weight: 500;font-size: 15px">id: </span><span style="font-weight: 500;font-size: 15px">3324176</span>
+                                    <span style="font-weight: 500;font-size: 15px">id: </span><span style="font-weight: 500;font-size: 15px" th:text="${discount.getDiscount_id()}">3324176</span>
 
                                 </div>
 
@@ -181,13 +217,14 @@
 
                                     <div class="col-2 align-self-center" style="height: 66px">
 
-                                        <img src="/images/discount_6.jpg" class="item_image_discount"><img>
+                                        <img th:src="|/${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="${!discount.getShop().getName().equals('X-kom')}">
+                                        <img th:src="|${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="${discount.getShop().getName().equals('X-kom')}">
 
                                     </div>
 
                                     <div class="col-9 align-self-center">
 
-                                        <span style="font-weight: 400;font-size: 16px;color: rgba(0,0,0,0.71)">Płyn do chłodnic samochodowych</span>
+                                        <span style="font-weight: 400;font-size: 16px;color: rgba(0,0,0,0.71)" th:text="${discount.getTitle()}">Płyn do chłodnic samochodowych</span>
 
                                     </div>
 
@@ -195,66 +232,127 @@
                         </div>
 
                     </div>
-
-                </div>
-            <div style="width: 100%;padding-left: 15px;padding-right: 15px">
-                <div class="row" style="padding-top:20px"></div>
-                <div class="row" style="box-shadow: 0px 2px 6px 1px rgb(173, 173, 173);border-radius: 15px">
-
-                    <div class="col-4" style="border-radius: 15px 0px 0px 15px;background-color: #e5e5e6">
-
-                        <div class="row" style="padding-left: 20px;padding-top:20px;">
-
-                            <span style="font-weight: 600;font-size: 16px" >Dodano: 24.02.2019</span>
-
-                        </div>
-
-                        <div class="row" style="padding-left: 20px;padding-top:10px;">
-
-                            <span style="font-weight: 400;font-size: 13px;">Wygasa:</span><span style="font-weight: 400;font-size: 14px;"> 29.10.2020</span>
-
-                        </div>
-
-                        <div class="row" style="padding-left: 20px;">
-                            <div class="col-4" style="padding-left: 0"><span class="fas fa-comments" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" >5</span></div>
-                            <div class="col-4" style="padding-left: 0"><span class="fas fa-plus" style="font-size: 15px;padding-top: 3px"></span><span style="font-weight: 400;font-size: 15px;padding-left: 5px" >25</span></div>
-
-                        </div>
-
-                        <div class="row" style="padding-left: 20px;padding-bottom: 20px;padding-top:10px">
-
-
-                            <span style="font-weight: 500;font-size: 15px">id: </span><span style="font-weight: 500;font-size: 15px">3324176</span>
-
-                        </div>
-
-                    </div>
-                    <div class="col-8">
-                        <div class="row" style="height: 100%">
-
-                            <div class="col-2 align-self-center" style="height: 66px">
-
-                                <img src="/images/discount_6.jpg" class="item_image_discount"><img>
-
-                            </div>
-
-                            <div class="col-9 align-self-center">
-
-                                <span style="font-weight: 400;font-size: 16px;color: rgba(0,0,0,0.71)">Płyn do chłodnic samochodowych</span>
-
-                            </div>
-
-                        </div>
-                    </div>
+                    </a>
 
                 </div>
 
+
+            <div class="mix w-100" th:if="${comments_page}" th:each="comment : ${user.getComments()}">
+                <div class="col-12" style="height: 15px;"></div>
+
+
+                <a href="" th:href="@{|/discount/${comment.getDiscount().getDiscount_id()}|}" style="width: 100%">
+                <div class="col-12 sort_div_comm w-100"
+                     style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);padding-top: 10px;width: 100%">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-2 offset-md-1 text-center"
+                                     style="border-bottom: 1px solid rgba(82,73,98,.2)">
+                                    <span style="font-size:12px;font-weight: 900;color: rgba(145,143,146,0.91);" th:text="|${comment.getDateDifference()} dni temu|">2 dni temu</span>
+                                </div>
+                                <div class="col-md-1 offset-md-7 text-center">
+                            <span class="fas fa-thumbs-up"
+                                  style="font-size:13px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
+                                        style="font-size:14px;font-weight: 900;color: rgba(145,143,146,0.91);"th:text="${comment.getRatingsSize()}">23</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="padding-top: 7px;padding-bottom: 10px">
+                            <div class="row">
+                                <div class="col-md-10 offset-md-1" style="font-size: 14px;font-weight: 500;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                             word-wrap: break-word;" th:text="${comment.getContent()}">
+                                    Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
+                                    wypadła im jedna z najlepszych
+                                    w historii portalu, za Sennheiserami (6300 zł) i HiFiManami x3 (1500 zł / 3800 zł / 5000
+                                    zł). 5. miejsce na 416 przetestowanych słuchawek.
+                                    Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
+                                    wypadła im jedna z najlepszych w historii portalu, za Sennheiserami (6300 zł)
+                                    i HiFiManami x3 (1500 zł / 3800 zł / 5000 zł). 5. miejsce na 416 przetestowanych
+                                    słuchawek.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="padding-bottom: 15px">
+                            <div class="row">
+                                <div class="col-md-10 offset-md-1" style="font-size: 14px;font-weight: 500" sec:authorize="!isAuthenticated()">
+                                    <a href="/login" class="comment_like">
+                                    <span class="fas fa-thumbs-up"
+                                          style="font-size:16px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
+                                            style="font-size:15px;font-weight: 900;color: rgba(145,143,146,0.91);">Lubię to</span>
+                                    </a>
+                                </div>
+                                <div class="col-md-10 offset-md-1" style="font-size: 14px;font-weight: 500" sec:authorize="isAuthenticated()">
+                                    <form th:action="@{/ratecomment}" method="post">
+                                        <input type="hidden" name="commentid" id="commentid"
+                                               th:value="${comment.getComment_id()}">
+                                        <button type="submit" style="background-color: #f4f4f5;border: 0;" class="comment_like">
+                                    <span class="fas fa-thumbs-up"
+                                          style="font-size:16px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
+                                                style="font-size:15px;font-weight: 900;color: rgba(145,143,146,0.91);">Lubię to</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </a>
             </div>
+
+
+
+
         </div>
 
     </div>
 
 
+</div>
+
+
+
+<div class="modal fade" id="dane" tabindex="-1" role="dialog" aria-labelledby="daneTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form th:action="@{/settings/messages}" method="post"class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                    <h5 class="modal-title" id="daneLongTitle" style="padding-left: 15px">Nowa wiadomość</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+
+                        <div class="row" style="padding-left: 36px">
+                            <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Treść</div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="width:100%">
+                            <textarea rows="4" COLS="72" id="message" maxlength="400" name="message" WRAP="description" placeholder="Treść wiadomości" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
+                                <input type="hidden" id="login" name="login"  value="" th:value="${user.getLogin()}">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px">Napisz</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 

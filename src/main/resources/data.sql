@@ -20,7 +20,8 @@ INSERT INTO `tag` (`tag_id`, `name`) VALUES
 INSERT INTO `user` (`user_id`, `role`, `cr_date`, `email`, `login`, `password`, `status`, `information_id`, `rank_id`) VALUES
 (1, 'USER', '2020-06-16 08:52:39', 'rafineria@gmail.com', 'rafineria', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL),
 (2, 'USER', '2020-06-16 08:52:39', 'rafineria123@gmail.com', 'rafineria123', '$2a$10$rehd0BIqzYtkm9KNGmZ8PuPgBqIIIfzGT/a29FCyHuNrtIZdIu1XS', 'Zatwierdzone', NULL, NULL),
-(3, 'USER', '2020-06-16 08:52:39', 'artyleria@gmail.com', 'artyleria', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL);
+(3, 'USER', '2020-06-16 08:52:39', 'artyleria@gmail.com', 'artyleria', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL),
+(4, 'USER', '2020-06-16 08:52:39', 'xkom@gmail.com', 'xkom', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL);
 
 INSERT INTO `discount` (`discount_id`, `content`, `creationdate`, `current_price`, `discount_link`, `expire_date`, `image_url`, `old_price`, `shipment_price`, `status`, `title`, `shop_id`, `tag_id`, `user_id`) VALUES
 (1, 'W Kaufland dostępne w dobrej cenie baterie alkaliczne AA oraz AAA 10szt. (wychodzi 1zł za sztukę). Dostępna duża ilość. Znalezione w Pszczynie, ale z informacji innych użytkowników okazja ogólnopolska.', '2020-06-16 08:52:39', 220, 'https://www.biedronka.pl/pl/dom-nf-10-06', '2020-06-16 08:52:39', 'images/discount_1.jpg', 255, 15, 'Zatwierdzone', 'Baterie alkaliczne AA', 6, 1, 1),

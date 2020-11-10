@@ -44,9 +44,9 @@
                                                                                                              style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
             </li>
             <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
-                <form th:action="@{/logout}" method="post">
+                <form th:action="@{/settings}" method="get">
                     <button style="white-space:pre;" class="btn add_button" type="submit"
-                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO</button>
                 </form>
             </li>
             <li>
@@ -100,7 +100,8 @@
                 align-items: center;
                 justify-content: center">
                 <div class="col-md-3" style="padding-top: 15px;padding-bottom: 15px;">
-                    <img th:src="|/${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                    <img th:src="|/${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="!${discount.getShop().getName().equals('X-kom')}">
+                    <img th:src="|${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="${discount.getShop().getName().equals('X-kom')}">
                 </div>
                 <div class="col-md-9" style="">
                     <div class="row" style="padding-right: 65px;">
@@ -260,7 +261,7 @@
                         <div class="row">
                             <div class="col-md-2 offset-md-1 text-center"
                                  style="border-bottom: 1px solid rgba(82,73,98,.2)">
-                                <span style="font-size:14px;font-weight:900;color:#e42d31; padding-right: 5px"th:text="${comment.getUser().getLogin()}">Rafineria</span>
+                                <a href="" th:href="@{|/profile/${comment.getUser().getLogin()}|}"> <span style="font-size:14px;font-weight:900;color:#e42d31; padding-right: 5px"th:text="${comment.getUser().getLogin()}">Rafineria</span></a>
                                 <span style="font-size:12px;font-weight: 900;color: rgba(145,143,146,0.91);" th:text="|${comment.getDateDifference()} dni temu|">2 dni temu</span>
                             </div>
                             <div class="col-md-1 offset-md-7 text-center">

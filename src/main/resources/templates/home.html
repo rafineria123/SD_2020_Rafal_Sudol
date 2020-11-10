@@ -193,7 +193,8 @@
 
                     <div class="col-md-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
-                        <img th:src="|/${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount"><img>
+                            <img th:src="|/${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="${!discount.getShop().getName().equals('X-kom')}">
+                            <img th:src="|${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="${discount.getShop().getName().equals('X-kom')}">
                         </a>
                     </div>
                 </div>
@@ -216,7 +217,7 @@
                 <!-- User-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
-                        <span class="item_user">Dodane przez: </span><a href="/"><span class="item_user"
+                        <span class="item_user">Dodane przez: </span><a href="/" th:href="@{|/profile/${discount.getUser().getLogin()}|}"><span class="item_user"
                                                                                        style="font-weight: 900; font-size: 15px;color: black"
                                                                                        th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
                     </div>
