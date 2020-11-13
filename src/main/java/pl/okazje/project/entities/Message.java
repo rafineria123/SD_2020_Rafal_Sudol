@@ -1,5 +1,7 @@
 package pl.okazje.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,10 +19,12 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name="conversation_id", nullable=false)
+    @JsonIgnore
     private Conversation conversation;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
+    @JsonIgnore
     private User user;
 
     public Message() {

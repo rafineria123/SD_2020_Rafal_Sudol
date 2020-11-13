@@ -201,7 +201,7 @@
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title"
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>
@@ -218,7 +218,7 @@
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
                         <span class="item_user">Dodane przez: </span><a href="/" th:href="@{|/profile/${discount.getUser().getLogin()}|}"><span class="item_user"
-                                                                                       style="font-weight: 900; font-size: 15px;color: black"
+                                                                                       style="font-weight: 900; font-size: 15px;color: black;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"
                                                                                        th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
                     </div>
                 </div>

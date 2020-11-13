@@ -130,6 +130,18 @@
 
                         </div>
                     </div>
+                    <div class="row" th:if="${user.getInformation()!=null&&user.getInformation().getDescription()!=null&&!user.getInformation().getDescription().equals('')}">
+<!--                        <span style="width: 100%" th:if="${user.getInformation().getDescription()!=null}">-->
+<!--                            <span style="width: 100%" th:if="${!user.getInformation().getDescription().equals('')}">-->
+
+                                <div class="col-8 offset-2 comm_disc_date" style="padding-left: 0px;padding-top: 10px">
+
+                                    O mnie: <span th:text="${user.getInformation().getDescription()}"></span>
+                                </div>
+<!--                            </span>-->
+<!--                        </span>-->
+
+                    </div>
 
                 </span>
             </div>

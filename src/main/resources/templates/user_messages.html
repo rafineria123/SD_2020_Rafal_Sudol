@@ -87,34 +87,34 @@
 
 <div class="container-fluid" style="padding-top: 70px">
 
-    <div class="row">
+    <div class="row" id="left_side_menu_row">
 
-        <div class="col-3" style="font-weight: 400;font-size: 14px;">
+        <div class="col-3" style="font-weight: 400;font-size: 14px;" id="left_side_menu">
 
              <span th:each="conversation : ${list_of_conversations}">
                  <a th:href="@{|/messages/${conversation.getConversation_id()}|}">
-                <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${conversation.hasNewMessage(user)}">
-                    <div class="col-12" style="border-top: 2px solid rgb(117 117 117);border-bottom: 2px solid rgb(117 117 117);border-right: 1px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;">
-                        <div class="row">
-                            <div class="col-2 offset-1 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
-                            <div class="col-8 align-self-center" style="font-weight: 600;">
-                                <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
+                    <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${conversation.hasNewMessage(user)}">
+                        <div class="col-12" style="border-top: 2px solid rgb(117 117 117);border-bottom: 2px solid rgb(117 117 117);border-right: 1px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;">
+                            <div class="row">
+                                <div class="col-2 offset-1 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
+                                <div class="col-8 align-self-center" style="font-weight: 600;">
+                                    <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
 
-                                    TrailBlazer
+                                        TrailBlazer
 
-                                </div>
-                                <div class="row">
+                                    </div>
+                                    <div class="row">
 
-                                    <span style="margin-top:-3px;font-size: 12px;color: rgba(8,8,8,0.72)" th:text="${conversation.getNewestMessage(user)}">
-                                        Ty: hejka, co tam? Chcesz cos z Avon'u?
-                                    </span>
+                                        <span style="margin-top:-3px;font-size: 12px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;color: rgba(8,8,8,0.72)" th:text="${conversation.getNewestMessage(user)}">
+                                            Ty: hejka, co tam? Chcesz cos z Avon'u?
+                                        </span>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
-                </div>
                  </a>
              </span>
 
@@ -122,7 +122,7 @@
             <span th:each="conversation : ${list_of_conversations}">
                 <a th:href="@{|/messages/${conversation.getConversation_id()}|}">
                 <div class="row" style="font-size:14px;padding-top: 10px;" th:if="!${conversation.hasNewMessage(user)}">
-                    <div class="col-12" style="background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${current_conversation.get().getConversation_id().equals(conversation.getConversation_id())}">
+                    <div class="col-12" style="background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${current_conversation.getConversation_id().equals(conversation.getConversation_id())}">
                         <div class="row">
                             <div class="col-2 offset-1 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
                             <div class="col-8" style="font-weight: 600;">
@@ -133,7 +133,7 @@
                                 </div>
                                 <div class="row">
 
-                                    <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56)" th:text="${conversation.getNewestMessage(user)}">
+                                    <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" th:text="${conversation.getNewestMessage(user)}">
                                         Ty: rafineria123@gmail.com
                                     </span>
 
@@ -142,7 +142,7 @@
                         </div>
 
                     </div>
-                    <div class="col-12" style="background-color:#ffffff;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${!current_conversation.get().getConversation_id().equals(conversation.getConversation_id())}">
+                    <div class="col-12" style="background-color:#ffffff;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${!current_conversation.getConversation_id().equals(conversation.getConversation_id())}">
                         <div class="row">
                             <div class="col-2 offset-1 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
                             <div class="col-8" style="font-weight: 600;">
@@ -153,7 +153,7 @@
                                 </div>
                                 <div class="row">
 
-                                    <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56)" th:text="${conversation.getNewestMessage(user)}">
+                                    <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" th:text="${conversation.getNewestMessage(user)}">
                                         Ty: rafineria123@gmail.com
                                     </span>
 
@@ -168,11 +168,11 @@
 
 
         </div>
-        <div class="col-6 d-flex flex-column-reverse" style="border-left: 1px solid rgba(82,73,98,.2); background-color:white;height: 650px;overflow:auto">
+        <div class="col-6 d-flex flex-column-reverse" id="chat" style="border-left: 1px solid rgba(82,73,98,.2); background-color:white;height: 650px;overflow:auto">
 
 
 
-            <span th:each="message:${current_conversation.get().getMessagesSorted()}">
+            <span th:each="message:${current_conversation.getMessagesSorted()}">
                 <div class="d-flex align-items-start flex-column" th:if="${message.getUser().getUser_id()!=user.getUser_id()}">
                     <div class="left_message" th:text="${message.getContent()}"></div>
                 </div>
@@ -189,7 +189,7 @@
 
 
             <div class="col-7 offset-3" style="border-left: 1px solid rgba(82,73,98,.2);padding-top: 7px">
-                <form th:action="@{/sendMessage}" method="post" style="width: 100%">
+
 
                     <div class="row">
 
@@ -198,20 +198,18 @@
 
                                 <input type="text" class="add_input" id="new_message" name="new_message" placeholder="Wpisz nową wiadomość..." value="" minlength="1" style="border: 1px solid rgba(82,73,98,0.2);
                                     padding-left: 20px;padding-top:5px;padding-bottom:5px;border-radius: 20px;width:100%;font-size: 17px">
-                                <input type="hidden" id="new_message_conv_id" name="new_message_conv_id" th:value="${current_conversation.get().getConversation_id()}">
 
                             </div>
 
                             <div class="col-1">
 
-                                <button type="submit" class="add_input" style="background: white;border: 0;height: 100%;font-size: 25px;">
+                                <button type="button" class="add_input" style="background: white;border: 0;height: 100%;font-size: 25px;" onclick="sendMessage()" id="mybutton">
                                     <span class="fas fa-comment-alt" style="color: #f9095af0;font-size: 30px;text-align: center;"></span>
                                 </button>
 
                             </div>
 
                     </div>
-                </form>
 
             </div>
 
@@ -222,58 +220,239 @@
     </div>
 
 </div>
-
-
-<div class="modal fade" id="dane" tabindex="-1" role="dialog" aria-labelledby="daneTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
-                <h5 class="modal-title" id="daneLongTitle" style="padding-left: 15px">Nowa wiadomość</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <div class="row" style="padding-left: 36px">
-                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Do</div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="name" name="name" placeholder="Wpisz nazwę osoby" value="" style="border: 1px solid rgba(82,73,98,0.2);
-                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
-                        </div>
-                    </div>
-
-                    <div class="row" style="padding-left: 36px">
-                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Treść</div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-12" style="width:100%">
-                            <textarea rows="4" COLS="72" id="description" maxlength="400" name="description" WRAP="description" placeholder="Treść wiadomości" style="border: 1px solid rgba(82,73,98,0.2);
-                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
-
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" style="width: 100%;border-radius: 20px">Napisz</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <script
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script type="text/javascript">
+    function refreshChat() {
+        $.ajax({
+            url : "http://localhost:8080/conversation/" + "[[${current_conversation.getConversation_id()}]]",
+            success : function(data) {
+                const obj = data;
+                document.getElementById("chat").innerHTML = "";
+                for (let i = 0; i < obj.length; i++) {
+
+                    let element1 = document.createElement("div");
+                    element1.classList.add("d-flex");
+                    element1.classList.add("flex-column");
+
+                    let element2 = document.createElement("div");
+
+                    if (obj[i][1] == "left") {
+                        element2.classList.add("left_message");
+                        element1.classList.add("align-items-start");
+                    }else {
+                        element2.classList.add("right_message");
+                        element1.classList.add("align-items-end");
+                    }
+
+                    element2.innerHTML=obj[i][0];
+
+                    element1.appendChild(element2);
+
+
+
+                    document.getElementById("chat").appendChild(element1);
+
+                };
+
+            }
+        });
+        $.ajax({
+            url : "http://localhost:8080/user_conversations/" + "[[${current_conversation.getConversation_id()}]]",
+            success : function(data) {
+                const obj = data;
+                let list = [];
+                for (let i = 0; i < obj.length; i++) {
+
+                    if (obj[i][2]==="nieodczytane"){
+                        if("[[${current_conversation.getConversation_id()}]]"===obj[i][3]){
+                            let element1 = document.createElement("div");
+                            element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
+                                "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
+                                "                        <div class=\"col-12\" style=\"background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +
+                                "                            <div class=\"row\">\n" +
+                                "                                <div class=\"col-2 offset-1 align-self-center\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
+                                "                                <div class=\"col-8 align-self-center\" style=\"font-weight: 600;\">\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "    \n" +
+                                obj[i][4]+"\n" +
+                                "    \n" +
+                                "                                    </div>\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "    \n" +
+                                "                                        <span style=\"margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;\">\n" +
+                                obj[i][5]+"\n" +
+                                "                                        </span>\n" +
+                                "    \n" +
+                                "                                    </div>\n" +
+                                "                                </div>\n" +
+                                "                            </div>\n" +
+                                "    \n" +
+                                "                        </div>\n" +
+                                "                    </div>\n" +
+                                "                 </a>"
+                            list.push(element1);
+
+                        }else {
+
+
+                            let element1 = document.createElement("div");
+                            element1.innerHTML = "<a href=\"" + "/messages/" + obj[i][3] + "\">\n" +
+                                "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
+                                "                        <div class=\"col-12\" style=\"border-top: 2px solid rgb(117 117 117);border-bottom: 2px solid rgb(117 117 117);border-right: 1px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +
+                                "                            <div class=\"row\">\n" +
+                                "                                <div class=\"col-2 offset-1 align-self-center\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
+                                "                                <div class=\"col-8 align-self-center\" style=\"font-weight: 600;\">\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "    \n" +
+                                obj[i][4] + "\n" +
+                                "    \n" +
+                                "                                    </div>\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "    \n" +
+                                "                                        <span style=\"margin-top:-3px;font-size: 12px;color: rgba(8,8,8,0.72);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;\">\n" +
+                                obj[i][5] + "\n" +
+                                "                                        </span>\n" +
+                                "    \n" +
+                                "                                    </div>\n" +
+                                "                                </div>\n" +
+                                "                            </div>\n" +
+                                "    \n" +
+                                "                        </div>\n" +
+                                "                    </div>\n" +
+                                "                 </a>"
+                            list.push(element1);
+                        }
+
+                    }
+
+                };
+                for (let i = 0; i < obj.length; i++) {
+
+                    if (obj[i][2]==="odczytane"){
+
+                        let element1 = document.createElement("div");
+                        if("[[${current_conversation.getConversation_id()}]]"===obj[i][3]){
+                        element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
+                            "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
+                            "                        <div class=\"col-12\" style=\"background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +
+                            "                            <div class=\"row\">\n" +
+                            "                                <div class=\"col-2 offset-1 align-self-center\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
+                            "                                <div class=\"col-8 align-self-center\" style=\"font-weight: 600;\">\n" +
+                            "                                    <div class=\"row\">\n" +
+                            "    \n" +
+                            obj[i][4]+"\n" +
+                            "    \n" +
+                            "                                    </div>\n" +
+                            "                                    <div class=\"row\">\n" +
+                            "    \n" +
+                            "                                        <span style=\"margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;\">\n" +
+                            obj[i][5]+"\n" +
+                            "                                        </span>\n" +
+                            "    \n" +
+                            "                                    </div>\n" +
+                            "                                </div>\n" +
+                            "                            </div>\n" +
+                            "    \n" +
+                            "                        </div>\n" +
+                            "                    </div>\n" +
+                            "                 </a>"
+                            list.push(element1);
+                        }else {
+
+                            element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
+                                "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
+                                "                        <div class=\"col-12\" style=\"background-color:#ffffff;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +
+                                "                            <div class=\"row\">\n" +
+                                "                                <div class=\"col-2 offset-1 align-self-center\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
+                                "                                <div class=\"col-8 align-self-center\" style=\"font-weight: 600;\">\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "    \n" +
+                                obj[i][4]+"\n" +
+                                "    \n" +
+                                "                                    </div>\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "    \n" +
+                                "                                        <span style=\"margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;\">\n" +
+                                obj[i][5]+"\n" +
+                                "                                        </span>\n" +
+                                "    \n" +
+                                "                                    </div>\n" +
+                                "                                </div>\n" +
+                                "                            </div>\n" +
+                                "    \n" +
+                                "                        </div>\n" +
+                                "                    </div>\n" +
+                                "                 </a>"
+
+                        }
+                        list.push(element1);
+
+                    }
+
+                };
+
+
+
+                let newdiv = document.getElementById("left_side_menu");
+                newdiv.innerHTML="";
+                list.forEach(function(item) {
+                    newdiv.appendChild(item);
+                });
+            }
+        });
+    }
+
+    function sendMessage(){
+
+        if(document.getElementById("new_message").value===""){
+
+        }else {
+
+            $.ajax({
+                type: 'POST',
+                url: '/sendNewMessage',
+                data: {
+                    message: document.getElementById("new_message").value,
+                    user: "[[${current_conversation.getOtherUser(user).getLogin()}]]"
+
+                },
+                success: function (data) {
+                    document.getElementById("new_message").value = "";
+                    refreshChat();
+
+                },
+                error: function (jqXHR) {
+                    $(document.body).text('Error: ' + jqXHR.status);
+                }
+            });
+        }
+
+    }
+
+    var input = document.getElementById("new_message");
+
+    // Execute a function when the user releases a key on the keyboard
+    input.addEventListener("keyup", function(event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("mybutton").click();
+        }
+    });
+
+
+</script>
+
+<script type="text/javascript">
+    var intervalId = 0;
+    intervalId = setInterval(refreshChat, 3000);
+</script>
 </body>
 </html>

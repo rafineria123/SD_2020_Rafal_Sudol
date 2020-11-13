@@ -1,30 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
     <meta charset="UTF-8">
+    <link type="text/css" href="/css/user_messages.css" rel="stylesheet"/>
     <title>Title</title>
 </head>
 <body>
 
-<button type="button" data-filter="all">All</button>
-<button type="button" data-filter=".category-a">Category A</button>
-<button type="button" data-filter=".category-b">Category B</button>
-<button type="button" data-filter=".category-c">Category C</button>
 
-<div class="container mix-container">
-    <div class="mix category-a" data-order="1">cata</div>
-    <div class="mix category-b" data-order="2">catb</div>
-    <div class="mix category-b category-c" data-order="3">catb</div>
-    <div class="mix category-a category-d" data-order="4">cata</div>
-</div>
+
+    <div class="col-6 d-flex flex-column-reverse" id="chat" style="border-left: 1px solid rgba(82,73,98,.2); background-color:white;height: 650px;overflow:auto">
 
 
 
+<!--                <div class="d-flex align-items-start flex-column" th:if="${message.getUser().getUser_id()!=user.getUser_id()}">-->
+<!--                    <div class="left_message" th:text="${message.getContent()}"></div>-->
+<!--                </div>-->
+<!--                 <div class="d-flex align-items-end flex-column" th:if="${message.getUser().getUser_id()==user.getUser_id()}">-->
+<!--                    <div class="right_message"  th:text="${message.getContent()}">Flex item</div>-->
+<!--                </div>-->
 
-<script src="js/mixitup/dist/mixitup.min.js"></script>
-<script>
-    const jd = document.querySelector(".mix-container")
-    var mixer = mixitup(jd)
+
+
+
+
+    </div>
+
+
+
+
+
+
+<script type="text/javascript">
+    function refreshChat() {
+        $.ajax({
+            url : "http://localhost:8080/add/" + "[[${current_conversation.getConversation_id()}]]",
+            success : function(data) {
+                const obj = data;
+                document.getElementById("chat").innerHTML = "";
+                for (let i = 0; i < obj.length; i++) {
+
+                    let element1 = document.createElement("div");
+                    element1.classList.add("d-flex");
+                    element1.classList.add("flex-column");
+                    element1.classList.add("align-items-start");
+
+                    let element2 = document.createElement("div");
+
+                    if (obj[i][1] == "left") {
+                        element2.classList.add("left_message");
+                    }else {
+                        element2.classList.add("right_message");
+                    }
+
+                    element2.innerHTML=obj[i][0];
+
+                    element1.appendChild(element2);
+
+
+
+                    document.getElementById("chat").appendChild(element1);
+
+                };
+
+            }
+        });
+    }
 </script>
+
+<script type="text/javascript">
+    var intervalId = 0;
+    intervalId = setInterval(refreshChat, 3000);
+</script>
+
+<script
+        src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+
 </body>
 </html>
