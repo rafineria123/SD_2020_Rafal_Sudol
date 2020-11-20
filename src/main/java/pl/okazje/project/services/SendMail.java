@@ -16,12 +16,26 @@ public class SendMail {
     private JavaMailSender javaMailSender;
 
     public void sendingMail(String to, String subject, String body) throws MessagingException {
-        MimeMessage message=javaMailSender.createMimeMessage();
-        MimeMessageHelper helper;
-        helper=new MimeMessageHelper(message,true);
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(body);
-        javaMailSender.send(message);
+
+        Thread t = new Thread(() -> {
+            try {
+
+                MimeMessage message=javaMailSender.createMimeMessage();
+                MimeMessageHelper helper;
+                helper=new MimeMessageHelper(message,true);
+                helper.setTo(to);
+                helper.setSubject(subject);
+                helper.setText(body);
+                javaMailSender.send(message);
+
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+
+        });
+        t.start();
+
+
+
 
     }}

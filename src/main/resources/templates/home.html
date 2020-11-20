@@ -176,7 +176,7 @@
     </div>
     <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
-                <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}"
+                <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.deletedOrNotReady()}"
                      th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
                      style="padding-bottom: 30px;"
                      th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
@@ -201,7 +201,7 @@
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>

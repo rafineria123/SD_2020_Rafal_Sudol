@@ -23,6 +23,9 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "information_id")
     private Information information = new Information();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ban_id")
+    private Ban ban = new Ban();
 
     @ManyToOne
     @JoinColumn(name="rank_id", nullable=true)
@@ -55,10 +58,19 @@ public class User {
 
 
 
+
     public User() {
     }
 
-    public User(String login,String password,String email) {
+    public Ban getBan() {
+        return ban;
+    }
+
+    public void setBan(Ban ban) {
+        this.ban = ban;
+    }
+
+    public User(String login, String password, String email) {
         this.status = "active";
         this.cr_date = new Date();
         this.login = login;
@@ -212,4 +224,19 @@ public class User {
         return new ArrayList<Discount>(discounts).size();
 
     }
+
+    public boolean hasDiscount(Long discount_id){
+
+        for (Discount d:discounts) {
+
+            if (d.getDiscount_id()==discount_id){
+
+                return true;
+            }
+
+        }
+        return false;
+
+    }
 }
+

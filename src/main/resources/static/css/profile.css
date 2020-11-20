@@ -38,6 +38,22 @@ a:link, a:visited,a:hover, a:active {
 
 }
 
+.remove_button{
+
+    background-color: inherit;
+    border: 0;
+
+
+}
+
+.remove_button:focus{
+
+    border: 0;
+    outline: 0;
+
+
+}
+
 .left_message{
 
     color: black;

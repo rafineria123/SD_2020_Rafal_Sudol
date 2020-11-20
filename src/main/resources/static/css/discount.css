@@ -78,6 +78,22 @@
 
 }
 
+.remove_button{
+
+    background-color: inherit;
+    border: 0;
+
+
+}
+
+.remove_button:focus{
+
+    border: 0;
+    outline: 0;
+
+
+}
+
 .nav_items{
 
     padding-top: 3px;
@@ -153,6 +169,35 @@ h1{
     background-color: white;
     box-shadow: 0px 2px 3px 1px rgba(220,220,220,1);
 
+}
+
+.alert {
+    padding: 20px;
+    background-color: rgba(27, 133, 31, 0.45);
+    color: white;
+    border-radius: 10px;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.bad_alert {
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+}
+
+.closebtn:hover {
+    color: black;
 }
 
 .sort_button:hover{

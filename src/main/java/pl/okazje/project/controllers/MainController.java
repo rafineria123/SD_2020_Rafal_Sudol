@@ -57,6 +57,8 @@ public class MainController {
     @Autowired
     MessageRepository messageRepository;
     @Autowired
+    BanRepository banRepository;
+    @Autowired
     SendMail sendMail;
 
 
@@ -424,6 +426,34 @@ public class MainController {
 
     @GetMapping("/discount/{id}")
     public ModelAndView discount(@PathVariable("id") Long id) {
+            if (discountRepository.findById(id).get().deletedOrNotReady()) {
+
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication.getAuthorities().stream()
+                        .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
+
+                    User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+                    if (uzytkownik1.hasDiscount(id) || uzytkownik1.getROLE().equals("ADMIN")) {
+
+                        ModelAndView modelAndView = new ModelAndView("discount");
+                        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+                        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+                        modelAndView.addObject("discount", discountRepository.findById(id).get());
+                        return modelAndView;
+
+                    }
+                    ModelAndView modelAndView = new ModelAndView("error");
+                    return modelAndView;
+
+
+                } else {
+                    ModelAndView modelAndView = new ModelAndView("error");
+                    return modelAndView;
+                }
+
+
+            }
+
         ModelAndView modelAndView = new ModelAndView("discount");
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
@@ -1074,7 +1104,7 @@ public class MainController {
     }
 
     @PostMapping("changePassword")
-    public RedirectView changePassword(@ModelAttribute("currentpassword") String currentpassword, @ModelAttribute("newpassword") String newpassword, @ModelAttribute("newpasswordconfirmation") String newpasswordconfirmation, RedirectAttributes redir) {
+    public RedirectView changePassword(@ModelAttribute("currentpassword") String currentpassword, @ModelAttribute("newpassword") String newpassword, @ModelAttribute("newpasswordconfirmation") String newpasswordconfirmation, RedirectAttributes redir) throws MessagingException {
 
         RedirectView redirectView = new RedirectView("/settings", true);
 
@@ -1096,6 +1126,7 @@ public class MainController {
         uzytkownik.setPassword(passwordEncoder.encode(newpassword));
         userRepository.save(uzytkownik);
         redir.addFlashAttribute("status", "Twoje hasło zostało zmienione.");
+        sendMail.sendingMail(uzytkownik.getEmail(),"Norgie - Hasło zostało zmienione", "Witaj "+uzytkownik.getLogin()+", \n hasło do twojego konta zostało zmienione.\n\nJeśli nie zostało ono zaktualizowane przez Ciebie, powiadom nas o tym jak najszybciej.");
         return redirectView;
 
     }
@@ -1232,6 +1263,60 @@ public class MainController {
 
         return "";
 
+
+    }
+
+    @PostMapping("/removediscount")
+    public String removediscount(@ModelAttribute("discount_id") String discount_id){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+        if(uzytkownik1.getROLE().equals("ADMIN")){
+
+            Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
+            disc.setStatus("Usuniete");
+            discountRepository.save(disc);
+
+        }
+
+        return "redirect:/discount/"+discount_id;
+
+    }
+
+    @PostMapping("/removecomment")
+    public String removecomment(@ModelAttribute("comment_id") String comment_id){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+        Comment comment = commentRepository.findById(Long.parseLong(comment_id)).get();
+        if(uzytkownik1.getROLE().equals("ADMIN")){
+
+
+            comment.setStatus("Usuniete");
+            commentRepository.save(comment);
+
+        }
+
+        return "redirect:/discount/"+comment.getDiscount().getDiscount_id();
+
+    }
+
+    @PostMapping("/banuser")
+    public String banuser(@ModelAttribute("user_id") String user_id,@ModelAttribute("reason") String reason){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+        if(uzytkownik1.getROLE().equals("ADMIN")){
+
+            Ban ban = new Ban();
+            ban.setDuration("");
+            ban.setReason(reason);
+            ban.setUser(userRepository.findById(Long.parseLong(user_id)).get());
+            banRepository.save(ban);
+
+        }
+
+        return "redirect:/profile/"+userRepository.findById(Long.parseLong(user_id)).get().getLogin();
 
     }
 }

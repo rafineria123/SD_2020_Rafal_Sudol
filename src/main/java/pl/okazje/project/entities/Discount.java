@@ -118,6 +118,46 @@ public class Discount {
         return s;
     }
 
+    public boolean deleted(){
+
+        if (this.status==null){
+
+            return false;
+
+        }else if(this.status.equals("Usuniete")){
+
+            return true;
+
+        }else{
+
+            return false;
+
+        }
+
+
+
+    }
+
+    public boolean deletedOrNotReady(){
+
+        if (this.status==null){
+
+            return false;
+
+        }else if(this.status.equals("Usuniete")||this.status.equals("Niezatwierdzone")){
+
+            return true;
+
+        }else{
+
+            return false;
+
+        }
+
+
+
+    }
+
     public String getCreation_date_formated() {
 
         Format formatter = new SimpleDateFormat("dd.MM.yy");

@@ -94,7 +94,7 @@
                 <span style="padding-left: 25px">Cześć,</span>
             </div>
             <div class="row" style="font-size: 20px;font-weight: 600;padding-bottom: 15px">
-                <span style="padding-left: 25px" th:text="${user.getLogin()}">Rafał</span>
+                <a href="" th:href="@{|/profile/${user.getLogin()}|}"> <span style="padding-left: 25px" th:text="${user.getLogin()}">Rafał</span></a>
             </div>
             <div class="row">
                 <a href="/settings" style="width: 100%">

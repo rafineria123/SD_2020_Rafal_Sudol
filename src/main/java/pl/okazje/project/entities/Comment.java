@@ -13,7 +13,7 @@ public class Comment {
     private Long comment_id;
     @Column(length = 700)
     private String content;
-    private Integer upper_comment_id;
+    private String status="";
     private Date cr_date;
 
     @OneToMany(mappedBy="comment")
@@ -50,19 +50,21 @@ public class Comment {
     }
 
     public String getContent() {
-        return content;
+        if (this.getStatus()==null){
+            return content;
+        }else if(this.getStatus().equals("Usuniete")){
+            return "<Komentarz usunięty przez Moderatora>";
+        }else{
+
+            return content;
+
+        }
+
+
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public Integer getUpper_comment_id() {
-        return upper_comment_id;
-    }
-
-    public void setUpper_comment_id(Integer upper_comment_id) {
-        this.upper_comment_id = upper_comment_id;
     }
 
     public Date getCr_date() {
@@ -103,6 +105,14 @@ public class Comment {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getRatingsSize(){
