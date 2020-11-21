@@ -1,12 +1,16 @@
 package pl.okazje.project.entities;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Entity
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +23,20 @@ public class User {
     private String status;
     private String ROLE = "USER";
     private Date cr_date;
+    private boolean enabled = false;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "information_id")
     private Information information = new Information();
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ban_id")
-    private Ban ban = new Ban();
+    private Ban ban;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "token_id", nullable = true)
+    private Token token;
+
 
     @ManyToOne
     @JoinColumn(name="rank_id", nullable=true)
@@ -66,6 +77,18 @@ public class User {
         return ban;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
+
     public void setBan(Ban ban) {
         this.ban = ban;
     }
@@ -94,8 +117,45 @@ public class User {
         this.login = login;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        final SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(ROLE);
+        return Collections.singletonList(simpleGrantedAuthority);
+    }
+
     public String getPassword() {
+
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        if (this.ban!=null){
+
+            return false;
+
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public void setPassword(String password) {

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.okazje.project.services.UserService;
 
 import javax.sql.DataSource;
 
@@ -28,6 +29,8 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private UserService userService;
 
 
     @Override
@@ -53,9 +56,8 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
     {
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .authoritiesByUsernameQuery("select LOGIN, ROLE from USER where LOGIN=?")
-                .usersByUsernameQuery("select LOGIN, PASSWORD, 1 as enabled from USER where LOGIN=?");
+        auth.userDetailsService(userService)
+                .passwordEncoder(passwordEncoder());
 
     }
 

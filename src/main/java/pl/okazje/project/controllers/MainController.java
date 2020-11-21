@@ -2,8 +2,8 @@ package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
-import org.springframework.scheduling.config.Task;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
+import pl.okazje.project.events.OnRegistrationCompleteEvent;
 import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.SendMail;
 
@@ -26,10 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -60,10 +58,13 @@ public class MainController {
     BanRepository banRepository;
     @Autowired
     SendMail sendMail;
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
+    @Autowired
+    TokenRepository tokenRepository;
 
 
 
-    private static User uzytkownik = null;
 
     private static int page_size_for_home = 8;
 
@@ -73,7 +74,7 @@ public class MainController {
     public ModelAndView homePage() throws MessagingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         Pageable pageable = PageRequest.of(0, page_size_for_home, Sort.by("creationdate").descending());
         Page<Discount> allProducts = discountRepository.findAll(pageable);
 
@@ -111,8 +112,8 @@ public class MainController {
     public ModelAndView homePageSort(@PathVariable("id") String id, @PathVariable("sort") String sort) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        Pageable pageable = null;
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        Pageable pageable;
         ModelAndView modelAndView = new ModelAndView("home");
         if (sort.equals("date")) {
             pageable = PageRequest.of(Integer.parseInt(id) - 1, page_size_for_home, Sort.by("creationdate").descending());
@@ -174,7 +175,7 @@ public class MainController {
     public ModelAndView homePage(@PathVariable("id") String id) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
         Pageable pageable = PageRequest.of(Integer.parseInt(id) - 1, page_size_for_home, Sort.by("creationdate").descending());
         Page<Discount> allProducts = discountRepository.findAll(pageable);
@@ -483,7 +484,7 @@ public class MainController {
         Discount discount = new Discount();
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            uzytkownik = userRepository.findUserByLogin(authentication.getName());
+            User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
             String uploadDir = "/static/images";
             String realPath = request.getServletContext().getRealPath(uploadDir);
@@ -661,7 +662,7 @@ public class MainController {
     public String addrate(@ModelAttribute("discountidadd") String discountid, @ModelAttribute("redirect") String redirect) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
         Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
         for (Rating r : discount.getRatings()) {
@@ -688,7 +689,7 @@ public class MainController {
 
         Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         for (Rating r : discount.getRatings()) {
 
             if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {
@@ -706,7 +707,7 @@ public class MainController {
     @PostMapping("/addcomment")
     public String addcomment(@ModelAttribute("discountidaddcomment") String discountaddcomment, @ModelAttribute("comment") String comment) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         Comment comment1 = new Comment();
         comment1.setDiscount(discountRepository.findById(Long.parseLong(discountaddcomment)).get());
         comment1.setUser(uzytkownik);
@@ -719,7 +720,7 @@ public class MainController {
 
     @PostMapping("/register")
     public RedirectView register(@ModelAttribute("login") String login, @ModelAttribute("password") String password, @ModelAttribute("repeated_password") String repeated_password,
-                                 RedirectAttributes redir, @ModelAttribute("email") String email, @ModelAttribute("reg") String reg) {
+                                 RedirectAttributes redir, @ModelAttribute("email") String email, @ModelAttribute("reg") String reg, HttpServletRequest request) {
 
         RedirectView redirectView = new RedirectView("/register", true);
 
@@ -766,18 +767,57 @@ public class MainController {
         user1.setPassword(passwordEncoder.encode(password));
         user1.setEmail(email);
         userRepository.save(user1);
+        String appUrl = request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user1,
+                request.getLocale(), appUrl));
 
-        redir.addFlashAttribute("good_status", "Zostałeś pomyślnie zarejestrowany. Możesz sie teraz zalogować.");
+
+        redir.addFlashAttribute("good_status", "Na twój mail została wysłana wiadomość. Może to potrwać kilka minut. Zatwierdz swoje konto klikając w link aktywacyjny.");
         redirectView = new RedirectView("/login", true);
 
         return redirectView;
 
     }
 
+    @GetMapping("/registrationConfirm")
+    public RedirectView registrationConfirm(@RequestParam("token") String token, RedirectAttributes redir){
+
+
+
+        Token verificationToken = tokenRepository.findByToken(token);
+        if (verificationToken == null) {
+
+            RedirectView redirectView = new RedirectView("/login",true);
+            redir.addFlashAttribute("bad_status", "Taki token nie istnieje.");
+            return redirectView;
+
+        }
+
+
+        User user = verificationToken.getUser();
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+
+            RedirectView redirectView = new RedirectView("/login",true);
+            redir.addFlashAttribute("bad_status", "Twój token wygasł.");
+            return redirectView;
+
+        }
+
+        user.setEnabled(true);
+        userRepository.save(user);
+        RedirectView redirectView = new RedirectView("/login",true);
+        redir.addFlashAttribute("good_status", "Możesz się teraz zalogować.");
+        return redirectView;
+
+    }
+
+
+
     @PostMapping("/ratecomment")
     public String ratecomment(@ModelAttribute("commentid") String commentid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         Comment comment = commentRepository.findById((Long.parseLong(commentid))).get();
         for (Rating r : comment.getRatings()) {
 
@@ -801,7 +841,7 @@ public class MainController {
     public ModelAndView settings() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         if (uzytkownik.getInformation() == null) {
             uzytkownik.setInformation(new Information());
         }
@@ -821,7 +861,7 @@ public class MainController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenUserId(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
@@ -849,7 +889,7 @@ public class MainController {
     @GetMapping("/settings/discounts/page/{id}")
     public ModelAndView pageSettingsDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         PagedListHolder page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
@@ -879,7 +919,7 @@ public class MainController {
         List<String> listOfAdresses = new ArrayList<>();
         ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         PagedListHolder page = null;
         if (sort.equals("date")) {
             modelAndView.addObject("picked_sort", 3);
@@ -936,7 +976,7 @@ public class MainController {
     public ModelAndView profileMessages() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
 
         ModelAndView modelAndView = new ModelAndView("user_profile_messages");
@@ -959,7 +999,7 @@ public class MainController {
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
         if (login.equals(uzytkownik.getLogin())) {
 
@@ -1026,7 +1066,7 @@ public class MainController {
     public ModelAndView profile(@PathVariable("name") String name) {
 
         ModelAndView modelAndView = new ModelAndView("profile");
-        uzytkownik = userRepository.findUserByLogin(name);
+        User uzytkownik = userRepository.findUserByLogin(name);
         modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("comments_page", false);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -1039,7 +1079,7 @@ public class MainController {
     public ModelAndView profile_comments(@PathVariable("name") String name) {
 
         ModelAndView modelAndView = new ModelAndView("profile");
-        uzytkownik = userRepository.findUserByLogin(name);
+        User uzytkownik = userRepository.findUserByLogin(name);
         modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("comments_page", true);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -1052,7 +1092,7 @@ public class MainController {
     public RedirectView changeUserDetails(@ModelAttribute("name") String name, @ModelAttribute("surname") String surname, @ModelAttribute("email") String email, RedirectAttributes redir) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
         uzytkownik.setEmail(email);
         Information info = new Information();
@@ -1081,7 +1121,7 @@ public class MainController {
     public RedirectView changeDescription(@ModelAttribute("description") String description, RedirectAttributes redir) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
         Information info = new Information();
         if (uzytkownik.getInformation() == null) {
@@ -1114,7 +1154,7 @@ public class MainController {
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
         if (!passwordEncoder.matches(currentpassword, uzytkownik.getPassword())) {
 
@@ -1135,7 +1175,7 @@ public class MainController {
     public ModelAndView pageMessages(@PathVariable("id") String id) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
         if (!conversationRepository.findById(Long.parseLong(id)).isPresent()) {
 
@@ -1176,7 +1216,7 @@ public class MainController {
     public String sendMessage(@ModelAttribute("new_message_conv_id") String new_message_conv_id, @ModelAttribute("new_message") String new_message) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
 
         Message message = new Message();
