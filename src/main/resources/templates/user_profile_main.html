@@ -130,6 +130,17 @@
                     </button>
                 </a>
             </div>
+            <div class="row" sec:authorize="hasAuthority('ADMIN')">
+                <a href="/settings/admin/discounts" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="far fa-calendar-check" style="font-size: 16px;padding-left: 17px"></span></div>
+                            <div class="col-10"><span>Oczekujące okazje</span></div>
+
+                        </div>
+                    </button>
+                </a>
+            </div>
 
         </div>
 

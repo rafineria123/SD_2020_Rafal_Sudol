@@ -176,11 +176,12 @@
     </div>
     <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
-                <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.deletedOrNotReady()}"
-                     th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
-                     style="padding-bottom: 30px;"
-                     th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
-                    <div class="col-md-12 item_div">
+        <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.deletedOrNotReady()}"
+             th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
+             style="padding-bottom: 30px;"
+             th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
+            <div class="col-md-12 item_div" th:if="${!discount.isOutDated()}">
+<!--                        <div class="col-md-12 item_div" th:if="${discount.isOutDated()}" style="filter: grayscale(90%)">-->
                         <!-- Brand icon-->
                         <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                             <div class="col-md-12">
@@ -193,8 +194,7 @@
 
                     <div class="col-md-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
-                            <img th:src="|/${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="${!discount.getShop().getName().equals('X-kom')}">
-                            <img th:src="|${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="${discount.getShop().getName().equals('X-kom')}">
+                            <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                         </a>
                     </div>
                 </div>
@@ -277,8 +277,119 @@
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
                     <div class="col-md-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
-                            <button type="button"  class="btn item_button">Przejdz do oferty
+                            <button type="button"  class="btn item_button" th:if="${!discount.isOutDated()}">
+
+                                    Przejdz do oferty
                                 <span class="fas fa-arrow-right"></span></button>
+<!--                            <button type="button"  class="btn item_button" th:if="${discount.isOutDated()}" style="background: linear-gradient(45deg,lightblue,lightblue);">-->
+
+<!--                                Przejdz do oferty-->
+<!--                                <span class="fas fa-arrow-right"></span></button>-->
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- outdated discounts -->
+            <div class="col-md-12 item_div" th:if="${discount.isOutDated()}" style="filter: grayscale(90%)">
+                <!-- Brand icon-->
+                <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="col-md-12">
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
+                                th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
+                    </div>
+                </div>
+                <!-- Discount image-->
+                <div class="row item_parts_padding">
+
+                    <div class="col-md-12">
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
+                            <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                        </a>
+                    </div>
+                </div>
+                <!-- Title-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
+                                                                                                  th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Date-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_date">Oferta wygasa: </span><span class="item_user"
+                                                                            style="font-weight: 900; font-size: 15px; color: #1e7e34"
+                                                                            th:text="${discount.getExpire_date_formated()}">25.06.20</span>
+                    </div>
+
+                </div>
+                <!-- User-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span class="item_user">Dodane przez: </span><a href="/" th:href="@{|/profile/${discount.getUser().getLogin()}|}"><span class="item_user"
+                                                                                                                                                style="font-weight: 900; font-size: 15px;color: black;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"
+                                                                                                                                                th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
+                    </div>
+                </div>
+                <!-- Rate + Comments-->
+                <div class="row item_parts_padding" style="padding-top: 10px">
+                    <div class="col-md-6 float-right" style="padding-left: 40px">
+                        <div class="row" sec:authorize="isAuthenticated()">
+                            <form th:action="@{/addrate}" method="post">
+                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
+                                       value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
+                                                                             id="discountidadd"
+                                                                             th:value="${discount.getDiscount_id()}">
+                                <input type="hidden" name="redirect"
+                                       id="redirect"
+                                       value="">
+                            </form>
+                            <span
+                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
+                                    th:text="|${discount.getRatingsSize()}|">  255  </span>
+                            <form th:action="@{/removerate}" method="post"><input
+                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
+                                    value="&#xf068;" type="submit"><input type="hidden" name="discountidremove"
+                                                                          id="discountidremove"
+                                                                          th:value="${discount.getDiscount_id()}">
+                                <input type="hidden" name="redirect_remove"
+                                       id="redirect_remove"
+                                       value="">
+                            </form>
+                        </div>
+                        <div class="row" sec:authorize="!isAuthenticated()">
+                            <form th:action="@{/login}" method="get"
+                                  sec:authorize="!isAuthenticated()">
+                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
+                                       value="&#xf067;" type="submit">
+                            </form>
+                            <span
+                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
+                                    th:text="|${discount.getRatingsSize()}|">  255  </span>
+                            <form th:action="@{/login}" method="get"
+                                  sec:authorize="!isAuthenticated()"><input
+                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
+                                    value="&#xf068;" type="submit">
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span
+                                class="fas fa-comments"
+                                style="color: #9e9ea4;font-size: 14px;"></span><span
+                                style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre"
+                                th:text="|   ${discount.getCommentsSize()}|">  255</span></a>
+                    </div>
+                </div>
+                <!--Discount Button-->
+                <div class="row item_parts_padding" style="padding-bottom: 15px">
+                    <div class="col-md-12">
+                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
+                                                        <button type="button"  class="btn item_button" th:if="${discount.isOutDated()}" style="background: linear-gradient(45deg,lightblue,lightblue);">
+
+                                                            Przejdz do oferty
+                                                            <span class="fas fa-arrow-right"></span></button>
                         </a>
                     </div>
                 </div>

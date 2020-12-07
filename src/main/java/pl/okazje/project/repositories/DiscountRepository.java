@@ -114,6 +114,8 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
             nativeQuery = true)
     public List<Discount> sortDiscountByRatingWithGivenUserId(Integer id);
 
+    public List<Discount> findDiscountsByStatusEquals(String status);
+
 
 
 

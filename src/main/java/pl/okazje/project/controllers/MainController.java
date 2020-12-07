@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -465,8 +466,19 @@ public class MainController {
 
 
     @GetMapping("/add/discount")
-    public ModelAndView add_discount_get() {
+    public ModelAndView add_discount_get(RedirectAttributes redir) {
         ModelAndView modelAndView = new ModelAndView("add_discount");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
+            RedirectView redirectView = new RedirectView("/login");
+            redir.addFlashAttribute("bad_status", "Musisz się zalogować aby dodać okazje.");
+            modelAndView =  new ModelAndView(redirectView);
+            return modelAndView;
+
+
+        }
+
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         modelAndView.addObject("error", false);
@@ -885,6 +897,63 @@ public class MainController {
 
 
     }
+
+    @GetMapping("/settings/admin/discounts")
+    public ModelAndView settingsAdminDiscounts() {
+
+        ModelAndView modelAndView = new ModelAndView("user_admin_profile_discounts");
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals("Oczekujace"));
+        page.setPageSize(2); // number of items per page
+        page.setPage(0);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("user", uzytkownik);
+        modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/settings/admin/discounts/page/" + i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+
+    }
+
+    @GetMapping("/settings/admin/discounts/page/{id}")
+    public ModelAndView pageSettingsAdminDiscounts(@PathVariable("id") String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals("Oczekujace"));
+        page.setPageSize(2); // number of items per page
+        page.setPage(Integer.parseInt(id) - 1);
+        ModelAndView modelAndView = new ModelAndView("user_admin_profile_discounts");
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous", "/settings/admin/discounts/page/id");
+        modelAndView.addObject("user", uzytkownik);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/settings/admin/discounts/page/" + i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+
 
     @GetMapping("/settings/discounts/page/{id}")
     public ModelAndView pageSettingsDiscounts(@PathVariable("id") String id) {
@@ -1323,6 +1392,23 @@ public class MainController {
 
     }
 
+    @PostMapping("/acceptdiscount")
+    public String acceptdiscount(@ModelAttribute("discount_id") String discount_id){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+        if(uzytkownik1.getROLE().equals("ADMIN")){
+
+            Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
+            disc.setStatus("Zatwierdzone");
+            discountRepository.save(disc);
+
+        }
+
+        return "redirect:/discount/"+discount_id;
+
+    }
+
     @PostMapping("/removecomment")
     public String removecomment(@ModelAttribute("comment_id") String comment_id){
 
@@ -1337,12 +1423,13 @@ public class MainController {
 
         }
 
+
         return "redirect:/discount/"+comment.getDiscount().getDiscount_id();
 
     }
 
     @PostMapping("/banuser")
-    public String banuser(@ModelAttribute("user_id") String user_id,@ModelAttribute("reason") String reason){
+    public String banuser(@ModelAttribute("user_id") int user_id,@ModelAttribute("reason") String reason){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
@@ -1351,12 +1438,19 @@ public class MainController {
             Ban ban = new Ban();
             ban.setDuration("");
             ban.setReason(reason);
-            ban.setUser(userRepository.findById(Long.parseLong(user_id)).get());
+            ban.setUser(userRepository.findUserById(user_id));
             banRepository.save(ban);
+            User uzytkownik2 = userRepository.findUserById(user_id);
+            uzytkownik2.setBan(ban);
+            userRepository.save(uzytkownik2);
+            userRepository.banUser(uzytkownik2.getLogin());
+
+
 
         }
 
-        return "redirect:/profile/"+userRepository.findById(Long.parseLong(user_id)).get().getLogin();
+        return "redirect:/profile/"+userRepository.findUserById(user_id).getLogin();
 
     }
+
 }

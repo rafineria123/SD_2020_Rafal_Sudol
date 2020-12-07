@@ -1,6 +1,8 @@
 package pl.okazje.project.entities;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +17,9 @@ public class Discount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long discount_id;
     private String title;
+    @Column(length = 500)
     private String content;
+    @Column(length = 500)
     private String image_url;
     private Date creationdate;
     private Date expire_date;
@@ -26,21 +30,21 @@ public class Discount {
     private String discount_link;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy="discount")
+    @OneToMany(mappedBy = "discount")
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy="discount")
+    @OneToMany(mappedBy = "discount")
     private Set<Rating> ratings;
 
     @ManyToOne
-    @JoinColumn(name="tag_id", nullable=false)
+    @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name="shop_id", nullable=false)
+    @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
 
     public Discount(String title, String content, String image_url, Double old_price, Double current_price, Double shipment_price, String discount_link, User user, Tag tag, Shop shop) {
@@ -64,7 +68,6 @@ public class Discount {
 
     public Discount() {
     }
-
 
 
     public Long getDiscount_id() {
@@ -92,7 +95,12 @@ public class Discount {
     }
 
     public String getImage_url() {
-        return image_url;
+
+        if(this.image_url.contains("http")){
+            return this.image_url;
+        }
+        return "/" +this.image_url;
+
     }
 
     public void setImage_url(String image_url) {
@@ -118,42 +126,40 @@ public class Discount {
         return s;
     }
 
-    public boolean deleted(){
+    public boolean deleted() {
 
-        if (this.status==null){
+        if (this.status == null) {
 
             return false;
 
-        }else if(this.status.equals("Usuniete")){
+        } else if (this.status.equals("Usuniete")) {
 
             return true;
 
-        }else{
+        } else {
 
             return false;
 
         }
-
 
 
     }
 
-    public boolean deletedOrNotReady(){
+    public boolean deletedOrNotReady() {
 
-        if (this.status==null){
+        if (this.status == null) {
 
             return false;
 
-        }else if(this.status.equals("Usuniete")||this.status.equals("Niezatwierdzone")){
+        } else if (this.status.equals("Usuniete") || this.status.equals("Oczekujace")) {
 
             return true;
 
-        }else{
+        } else {
 
             return false;
 
         }
-
 
 
     }
@@ -165,9 +171,9 @@ public class Discount {
         return s;
     }
 
-    public int getDifference(){
+    public int getDifference() {
 
-        return (int)(100-(current_price/old_price * 100));
+        return (int) (100 - (current_price / old_price * 100));
     }
 
     public String getDiscount_link() {
@@ -191,7 +197,7 @@ public class Discount {
     }
 
     public Double getOld_price() {
-        return old_price;
+        return round(old_price,2);
     }
 
     public void setOld_price(Double old_price) {
@@ -199,7 +205,7 @@ public class Discount {
     }
 
     public Double getCurrent_price() {
-        return current_price;
+        return round(current_price,2);
     }
 
     public void setCurrent_price(Double current_price) {
@@ -207,7 +213,7 @@ public class Discount {
     }
 
     public Double getShipment_price() {
-        return shipment_price;
+        return round(shipment_price,2);
     }
 
     public void setShipment_price(Double shipment_price) {
@@ -254,28 +260,55 @@ public class Discount {
         this.shop = shop;
     }
 
-    public int getCommentsSize(){
+    public int getCommentsSize() {
 
-        if(comments == null){
+        if (comments == null) {
             return 0;
-        }else {
+        } else {
             return comments.size();
         }
 
     }
 
-    public int getRatingsSize(){
-        if(ratings == null){
+    public int getRatingsSize() {
+        if (ratings == null) {
             return 0;
-        }else {
+        } else {
             return ratings.size();
         }
     }
 
-    public long getDataToNumber(){
+    public long getDataToNumber() {
 
-            long daysBetween = data.getTime() - this.creationdate.getTime();
-            return daysBetween;
+        long daysBetween = data.getTime() - this.creationdate.getTime();
+        return daysBetween;
+
+    }
+
+    public boolean isOutDated() {
+        Date currentdate = new Date();
+        if (currentdate.compareTo(expire_date) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public boolean isGlobalLink(){
+
+        System.out.println("global link: "+this.image_url);
+
+        if(this.image_url.contains("http")){
+            return true;
+        }
+        return false;
 
     }
 }

@@ -1,9 +1,10 @@
 package pl.okazje.project.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Information {
+public class Information implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

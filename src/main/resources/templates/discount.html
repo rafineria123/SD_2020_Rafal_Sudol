@@ -85,37 +85,55 @@
 
 </div>
 
-<div class="row" th:if="${discount.deleted()}">
-    <div class="container-fluid" style="padding: 15px 0;">
-        <div class="row" style="width: 100%">
-            <div class="col-md-8 offset-md-2" style="padding-left: 0;padding-right: 0">
-                <div class="bad_alert">
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    <strong>Ta okazja została usunięta przez Moderatora. Nie można dodawac lub usuwać komentarzy.</strong>
+<div class="container-fluid">
+    <div class="col-8 offset-2">
+        <div class="row" th:if="${discount.deleted()}">
+            <div style="padding: 15px 0;width: 100%">
+                <div class="row" style="width: 100%">
+                    <div class="col-12" style="padding-left: 0;padding-right: 0">
+                        <div class="bad_alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong>Ta okazja została usunięta przez Moderatora. Nie można dodawac lub usuwać komentarzy.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" th:if="${discount.deletedOrNotReady()}">
+            <div style="padding: 15px 0;width: 100%" th:if="${discount.getStatus().equals('Oczekujace')}">
+                <div class="row" style="width: 100%">
+                    <div class="col-12" style="padding-left: 0;padding-right: 0">
+                        <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong>Ta okazja nie została jeszcze zatwierdzona przez Moderatora. Nie można dodawac lub usuwać komentarzy.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" th:if="${discount.isOutDated()&&!discount.deleted()&&!discount.getStatus().equals('Oczekujace')}">
+            <div style="padding: 15px 0;width: 100%">
+                <div class="row" style="width: 100%">
+                    <div class="col-12" style="padding-left: 0;padding-right: 0">
+                        <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong>Ta okazja juz wygasła. Zawarte informacje mogą być już nieaktualne.</strong>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="row" th:if="${discount.deletedOrNotReady()}">
-    <div class="container-fluid" style="padding: 15px 0;" th:if="${discount.getStatus().equals('Niezatwierdzone')}">
-        <div class="row" style="width: 100%">
-            <div class="col-md-8 offset-md-2" style="padding-left: 0;padding-right: 0">
-                <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                    <strong>Ta okazja nie została jeszcze zatwierdzona przez Moderatora. Nie można dodawac lub usuwać komentarzy.</strong>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 
 
 <div class="container-fluid">
     <div class="row" style="width: 100%">
         <div class="col-md-8 offset-md-2" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
             <div class="row">
-                <div class="col-10">
+                <div class="col-8">
                     <span class="over_items">Informacje o okazji</span>
                 </div>
 <!--                <div class="col-2 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')" th:if="${!discount.getStatus().equals('Oczekuje')}">-->
@@ -123,7 +141,12 @@
 <!--                    <span class="over_items fas fa-ban" style="padding-bottom: 5px"></span>-->
 
 <!--                </div>-->
-                <div class="col-2 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
+                <div class="col-4 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
+
+                    <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('Oczekujace')}">
+                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
+                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 20px"></span> </button>
+                    </form>
 
                     <form th:action="@{/removediscount}" method="post">
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
@@ -146,8 +169,7 @@
                 align-items: center;
                 justify-content: center">
                 <div class="col-md-3" style="padding-top: 15px;padding-bottom: 15px;">
-                    <img th:src="|/${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="!${discount.getShop().getName().equals('X-kom')}">
-                    <img th:src="|${discount.getImage_url()}|" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount" th:if="${discount.getShop().getName().equals('X-kom')}">
+                    <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                 </div>
                 <div class="col-md-9" style="">
                     <div class="row">
@@ -166,7 +188,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12" th:text="${discount.getContent()}" style="padding-right: 65px;padding-top: 5px;font-size: 15px">
+                        <div class="col-md-12" th:text="${discount.getContent()}" style="padding-right: 65px;padding-top: 5px;font-size: 15px;">
                             Przetworniki neodymowe o średnicy 50 mm zapewniają szeroki i jednocześnie wiernie
                             odwzorowany zakres dźwięków
 
@@ -233,10 +255,19 @@
                 <div class="col-md-12" style="padding-top: 10px;padding-bottom: 10px;padding-right: 0px;padding-left: 0px">
                     <a th:href="${discount.getDiscount_link()}" href="/discount">
                         <button type="button" style="width: 100%" class="btn item_button">
-                            <span class="fas fa-arrow-right"></span> <span class="fas fa-arrow-right"> </span><span th:text="| ${discount.getDiscount_link()} |">
-                            https://www.amazon.de/dp/B01N5VHLUG/?language=pl_PL&tag=pepperpl09-21 </span><span
-                                class="fas fa-arrow-left"> </span> <span
-                                class="fas fa-arrow-left"> </span></button>
+                            <div class="row">
+                            <div class="col-1">
+                                <span class="fas fa-arrow-right"></span> <span class="fas fa-arrow-right"></span>
+                            </div>
+                                <div class="col-10" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                    <span th:text="| ${discount.getDiscount_link()} |" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                            https://www.amazon.de/dp/B01N5VHLUG/?language=pl_PL&tag=pepperpl09-21 </span>
+                                </div>
+                                <div class="col-1">
+                                   <span class="fas fa-arrow-left"> </span> <span class="fas fa-arrow-left"> </span>
+                                </div>
+                            </div>
+                        </button>
                     </a>
                 </div>
             </div>
