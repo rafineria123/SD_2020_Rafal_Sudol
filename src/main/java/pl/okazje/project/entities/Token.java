@@ -6,9 +6,12 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+
+
 @Entity
 public class Token {
     private static final int EXPIRATION = 60 * 24;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

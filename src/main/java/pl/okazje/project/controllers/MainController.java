@@ -491,7 +491,7 @@ public class MainController {
             @ModelAttribute("title") String title, @ModelAttribute("old_price") String old_price, @ModelAttribute("current_price") String current_price,
             @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
             @ModelAttribute("expire_date") String expire_date, @RequestParam("image_url")
-                    MultipartFile file, HttpServletRequest request
+                    MultipartFile file, HttpServletRequest request, RedirectAttributes redir
     ) throws ParseException, IOException {
         Discount discount = new Discount();
         try {
@@ -510,15 +510,17 @@ public class MainController {
             discount.setOld_price(Double.parseDouble(old_price));
             discount.setShipment_price(Double.parseDouble(shipment_price));
             discount.setDiscount_link(url);
+
             discount.setTag(tagRepository.findById(Long.parseLong(tag)).get());
             discount.setShop(shopRepository.findById(Long.parseLong(shop)).get());
             discount.setTitle(title);
             Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(expire_date);
             discount.setExpire_date(date1);
-            discount.setStatus("");
+            discount.setStatus("Oczekujace");
             discount.setUser(uzytkownik);
             discount.setImage_url("images/" + file.getOriginalFilename());
             discountRepository.save(discount);
+
 
         } catch (Exception e) {
 
@@ -529,7 +531,9 @@ public class MainController {
             return modelAndView;
         }
 
-        ModelAndView modelAndView = new ModelAndView("redirect:/discount/" + discount.getDiscount_id());
+        RedirectView redirectView = new RedirectView("/settings/discounts");
+        redir.addFlashAttribute("good_status", "Twoja okazja została dodana i oczekuje na weryfikacje.");
+        ModelAndView modelAndView =  new ModelAndView(redirectView);
 
         return modelAndView;
     }

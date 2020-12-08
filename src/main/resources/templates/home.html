@@ -143,7 +143,7 @@
 
 
 
-<!--menu glowne-->
+<!--main menu-->
 <div class="container" style="padding-top: 25px;">
     <div class="row" style="padding-left: 15px;padding-right: 15px;">
         <div class="col-md-12 sort_div" style="padding-top: 10px;padding-bottom: 10px;">
@@ -180,8 +180,8 @@
              th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
              style="padding-bottom: 30px;"
              th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
+            <!-- discount outdated=false -->
             <div class="col-md-12 item_div" th:if="${!discount.isOutDated()}">
-<!--                        <div class="col-md-12 item_div" th:if="${discount.isOutDated()}" style="filter: grayscale(90%)">-->
                         <!-- Brand icon-->
                         <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                             <div class="col-md-12">
@@ -203,6 +203,14 @@
                     <div class="col-md-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Price-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>->
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
                     </div>
                 </div>
                 <!-- Date-->
@@ -289,7 +297,7 @@
                     </div>
                 </div>
             </div>
-            <!-- outdated discounts -->
+            <!-- discount outdated=true -->
             <div class="col-md-12 item_div" th:if="${discount.isOutDated()}" style="filter: grayscale(90%)">
                 <!-- Brand icon-->
                 <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
@@ -312,6 +320,14 @@
                     <div class="col-md-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
+                    </div>
+                </div>
+                <!-- Price-->
+                <div class="row item_parts_padding" style="padding-bottom: 0">
+                    <div class="col-md-12">
+                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>->
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
                     </div>
                 </div>
                 <!-- Date-->

@@ -144,6 +144,28 @@
 
         </div>
         <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
+            <div class="row" th:if="${good_status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
+                    <div class="col-12" style="padding-left: 0px;padding-right: 0px">
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${good_status.toString()}"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" th:if="${bad_status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;">
+                    <div class="col-12" style="padding-left: 0px;padding-right: 0px;padding-bottom: 15px">
+                        <div class="bad_alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${bad_status.toString()}"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
                 Moje okazje
             </div>

@@ -8,8 +8,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
+//promocja=cena pierwotna -> cena obecna
+//kupon = przecena w gazetce/sklepie lokanlym
+//kod = przecena online
 @Entity
 public class Discount {
+
+    public enum Type{ KUPON, KOD, PROMOCJA }
+    public enum Status{ USUNIETE, OCZEKUJACE, ZATWIERDZONE }
 
     private static Date data = new Date();
 
@@ -28,6 +34,8 @@ public class Discount {
     private Double current_price;
     private Double shipment_price;
     private String discount_link;
+    @Enumerated(EnumType.STRING)
+    private Type type = Type.PROMOCJA;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -258,6 +266,14 @@ public class Discount {
 
     public void setShop(Shop shop) {
         this.shop = shop;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public int getCommentsSize() {

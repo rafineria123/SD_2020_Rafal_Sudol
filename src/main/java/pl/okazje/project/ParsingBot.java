@@ -165,7 +165,7 @@ public class ParsingBot {
                     discount.setTitle(upToNCharacters1);
                     discount.setShipment_price(0.0);
                     discount.setDiscount_link(link);
-                    String upToNCharacters = desc.substring(0, Math.min(desc.length(), 100));
+                    String upToNCharacters = desc.substring(0, Math.min(desc.length(), 500));
                     discount.setContent(upToNCharacters);
                     System.out.println(price);
                     price = price.replaceAll("[^\\d,.]", "");
