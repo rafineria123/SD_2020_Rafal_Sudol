@@ -146,32 +146,67 @@
 <!--main menu-->
 <div class="container" style="padding-top: 25px;">
     <div class="row" style="padding-left: 15px;padding-right: 15px;">
-        <div class="col-md-12 sort_div" style="padding-top: 10px;padding-bottom: 10px;">
-            <a th:href="|${sort_buttons_prefix +'top-rated'}|">
+        <div class="container-fluid sort_div" style="width: 100%">
+            <div class="row">
+            <div class="col-md-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;">
+                <a th:href="|${sort_buttons_prefix +'top-rated'}|">
 
-                <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                        class="btn sort_button sort_button_activated">Najlepiej oceniane
-                </button>
-                <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                        class="btn sort_button ">Najlepiej oceniane
-                </button>
-            </a>
-            <a th:href="|${sort_buttons_prefix +'most-comments'}|">
-                <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
-                        class="btn sort_button">Najczęściej komentowane
-                </button>
-                <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
-                        class="btn sort_button sort_button_activated">Najczęściej komentowane
-                </button>
-            </a>
-            <a th:href="|${sort_buttons_prefix +'date'}|">
-                <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
-                        class="btn sort_button sort_button_activated">Niedawno dodane
-                </button>
-                <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
-                        class="btn sort_button">Niedawno dodane
-                </button>
-            </a>
+                    <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                            class="btn sort_button sort_button_activated" style="margin-right: 10px">Najlepiej oceniane
+                    </button>
+                    <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                            class="btn sort_button" style="margin-right: 10px">Najlepiej oceniane
+                    </button>
+                </a>
+                <a th:href="|${sort_buttons_prefix +'most-comments'}|">
+                    <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
+                            class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
+                    </button>
+                    <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
+                            class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
+                    </button>
+                </a>
+                <a th:href="|${sort_buttons_prefix +'date'}|">
+                    <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button_activated">Niedawno dodane
+                    </button>
+                    <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button">Niedawno dodane
+                    </button>
+                </a>
+            </div>
+            <div class="col-md-6 d-flex flex-row-reverse sort_div" style="padding-top: 10px;padding-bottom: 10px;">
+                <a th:href="|${time_buttons_prefix +'day'}|" th:if="${picked_sort != 3}">
+                    <button type="button" th:if="${picked_time!=1}"  data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button" style="margin-left: 10px">Ostatnie 24h
+                    </button>
+                    <button type="button" th:if="${picked_time==1}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button_activated" style="margin-left: 10px">Ostatnie 24h
+                    </button>
+
+                </a>
+                <a th:href="|${time_buttons_prefix +'week'}|" th:if="${picked_sort != 3}">
+                    <button type="button" th:if="${picked_time!=2}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button" style="margin-left: 10px">Ostatni tydzien
+                    </button>
+                    <button type="button" th:if="${picked_time==2}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button_activated" style="margin-left: 10px">Ostatni tydzien
+                    </button>
+
+                </a>
+
+                <a th:href="|${time_buttons_prefix +'all'}|" th:if="${picked_sort != 3}">
+                    <button type="button" th:if="${picked_time!=3}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button">Wszystkie
+                    </button>
+                    <button type="button" th:if="${picked_time==3}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button_activated">Wszystkie
+                    </button>
+
+                </a>
+
+            </div>
+            </div>
         </div>
     </div>
     <!-- discounts-->
@@ -206,11 +241,34 @@
                     </div>
                 </div>
                 <!-- Price-->
-                <div class="row item_parts_padding" style="padding-bottom: 0">
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('PROMOCJA')}">
                     <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
                         <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>->
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
+                    </div>
+                </div>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONNORMALNY')}">
+                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+
+                    </div>
+                </div>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONPROCENT')}">
+                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                    </div>
+                </div>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODNORMALNY')}">
+                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+
+                    </div>
+                </div>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODPROCENT')}">
+                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+
                     </div>
                 </div>
                 <!-- Date-->

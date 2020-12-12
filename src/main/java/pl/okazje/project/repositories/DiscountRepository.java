@@ -21,15 +21,15 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
             nativeQuery = true)
     public List<Discount> sortDiscountByRating();
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
-            " FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id ORDER BY c.disc_count DESC " ,
+            " FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id ORDER BY  c.disc_count DESC " ,
             nativeQuery = true)
     public List<Discount> sortDiscountByComments();
 
-    @Query(value = "SELECT * from discount where discount.tag_id in (select tag_id from tag where tag.name=?1)" ,
+    @Query(value = "SELECT * from discount where discount.tag_id in (select tag_id from tag where tag.name=?1) ORDER BY discount.creationdate DESC" ,
             nativeQuery = true)
     public List<Discount> discountByTag(String tag);
 
-    @Query(value = "SELECT * from discount where discount.shop_id in (select shop_id from shop where shop.name=?1)" ,
+    @Query(value = "SELECT * from discount where discount.shop_id in (select shop_id from shop where shop.name=?1) ORDER BY discount.creationdate DESC" ,
             nativeQuery = true)
     public List<Discount> discountByShop(String shop);
 
@@ -95,7 +95,7 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
             nativeQuery = true)
     public List<Discount> sortDiscountByRatingWithGivenSearchInput(String search);
 
-    @Query(value = "Select * from discount where user_id=?1" ,
+    @Query(value = "Select * from discount where user_id=?1 ORDER BY discount.creationdate DESC" ,
             nativeQuery = true)
     public List<Discount> discountByUserId(Integer id);
 
@@ -114,7 +114,7 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
             nativeQuery = true)
     public List<Discount> sortDiscountByRatingWithGivenUserId(Integer id);
 
-    public List<Discount> findDiscountsByStatusEquals(String status);
+    public List<Discount> findDiscountsByStatusEquals(Discount.Status status);
 
 
 

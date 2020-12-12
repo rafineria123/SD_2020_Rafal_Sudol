@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 public class Discount {
 
-    public enum Type{ KUPON, KOD, PROMOCJA }
+    public enum Type{ KUPONNORMALNY,KUPONPROCENT,KODPROCENT, KODNORMALNY, PROMOCJA }
     public enum Status{ USUNIETE, OCZEKUJACE, ZATWIERDZONE }
 
     private static Date data = new Date();
@@ -29,7 +29,8 @@ public class Discount {
     private String image_url;
     private Date creationdate;
     private Date expire_date;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private Double old_price;
     private Double current_price;
     private Double shipment_price;
@@ -62,7 +63,6 @@ public class Discount {
         this.image_url = image_url;
         this.creationdate = new Date();
         this.expire_date = new Date();
-        this.status = "active";
         this.old_price = old_price;
         this.current_price = current_price;
         this.shipment_price = shipment_price;
@@ -134,13 +134,15 @@ public class Discount {
         return s;
     }
 
+
+
     public boolean deleted() {
 
         if (this.status == null) {
 
             return false;
 
-        } else if (this.status.equals("Usuniete")) {
+        } else if (this.status.equals(Status.USUNIETE)) {
 
             return true;
 
@@ -159,7 +161,7 @@ public class Discount {
 
             return false;
 
-        } else if (this.status.equals("Usuniete") || this.status.equals("Oczekujace")) {
+        } else if (this.status.equals(Status.USUNIETE) || this.status.equals(Status.OCZEKUJACE)) {
 
             return true;
 
@@ -197,10 +199,10 @@ public class Discount {
     }
 
     public String getStatus() {
-        return status;
+        return status.name();
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -268,8 +270,8 @@ public class Discount {
         this.shop = shop;
     }
 
-    public Type getType() {
-        return type;
+    public String getType() {
+        return type.name();
     }
 
     public void setType(Type type) {

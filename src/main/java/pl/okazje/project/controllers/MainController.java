@@ -17,6 +17,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.events.OnRegistrationCompleteEvent;
 import pl.okazje.project.repositories.*;
+import pl.okazje.project.services.DiscountService;
 import pl.okazje.project.services.SendMail;
 
 import javax.mail.MessagingException;
@@ -63,13 +64,15 @@ public class MainController {
     ApplicationEventPublisher eventPublisher;
     @Autowired
     TokenRepository tokenRepository;
+    @Autowired
+    DiscountService discountService;
 
 
 
 
     private static int page_size_for_home = 8;
 
-    private static int page_size_for_cat_and_shops = 4;
+    private static int page_size_for_cat_and_shops = 8;
 
     @GetMapping("/")
     public ModelAndView homePage() throws MessagingException {
@@ -490,7 +493,7 @@ public class MainController {
             @ModelAttribute("url") String url, @ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop,
             @ModelAttribute("title") String title, @ModelAttribute("old_price") String old_price, @ModelAttribute("current_price") String current_price,
             @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
-            @ModelAttribute("expire_date") String expire_date, @RequestParam("image_url")
+            @ModelAttribute("expire_date") String expire_date, @ModelAttribute("type") String type, @ModelAttribute("discount") String rodzaj, @RequestParam("image_url")
                     MultipartFile file, HttpServletRequest request, RedirectAttributes redir
     ) throws ParseException, IOException {
         Discount discount = new Discount();
@@ -498,17 +501,59 @@ public class MainController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
+
             String uploadDir = "/static/images";
             String realPath = request.getServletContext().getRealPath(uploadDir);
 
             File transferFile = new File("C:/projekt inz/project/src/main/resources/static/images/" + file.getOriginalFilename());
             file.transferTo(transferFile);
 
+            if(type.equals("PROMOCJA")){
+
+                discount.setCurrent_price(Double.parseDouble(current_price));
+                discount.setOld_price(Double.parseDouble(old_price));
+                discount.setShipment_price(Double.parseDouble(shipment_price));
+                discount.setType(Discount.Type.PROMOCJA);
+
+            }
+
+            if(type.equals("KOD")){
+
+                discount.setOld_price(Double.parseDouble(old_price));
+                if(rodzaj.equals("%")){
+
+                    discount.setType(Discount.Type.KODPROCENT);
+
+                }
+                if(rodzaj.equals("PLN")){
+
+                    discount.setType(Discount.Type.KODNORMALNY);
+
+                }
+
+
+            }
+
+            if(type.equals("KUPON")){
+
+                discount.setOld_price(Double.parseDouble(old_price));
+                if(rodzaj.equals("%")){
+
+                    discount.setType(Discount.Type.KUPONPROCENT);
+
+                }
+                if(rodzaj.equals("PLN")){
+
+                    discount.setType(Discount.Type.KUPONNORMALNY);
+
+                }
+
+
+            }
+
+
             discount.setContent(content);
             discount.setCreationdate(new Date());
-            discount.setCurrent_price(Double.parseDouble(current_price));
-            discount.setOld_price(Double.parseDouble(old_price));
-            discount.setShipment_price(Double.parseDouble(shipment_price));
             discount.setDiscount_link(url);
 
             discount.setTag(tagRepository.findById(Long.parseLong(tag)).get());
@@ -516,7 +561,7 @@ public class MainController {
             discount.setTitle(title);
             Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(expire_date);
             discount.setExpire_date(date1);
-            discount.setStatus("Oczekujace");
+            discount.setStatus(Discount.Status.OCZEKUJACE);
             discount.setUser(uzytkownik);
             discount.setImage_url("images/" + file.getOriginalFilename());
             discountRepository.save(discount);
@@ -559,7 +604,7 @@ public class MainController {
 
 
         PagedListHolder page = new PagedListHolder(discountRepository.discountBySearchInput("%" + search + "%"));
-        page.setPageSize(1); // number of items per page
+        page.setPageSize(page_size_for_cat_and_shops); // number of items per page
         page.setPage(0);
 
         ModelAndView modelAndView = new ModelAndView("home");
@@ -910,7 +955,7 @@ public class MainController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals("Oczekujace"));
+        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals(Discount.Status.OCZEKUJACE));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
         modelAndView.addObject("list_of_discounts", page.getPageList());
@@ -936,7 +981,7 @@ public class MainController {
     public ModelAndView pageSettingsAdminDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals("Oczekujace"));
+        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals(Discount.Status.OCZEKUJACE));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
         ModelAndView modelAndView = new ModelAndView("user_admin_profile_discounts");
@@ -1387,7 +1432,7 @@ public class MainController {
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
-            disc.setStatus("Usuniete");
+            disc.setStatus(Discount.Status.USUNIETE);
             discountRepository.save(disc);
 
         }
@@ -1404,7 +1449,7 @@ public class MainController {
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
-            disc.setStatus("Zatwierdzone");
+            disc.setStatus(Discount.Status.ZATWIERDZONE);
             discountRepository.save(disc);
 
         }
@@ -1433,7 +1478,7 @@ public class MainController {
     }
 
     @PostMapping("/banuser")
-    public String banuser(@ModelAttribute("user_id") int user_id,@ModelAttribute("reason") String reason){
+    public String banuser(@ModelAttribute("user_id") int user_id,@ModelAttribute("reason") String reason) throws MessagingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
@@ -1448,8 +1493,7 @@ public class MainController {
             uzytkownik2.setBan(ban);
             userRepository.save(uzytkownik2);
             userRepository.banUser(uzytkownik2.getLogin());
-
-
+            sendMail.sendingMail(uzytkownik2.getEmail(),"Ban - Twoje konto zostało zbanowane", "Witaj "+uzytkownik2.getLogin()+", \n Złamałeś regulamin strony co poskutkowalo blokadą konta.\n Powód blokady: "+ban.getReason()+"\n\nJeśli nie zgadzasz sie z ta blokadą, powiadom nas o tym jak najszybciej.");
 
         }
 

@@ -100,7 +100,7 @@
             </div>
         </div>
         <div class="row" th:if="${discount.deletedOrNotReady()}">
-            <div style="padding: 15px 0;width: 100%" th:if="${discount.getStatus().equals('Oczekujace')}">
+            <div style="padding: 15px 0;width: 100%" th:if="${discount.getStatus().equals('OCZEKUJACE')}">
                 <div class="row" style="width: 100%">
                     <div class="col-12" style="padding-left: 0;padding-right: 0">
                         <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
@@ -111,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" th:if="${discount.isOutDated()&&!discount.deleted()&&!discount.getStatus().equals('Oczekujace')}">
+        <div class="row" th:if="${discount.isOutDated()&&!discount.deleted()&&!discount.getStatus().equals('OCZEKUJACE')}">
             <div style="padding: 15px 0;width: 100%">
                 <div class="row" style="width: 100%">
                     <div class="col-12" style="padding-left: 0;padding-right: 0">
@@ -143,7 +143,7 @@
 <!--                </div>-->
                 <div class="col-4 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
 
-                    <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('Oczekujace')}">
+                    <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('OCZEKUJACE')}">
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
                         <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 20px"></span> </button>
                     </form>
@@ -188,7 +188,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12" th:text="${discount.getContent()}" style="padding-right: 65px;padding-top: 5px;font-size: 15px;">
+                        <div class="col-md-12" th:text="${discount.getContent()}" style="padding-right: 65px;padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                             word-wrap: break-word;">
                             Przetworniki neodymowe o średnicy 50 mm zapewniają szeroki i jednocześnie wiernie
                             odwzorowany zakres dźwięków
 
@@ -235,12 +236,18 @@
                 </div>
 
                 <div class="col-md-5 offset-md-1">
-                    <span style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
-                    <span style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
-                    <span style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
-                    <span class="fas fa-truck"
-                          style="font-size: 18px;color: rgba(145,143,146,0.91);padding-right: 3px"></span><span
-                        style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91); " th:text="|${discount.getShipment_price()}zł|">20zł</span>
+
+                    <span th th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                    <span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
+                    <span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
+                    <span th:if="${discount.getType().equals('PROMOCJA')}" class="fas fa-truck"
+                          style="font-size: 18px;color: rgba(145,143,146,0.91);padding-right: 3px"></span><span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91); " th:text="|${discount.getShipment_price()}zł|">20zł</span>
+
+                    <span th:if="${discount.getType().equals('KUPONNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}PLN|">-19%</span>
+                    <span th:if="${discount.getType().equals('KUPONPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}%|">-19%</span>
+                    <span th:if="${discount.getType().equals('KODNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOld_price()}PLN|">-19%</span>
+                    <span th:if="${discount.getType().equals('KODPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOld_price()}%|">-19%</span>
+
                 </div>
                 <div class="col-md-3 offset-md-1">
                     <span style="padding-right: 3px;font-weight: 500;font-size: 17px;font-family: Calibri;color: rgba(145,143,146,0.91);">Oferta wygasa:</span><span

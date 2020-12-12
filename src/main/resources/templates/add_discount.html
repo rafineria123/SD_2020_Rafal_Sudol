@@ -85,7 +85,7 @@
 
 <div class="container-fluid">
     <div class="col-md-6 offset-md-3" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
-        <span class="over_items">Dodaj nowy kupon!</span>
+        <span class="over_items">Dodaj nowa okazje!</span>
     </div>
     <div style="height: 15px"></div>
 </div>
@@ -101,14 +101,44 @@
 <div class="container-fluid ">
     <div class="row" sec:authorize="isAuthenticated()">
         <form th:action="@{/add/discount}" class="w-100" method="post" enctype="multipart/form-data">
-        <div class="col-md-6 offset-md-3 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
+        <div class="col-md-6 offset-md-3 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);border-width: 2px;border-style: dashed;border-color: rgb(193 188 188);">
+
+            <div class="row">
+
+                <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                    <span class="add_big">Typ</span>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+
+                        <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('promocja')">
+                            <input type="radio" id="type_promocja" name="type" value="PROMOCJA">
+                            <label for="type_promocja" class="w-100">PROMOCJA</label>
+                        </div>
+                        <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('kupon')">
+                            <input type="radio" id="type_kupon" name="type" value="KUPON">
+                            <label for="type_kupon" class="w-100">KUPON</label>
+                        </div>
+                        <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('kod')">
+                            <input type="radio" id="type_kod" name="type" value="KOD">
+                            <label for="type_kod" class="w-100">KOD</label>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
             <div class="row">
 
             <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
                 <span class="add_big">Link</span>
             </div>
 
-        </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <input type="text" class="add_input" id="url" name="url" placeholder=" http://www.example.com/greatdeal...">
@@ -173,28 +203,25 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" id="nazwy_cen">
 
-                <div class="col-md-4 text-center" style="padding-top: 10px;padding-bottom: 5px;">
-                    <span class="add_big">Cena regularna</span>
+                <div class="col-md-4 offset-4 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                    <span class="add_big">Obniżka ceny</span>
                 </div>
-                <div class="col-md-4 text-center" style="padding-top: 10px;padding-bottom: 5px;">
-                    <span class="add_big">Cena oferty</span>
-                </div>
-                <div class="col-md-4 text-center" style="padding-top: 10px;padding-bottom: 5px;">
-                    <span class="add_big">Koszt dostawy</span>
-                </div>
+
 
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <input type="number" class="add_input" id="old_price" name="old_price" placeholder=" 0.00">
+            <div class="row" id="ceny">
+                <div class="col-md-2 offset-4">
+                    <input type="number" class="add_input" id="old_price" name="old_price" placeholder=" 0.00" style="margin-top: 13px">
                 </div>
-                <div class="col-md-4">
-                    <input type="number" class="add_input" id="current_price" name="current_price" placeholder=" 0.00">
+                <div class="col-md-1 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;">
+                    <input type="radio" id="type_pln" name="discount" value="PLN">
+                    <label for="type_pln" class="w-100">PLN</label>
                 </div>
-                <div class="col-md-4">
-                    <input type="number" class="add_input" id="shipment_price" name="shipment_price" placeholder=" 0.00">
+                <div class="col-md-1 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;">
+                    <input type="radio" id="type_procent" name="discount" value="%">
+                    <label for="type_procent" class="w-100">%</label>
                 </div>
             </div>
 
@@ -401,5 +428,57 @@
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script>
+    function typ(typ) {
+        var nazwy_cen = document.querySelector("#nazwy_cen");
+        nazwy_cen.innerHTML="";
+        var ceny = document.querySelector("#ceny");
+        ceny.innerHTML="";
+        if(typ=="promocja"){
+
+            nazwy_cen.innerHTML="<div class=\"col-md-4 text-center\" style=\"padding-top: 10px;padding-bottom: 5px;\">\n" +
+                "                    <span class=\"add_big\">Cena regularna</span>\n" +
+                "                </div>\n" +
+                "                <div class=\"col-md-4 text-center\" style=\"padding-top: 10px;padding-bottom: 5px;\">\n" +
+                "                    <span class=\"add_big\">Cena oferty</span>\n" +
+                "                </div>\n" +
+                "                <div class=\"col-md-4 text-center\" style=\"padding-top: 10px;padding-bottom: 5px;\">\n" +
+                "                    <span class=\"add_big\">Koszt dostawy</span>\n" +
+                "                </div>";
+            ceny.innerHTML="<div class=\"col-md-4\">\n" +
+                "                    <input type=\"number\" class=\"add_input\" id=\"old_price\" name=\"old_price\" placeholder=\" 0.00\">\n" +
+                "                </div>\n" +
+                "                <div class=\"col-md-4\">\n" +
+                "                    <input type=\"number\" class=\"add_input\" id=\"current_price\" name=\"current_price\" placeholder=\" 0.00\">\n" +
+                "                </div>\n" +
+                "                <div class=\"col-md-4\">\n" +
+                "                    <input type=\"number\" class=\"add_input\" id=\"shipment_price\" name=\"shipment_price\" placeholder=\" 0.00\">\n" +
+                "                </div>";
+
+        }
+        if(typ=="kupon"||typ=="kod"){
+
+            nazwy_cen.innerHTML="<div class=\"col-md-4 offset-4 text-center\" style=\"padding-top: 10px;padding-bottom: 5px;\">\n" +
+                "                    <span class=\"add_big\">Obniżka ceny</span>\n" +
+                "                </div>";
+            ceny.innerHTML=" <div class=\"col-md-2 offset-4\">\n" +
+                "                    <input type=\"number\" class=\"add_input\" id=\"old_price\" name=\"old_price\" placeholder=\" 0.00\" style=\"margin-top: 13px\">\n" +
+                "                </div>\n" +
+                "                <div class=\"col-md-1 radio-toolbar text-center\" style=\"font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;\">\n" +
+                "                    <input type=\"radio\" id=\"type_pln\" name=\"discount\" value=\"PLN\">\n" +
+                "                    <label for=\"type_pln\" class=\"w-100\">PLN</label>\n" +
+                "                </div>\n" +
+                "                <div class=\"col-md-1 radio-toolbar text-center\" style=\"font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;\">\n" +
+                "                    <input type=\"radio\" id=\"type_procent\" name=\"discount\" value=\"%\">\n" +
+                "                    <label for=\"type_procent\" class=\"w-100\">%</label>\n" +
+                "                </div>";
+
+        }
+
+    }
+
+
+
+</script>
 </body>
 </html>
