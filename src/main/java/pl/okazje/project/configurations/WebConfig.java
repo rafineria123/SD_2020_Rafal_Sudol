@@ -61,7 +61,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutSuccessUrl("/login?logout")
                 .permitAll().and().authorizeRequests().antMatchers("/settings/*","/settings","/messages").hasAnyAuthority("USER","ADMIN")
-                .and().sessionManagement().maximumSessions(3).expiredUrl("/login").and().invalidSessionUrl("/login");
+                .and().sessionManagement().maximumSessions(3).expiredUrl("/login?session=true").and().invalidSessionUrl("/login?session=true");
 
     }
 

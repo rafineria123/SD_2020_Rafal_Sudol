@@ -19,107 +19,217 @@
 
 </head>
 <body>
-<div style="padding-bottom: 35px"></div>
-<div class="container-fluid" style="width: 95%">
+<!--<div style="padding-bottom: 35px"></div>-->
+<!--<div class="container-fluid" style="width: 95%">-->
 
-    <div class="row" style="width: 100%">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light"
-             style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">
-            <div class="navbar-brand" style="cursor: pointer;" onclick="window.location='/';">
-                <div class="row">
-                    <div class="col-md-4 dj text-center"><h1>NG</h1></div>
-                    <div class="col-md-6">NORGIE</div>
+<!--    <div class="row" style="width: 100%">-->
+<!--        <nav class="navbar navbar-expand-xl navbar-light bg-light"-->
+<!--             style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">-->
+<!--            <div class="navbar-brand" style="cursor: pointer;" onclick="window.location='/';">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-4 dj text-center"><h1>NG</h1></div>-->
+<!--                    <div class="col-6">NORGIE</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"-->
+<!--                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+
+<!--            <div class="collapse navbar-collapse flex-column" id="navbarTogglerDemo02">-->
+<!--                <ul class="nav navbar-nav ml-auto " style="padding-right: 250px">-->
+<!--                    <li class="nav_items">-->
+<!--                        <button class="navbar-toggler" type="button" data-toggle="collapse"-->
+<!--                                data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"-->
+<!--                                aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                            <span class="navbar-toggler-icon"></span>-->
+<!--                        </button>-->
+<!--                    </li>-->
+<!--                    <li class="nav_items" data-toggle="collapse"-->
+<!--                        data-target="#kategorie" aria-controls="navbarToggleExternalContent"-->
+<!--                        aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a>-->
+<!--                    </li>-->
+<!--                    <li class="nav_items" data-toggle="collapse"-->
+<!--                        data-target="#sklepy" aria-controls="navbarToggleExternalContent"-->
+<!--                        aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a>-->
+<!--                    </li>-->
+<!--                    <li style="padding-right: 50px;" sec:authorize="!isAuthenticated()">-->
+<!--                        <a href="/login">-->
+<!--                            <button type="button" style="" class="btn add_button"><span-->
+<!--                                    class="fas fa-user"-->
+<!--                                    style="font-size: 12px;"></span>ZALOGUJ SIĘ-->
+<!--                            </button>-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li style="padding-right: 50px;" sec:authorize="isAuthenticated()">-->
+<!--                        <a href="/settings">-->
+<!--                        <button style="" class="btn add_button"-->
+<!--                                aria-haspopup="true" aria-expanded="false"-->
+<!--                        ><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO-->
+<!--                        </button>-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="/add/discount">-->
+<!--                            <button type="button"  class="btn add_button"><span-->
+<!--                                    class="fas fa-plus"-->
+<!--                                    style="font-size: 12px;"></span>DODAJ OKAZJE-->
+<!--                            </button>-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </nav>-->
+<!--    </div>-->
+<!--    <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;-->
+<!--     padding-bottom: 30px;padding-top: 30px;margin-top: -25px">-->
+<!--        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -20px;">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-2" th:each="shop : ${list_of_shops}"-->
+<!--                     style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">-->
+<!--                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">-->
+<!--                        <button type="button" style="width: 100%" class="btn category_button"-->
+<!--                                th:text="${shop.getName()}">DODAJ KUPON-->
+<!--                        </button>-->
+<!--                    </a>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </div>-->
+
+<!--    </div>-->
+<!--    <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;-->
+<!--     padding-bottom: 30px;padding-top: 30px;margin-top: -25px">-->
+<!--        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -20px;">-->
+<!--            <div class="row">-->
+
+<!--                <div class="col-md-2" th:each="tag : ${list_of_tags}"-->
+<!--                     style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">-->
+<!--                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">-->
+<!--                        <button type="button" style="width: 100%" class="btn category_button"-->
+<!--                                th:text="${tag.getName()}">DODAJ KUPON-->
+<!--                        </button>-->
+<!--                    </a>-->
+<!--                </div>-->
+
+
+<!--            </div>-->
+<!--        </div>-->
+
+<!--    </div>-->
+
+<!--        <div class="row" style="width: 100%;margin-top: -25px">-->
+<!--            <div class="col-md-6 offset-md-3">-->
+<!--                <form th:action="@{/search}" method="post">-->
+<!--                    <input class="form-control mr-sm-0 input nav_search" minlength="3"  id="searchform" name="searchform"-->
+<!--                           data-ref="input-search" type="search" placeholder="np. Adidas, Neonet, Telefon, CCC"-->
+<!--                           aria-label="Search">-->
+<!--                    <input type="submit" style="height: 0px; width: 0px; border: none; padding: 0px;" hidefocus="true" />-->
+<!--                </form>-->
+
+<!--            </div>-->
+<!--        </div>-->
+
+<!--</div>-->
+
+
+<!--test-->
+
+</div><div style="padding-bottom: 35px"></div>
+<div class="container-fluid d-flex justify-content-center" style="width: 100%">
+    <div style="width: 90%">
+
+        <div class="row" style="width: 100%;margin-left: 0;margin-right: 0">
+            <nav class="navbar navbar-expand-xl navbar-light bg-light"
+                 style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">
+                <div class="navbar-brand" style="cursor: pointer;padding-left: 50px;" onclick="window.location='/';">
+                    <div class="row">
+                        <div class="col-4 dj text-center"><h1>NG</h1></div>
+                        <div class="col-6">NORGIE</div>
+                    </div>
                 </div>
-            </div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
-                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <button class="navbar-toggler" id="navbar-toggler-button" type="button" data-target="#navbarTogglerDemo02"
+                        aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse flex-column" id="navbarTogglerDemo02">
-                <ul class="nav navbar-nav ml-auto " style="padding-right: 250px">
-                    <li class="nav_items">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                                data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                    </li>
-                    <li class="nav_items" data-toggle="collapse"
-                        data-target="#kategorie" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a>
-                    </li>
-                    <li class="nav_items" data-toggle="collapse"
-                        data-target="#sklepy" aria-controls="navbarToggleExternalContent"
-                        aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a>
-                    </li>
-                    <li style="padding-right: 50px;" sec:authorize="!isAuthenticated()">
-                        <a href="/login">
-                            <button type="button" style="" class="btn add_button"><span
-                                    class="fas fa-user"
-                                    style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 105px">
+                    <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+                        <div class="nav_items d-flex align-items-center" id="kategorie-button"
+                            data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+                            aria-expanded="false" aria-label="Toggle navigation" style="padding-bottom: 5px"><a href="#" class="nav_items_clickable">Kategorie</a>
+                        </div>
+                        <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 5px;padding-bottom: 5px"
+                            data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+                            aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
+                        </div>
+                        <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
+                            <a href="/login">
+                                <button type="button" style="" class="btn add_button"><span
+                                        class="fas fa-user"
+                                        style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                                </button>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
+                            <a href="/settings">
+                                <button style="" class="btn add_button"
+                                        aria-haspopup="true" aria-expanded="false"
+                                ><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO
+                                </button>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center" style="padding-top: 10px">
+                            <a href="/add/discount">
+                                <button type="button"  class="btn add_button"><span
+                                        class="fas fa-plus"
+                                        style="font-size: 12px;"></span>DODAJ OKAZJE
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
+         ;margin-top: -25px;margin-left: 0px">
+            <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+                <div class="row" style="padding-left: 20px;padding-right: 20px">
+                    <div class="col-xl-2" th:each="tag : ${list_of_tags}"
+                         style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                        <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                            <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                    th:text="${tag.getName()}">DODAJ KUPON
                             </button>
                         </a>
-                    </li>
-                    <li style="padding-right: 50px;" sec:authorize="isAuthenticated()">
-                        <a href="/settings">
-                        <button style="" class="btn add_button"
-                                aria-haspopup="true" aria-expanded="false"
-                        ><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO
-                        </button>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/add/discount">
-                            <button type="button"  class="btn add_button"><span
-                                    class="fas fa-plus"
-                                    style="font-size: 12px;"></span>DODAJ OKAZJE
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
+         ;margin-top: -25px;margin-left: 0px">
+            <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+                <div class="row" style="padding-left: 20px;padding-right: 20px">
+                    <div class="col-xl-2" th:each="shop : ${list_of_shops}"
+                         style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                        <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                            <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                    th:text="${shop.getName()}">DODAJ KUPON
                             </button>
                         </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-    <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
-     padding-bottom: 30px;padding-top: 30px;margin-top: -25px">
-        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -20px;">
-            <div class="row">
-                <div class="col-md-2" th:each="shop : ${list_of_shops}"
-                     style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
-                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
-                        <button type="button" style="width: 100%" class="btn category_button"
-                                th:text="${shop.getName()}">DODAJ KUPON
-                        </button>
-                    </a>
-                </div>
+                    </div>
 
+
+                </div>
             </div>
+
         </div>
 
-    </div>
-    <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
-     padding-bottom: 30px;padding-top: 30px;margin-top: -25px">
-        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -20px;">
-            <div class="row">
-
-                <div class="col-md-2" th:each="tag : ${list_of_tags}"
-                     style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
-                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
-                        <button type="button" style="width: 100%" class="btn category_button"
-                                th:text="${tag.getName()}">DODAJ KUPON
-                        </button>
-                    </a>
-                </div>
-
-
-            </div>
-        </div>
-
-    </div>
-
-        <div class="row" style="width: 100%;margin-top: -25px">
-            <div class="col-md-6 offset-md-3">
+        <div class="row d-flex justify-content-center" style="width: 100%;margin-top: -25px;margin-right: 0;margin-left: 0">
+            <div class="col-xl-6">
                 <form th:action="@{/search}" method="post">
                     <input class="form-control mr-sm-0 input nav_search" minlength="3"  id="searchform" name="searchform"
                            data-ref="input-search" type="search" placeholder="np. Adidas, Neonet, Telefon, CCC"
@@ -129,8 +239,11 @@
 
             </div>
         </div>
+    </div>
 
 </div>
+
+<!--koniectest-->
 <div class="container" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
     <span class="over_items">Najlepsze kody, kupony i promocje! </span>
     <div style="height: 15px"></div>
@@ -148,7 +261,7 @@
     <div class="row" style="padding-left: 15px;padding-right: 15px;">
         <div class="container-fluid sort_div" style="width: 100%">
             <div class="row">
-            <div class="col-md-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;">
+            <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;">
                 <a th:href="|${sort_buttons_prefix +'top-rated'}|">
 
                     <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
@@ -175,7 +288,7 @@
                     </button>
                 </a>
             </div>
-            <div class="col-md-6 d-flex flex-row-reverse sort_div" style="padding-top: 10px;padding-bottom: 10px;">
+            <div class="col-lg-6 d-flex flex-row-reverse sort_div" style="padding-top: 10px;padding-bottom: 10px;" th:if="${picked_time!=null}">
                 <a th:href="|${time_buttons_prefix +'day'}|" th:if="${picked_sort != 3}">
                     <button type="button" th:if="${picked_time!=1}"  data-mixitup-control data-sort="number-date:asc"
                             class="btn sort_button sort_button" style="margin-left: 10px">Ostatnie 24h
@@ -211,15 +324,15 @@
     </div>
     <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
-        <div class="col-md-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.deletedOrNotReady()}"
+        <div class="col-lg-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.deletedOrNotReady()}"
              th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
              style="padding-bottom: 30px;"
              th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
             <!-- discount outdated=false -->
-            <div class="col-md-12 item_div" th:if="${!discount.isOutDated()}">
+            <div class="col-lg-12 item_div" th:if="${!discount.isOutDated()}">
                         <!-- Brand icon-->
                         <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
                                         th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
                             </div>
@@ -227,7 +340,7 @@
                 <!-- Discount image-->
                 <div class="row item_parts_padding">
 
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
                             <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                         </a>
@@ -235,45 +348,45 @@
                 </div>
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>
                 <!-- Price-->
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('PROMOCJA')}">
-                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>->
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONNORMALNY')}">
-                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
                         KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONPROCENT')}">
-                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
                         KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODNORMALNY')}">
-                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
                         KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODPROCENT')}">
-                    <div class="col-md-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
                         KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
 
                     </div>
                 </div>
                 <!-- Date-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <span class="item_date">Oferta wygasa: </span><span class="item_user"
                                                                             style="font-weight: 900; font-size: 15px; color: #1e7e34"
                                                                             th:text="${discount.getExpire_date_formated()}">25.06.20</span>
@@ -282,15 +395,15 @@
                 </div>
                 <!-- User-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <span class="item_user">Dodane przez: </span><a href="/" th:href="@{|/profile/${discount.getUser().getLogin()}|}"><span class="item_user"
                                                                                        style="font-weight: 900; font-size: 15px;color: black;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"
                                                                                        th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
                     </div>
                 </div>
                 <!-- Rate + Comments-->
-                <div class="row item_parts_padding" style="padding-top: 10px">
-                    <div class="col-md-6 float-right" style="padding-left: 40px">
+                <div class="row item_parts_padding d-flex justify-content-around" style="padding-top: 10px">
+                    <div class="">
                         <div class="row" sec:authorize="isAuthenticated()">
                             <form th:action="@{/addrate}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
@@ -331,7 +444,7 @@
                         </div>
 
                     </div>
-                    <div class="col-md-6">
+                    <div class="">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span
                                 class="fas fa-comments"
                                 style="color: #9e9ea4;font-size: 14px;"></span><span
@@ -341,7 +454,7 @@
                 </div>
                 <!--Discount Button-->
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
                             <button type="button"  class="btn item_button" th:if="${!discount.isOutDated()}">
 
@@ -356,7 +469,7 @@
                 </div>
             </div>
             <!-- discount outdated=true -->
-            <div class="col-md-12 item_div" th:if="${discount.isOutDated()}" style="filter: grayscale(90%)">
+            <div class="col-lg-12 item_div" th:if="${discount.isOutDated()}" style="filter: grayscale(90%)">
                 <!-- Brand icon-->
                 <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                     <div class="col-md-12">
@@ -381,11 +494,34 @@
                     </div>
                 </div>
                 <!-- Price-->
-                <div class="row item_parts_padding" style="padding-bottom: 0">
-                    <div class="col-md-12">
-                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>->
-                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('PROMOCJA')}">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
+                    </div>
+                </div>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONNORMALNY')}">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+
+                    </div>
+                </div>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONPROCENT')}">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                    </div>
+                </div>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODNORMALNY')}">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+
+                    </div>
+                </div>
+                <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODPROCENT')}">
+                    <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+
                     </div>
                 </div>
                 <!-- Date-->
@@ -406,8 +542,8 @@
                     </div>
                 </div>
                 <!-- Rate + Comments-->
-                <div class="row item_parts_padding" style="padding-top: 10px">
-                    <div class="col-md-6 float-right" style="padding-left: 40px">
+                <div class="row item_parts_padding d-flex justify-content-around" style="padding-top: 10px">
+                    <div class="">
                         <div class="row" sec:authorize="isAuthenticated()">
                             <form th:action="@{/addrate}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
@@ -448,7 +584,7 @@
                         </div>
 
                     </div>
-                    <div class="col-md-6">
+                    <div class="">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span
                                 class="fas fa-comments"
                                 style="color: #9e9ea4;font-size: 14px;"></span><span
@@ -458,7 +594,7 @@
                 </div>
                 <!--Discount Button-->
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
                                                         <button type="button"  class="btn item_button" th:if="${discount.isOutDated()}" style="background: linear-gradient(45deg,lightblue,lightblue);">
 
@@ -530,7 +666,6 @@
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="js/home.js"></script>
-
+<script src="/js/home.js"></script>
 </body>
 </html>
