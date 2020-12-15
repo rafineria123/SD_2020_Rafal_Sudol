@@ -19,6 +19,7 @@ import pl.okazje.project.events.OnRegistrationCompleteEvent;
 import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.DiscountService;
 import pl.okazje.project.services.SendMail;
+import pl.okazje.project.services.UserService;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -81,6 +82,7 @@ public class MainController {
         User uzytkownik = userRepository.findUserByLogin(authentication.getName());
         Pageable pageable = PageRequest.of(0, page_size_for_home, Sort.by("creationdate").descending());
         Page<Discount> allProducts = discountRepository.findAll(pageable);
+
 
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("list_of_discounts", allProducts.getContent());
@@ -1353,7 +1355,7 @@ public class MainController {
     }
 
     @PostMapping("/settings/messages")
-    public RedirectView newMessageToUser(@ModelAttribute("login") String login, @ModelAttribute("message") String message, RedirectAttributes redir) {
+    public RedirectView newMessageToUser(@ModelAttribute("login") String login, @ModelAttribute("message") String message, RedirectAttributes redir) throws MessagingException {
 
         RedirectView redirectView = new RedirectView("/settings/messages", true);
 
@@ -1388,6 +1390,25 @@ public class MainController {
                 messageRepository.save(newmessageobject);
             }
 
+            ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(uzytkownicy.get(1).getLogin()));
+            if(!list.isEmpty()){
+
+                for (String s:list) {
+                    if(Long.parseLong(s)-System.currentTimeMillis()<0){
+                        sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
+                                "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
+                                        +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+newmessageobject.getContent());
+                    }
+
+                }
+
+            }else {
+
+                sendMail.sendingMail(uzytkownicy.get(1).getEmail(),"NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
+                                +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+newmessageobject.getContent());
+
+            }
+
 
             redirectView = new RedirectView("/messages/" + conversation.getConversation_id(), true);
             return redirectView;
@@ -1407,6 +1428,25 @@ public class MainController {
         lista_uzytkownikow.forEach(o -> userRepository.save(o));
         Message m = new Message(message, new Date(), "nieodczytane", conversation, uzytkownik);
         messageRepository.save(m);
+        ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(uzytkownicy.get(1).getLogin()));
+        if(!list.isEmpty()){
+
+            for (String s:list) {
+                if(Long.parseLong(s)-System.currentTimeMillis()<0){
+                    sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
+                            "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
+                                    +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+m.getContent());
+                }
+
+            }
+
+        }else {
+
+            sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
+                    "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
+                            +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+m.getContent());
+
+        }
 
 
         redirectView = new RedirectView("/messages/" + conversation.getConversation_id(), true);
@@ -1577,7 +1617,7 @@ public class MainController {
     }
 
     @PostMapping("sendMessage")
-    public String sendMessage(@ModelAttribute("new_message_conv_id") String new_message_conv_id, @ModelAttribute("new_message") String new_message) {
+    public String sendMessage(@ModelAttribute("new_message_conv_id") String new_message_conv_id, @ModelAttribute("new_message") String new_message) throws MessagingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findUserByLogin(authentication.getName());
@@ -1589,6 +1629,30 @@ public class MainController {
         message.setConversation(conversationRepository.findById(Long.parseLong(new_message_conv_id)).get());
         message.setCr_date(new Date());
         message.setUser(uzytkownik);
+        User otheruser = conversationRepository.findById(Long.parseLong(new_message_conv_id)).get().getOtherUser(uzytkownik);
+        ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(otheruser.getLogin()));
+        if(!list.isEmpty()){
+            System.out.println(1);
+
+            for (String s:list) {
+                if(Long.parseLong(s)-System.currentTimeMillis()<0){
+                    sendMail.sendingMail(otheruser.getEmail(),
+                            "NORGIE - Otrzymales nową wiadomość","Witaj "+otheruser.getLogin()+",\n Otrzymałeś nową wiadomość od "
+                                    +uzytkownik.getLogin()+"\n Treść wiadomości: "+message.getContent());
+                }
+
+            }
+
+        }else {
+            System.out.println(2);
+
+            sendMail.sendingMail(otheruser.getEmail(),
+                    "NORGIE - Otrzymales nową wiadomość","Witaj "+otheruser.getLogin()+",\n Otrzymałeś nową wiadomość od "
+                            +uzytkownik.getLogin()+"\n Treść wiadomości: "+message.getContent());
+
+        }
+
+
 
         messageRepository.save(message);
 
@@ -1656,6 +1720,7 @@ public class MainController {
         User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
         User uzytkownik2 = userRepository.findUserByLogin(user2);
 
+        System.out.println(3);
 
         Message m = new Message();
         m.setUser(uzytkownik1);
@@ -1664,6 +1729,26 @@ public class MainController {
         m.setContent(message);
         m.setStatus("nieodczytane");
         messageRepository.save(m);
+
+        ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(uzytkownik2.getLogin()));
+        if(!list.isEmpty()){
+
+            for (String s:list) {
+                if(Long.parseLong(s)-System.currentTimeMillis()<0){
+                    sendMail.sendingMail(uzytkownik2.getEmail(),
+                            "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownik2.getLogin()+",\n Otrzymałeś nową wiadomość od "
+                                    +uzytkownik1.getLogin()+"\n Treść wiadomości: "+m.getContent());
+                }
+
+            }
+
+        }else {
+
+            sendMail.sendingMail(uzytkownik2.getEmail(),
+                    "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownik2.getLogin()+",\n Otrzymałeś nową wiadomość od "
+                            +uzytkownik1.getLogin()+"\n Treść wiadomości: "+m.getContent());
+
+        }
 
         return "";
 
@@ -1688,7 +1773,7 @@ public class MainController {
     }
 
     @PostMapping("/acceptdiscount")
-    public String acceptdiscount(@ModelAttribute("discount_id") String discount_id){
+    public String acceptdiscount(@ModelAttribute("discount_id") String discount_id) throws MessagingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
@@ -1697,6 +1782,9 @@ public class MainController {
             Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
             disc.setStatus(Discount.Status.ZATWIERDZONE);
             discountRepository.save(disc);
+            sendMail.sendingMail(disc.getUser().getEmail(),"NORGIE - Okazja zatwierdzona","Twoja okazja została zweryfikowana i zatwierdzona," +
+                    " juz niedługo pojawi się na stronie głównej.\n" +
+                    "Tytuł okazji: "+disc.getTitle());
 
         }
 

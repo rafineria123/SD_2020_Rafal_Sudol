@@ -193,7 +193,7 @@ public class ParsingBot {
 
             }
 
-//            fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
+//           fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
 //            fetchAmazon("https://www.amazon.com/Best-Sellers-Grocery-Gourmet-Food/zgbs/grocery","Artykuły Spożywcze");
 //            fetchAmazon("https://www.amazon.com/Best-Sellers-Sports-Outdoors/zgbs/sporting-goods", "Sport i Turystyka");
 

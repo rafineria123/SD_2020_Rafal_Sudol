@@ -35,9 +35,9 @@
         <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
             <div class="nav_items d-flex align-items-center" id="kategorie-button"
                  data-target="#kategorie" aria-controls="navbarToggleExternalContent"
-                 aria-expanded="false" aria-label="Toggle navigation" style="padding-bottom: 5px"><a href="#" class="nav_items_clickable">Kategorie</a>
+                 aria-expanded="false" aria-label="Toggle navigation" style="padding-top: 10px"><a href="#" class="nav_items_clickable">Kategorie</a>
             </div>
-            <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 5px;padding-bottom: 5px"
+            <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 10px;"
                  data-target="#sklepy" aria-controls="navbarToggleExternalContent"
                  aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
             </div>
@@ -115,38 +115,40 @@
 </div>
 
 <div class="container-fluid">
-    <div class="col-8 offset-2">
-        <div class="row" th:if="${discount.deleted()}">
-            <div style="padding: 15px 0;width: 100%">
-                <div class="row" style="width: 100%">
-                    <div class="col-12" style="padding-left: 0;padding-right: 0">
-                        <div class="bad_alert">
-                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                            <strong>Ta okazja została usunięta przez Moderatora. Nie można dodawac lub usuwać komentarzy.</strong>
+    <div class="row d-flex justify-content-center" style="width: 100%;margin: 0">
+        <div class="col-8">
+            <div class="row" style="padding: 0;" th:if="${discount.deleted()}">
+                <div style="padding: 15px;width: 100%">
+                    <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
+                        <div class="col-12" style="padding-left: 0;padding-right: 0">
+                            <div class="bad_alert">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong>Ta okazja została usunięta przez Moderatora. Nie można dodawac lub usuwać komentarzy.</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row" th:if="${discount.deletedOrNotReady()}">
-            <div style="padding: 15px 0;width: 100%" th:if="${discount.getStatus().equals('OCZEKUJACE')}">
-                <div class="row" style="width: 100%">
-                    <div class="col-12" style="padding-left: 0;padding-right: 0">
-                        <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
-                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                            <strong>Ta okazja nie została jeszcze zatwierdzona przez Moderatora. Nie można dodawac lub usuwać komentarzy.</strong>
+            <div class="row" style="padding: 0" th:if="${discount.deletedOrNotReady()}">
+                <div style="padding: 15px;width: 100%" th:if="${discount.getStatus().equals('OCZEKUJACE')}">
+                    <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
+                        <div class="col-12" style="padding-left: 0;padding-right: 0">
+                            <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong>Ta okazja nie została jeszcze zatwierdzona przez Moderatora. Nie można dodawac lub usuwać komentarzy.</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row" th:if="${discount.isOutDated()&&!discount.deleted()&&!discount.getStatus().equals('OCZEKUJACE')}">
-            <div style="padding: 15px 0;width: 100%">
-                <div class="row" style="width: 100%">
-                    <div class="col-12" style="padding-left: 0;padding-right: 0">
-                        <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
-                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                            <strong>Ta okazja juz wygasła. Zawarte informacje mogą być już nieaktualne.</strong>
+            <div class="row" style="padding: 0" th:if="${discount.isOutDated()&&!discount.deleted()&&!discount.getStatus().equals('OCZEKUJACE')}">
+                <div style="padding: 15px;width: 100%">
+                    <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
+                        <div class="col-12" style="padding-left: 0;padding-right: 0">
+                            <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong>Ta okazja juz wygasła. Zawarte informacje mogą być już nieaktualne.</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,7 +164,7 @@
     <div class="row d-flex justify-content-center" style="width: 100%;margin: 0">
         <div class="col-md-8" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
             <div class="row">
-                <div class="col-12">
+                <div class="col-10">
                     <span class="over_items">Informacje o okazji</span>
                 </div>
 <!--                <div class="col-2 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')" th:if="${!discount.getStatus().equals('Oczekuje')}">-->
@@ -170,7 +172,7 @@
 <!--                    <span class="over_items fas fa-ban" style="padding-bottom: 5px"></span>-->
 
 <!--                </div>-->
-                <div class="col-4 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
+                <div class="col-2 d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
 
                     <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('OCZEKUJACE')}">
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
@@ -194,30 +196,66 @@
 <div class="container-fluid ">
     <div class="row mix-container w-100 d-flex justify-content-center" style="width: 100%;margin: 0">
         <div class="col-md-8 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
-            <div class="row text-left" style="display: flex;
-                align-items: center;
-                justify-content: center">
-                <div class="col-md-3 d-flex justify-content-center" style="padding-top: 15px;padding-bottom: 15px;">
+            <div class="row" style="display: flex;align-items: center;justify-content: center">
+                    <div class="d-flex justify-content-around" style="width: 100%">
+                        <div class="d-flex justify-content-start" style="width: 100%;padding-top: 15px">
+                            <div class="col-3 d-flex justify-content-center align-self-end">
+                                <div class="" style="border-radius: 15px;border: 2px solid #ff0065;width: 40%;padding-left: 15px;padding-right: 15px;min-width: fit-content">
+                                    <div class="d-flex justify-content-around" sec:authorize="isAuthenticated()">
+                                        <form th:action="@{/addrate}" method="post">
+                                            <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
+                                                                                                                                                                th:value="${discount.getDiscount_id()}">
+                                            <input type="hidden" name="redirect"
+                                                   id="redirect"
+                                                   value="" th:value="|discount/${discount.getDiscount_id()}|">
+                                        </form>
+                                        <span style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
+                                        <form th:action="@{/removerate}" method="post"><input
+                                                class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
+                                            <input type="hidden" name="redirect_remove"
+                                                   id="redirect_remove"
+                                                   th:value="|discount/${discount.getDiscount_id()}|">
+                                        </form>
+                                    </div>
+                                    <div class="d-flex justify-content-around" sec:authorize="!isAuthenticated()">
+                                        <form th:action="@{/login}" method="post">
+                                            <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
+                                                                                                                                                                th:value="${discount.getDiscount_id()}">
+                                        </form>
+                                        <span
+                                                style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
+                                        <form th:action="@{/login}" method="post"><input
+                                                class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-end flex-column" style="width:100%;padding-right: 20px">
+                                <span style="font-weight: 500;font-size: 17px;font-family: Calibri;color: rgba(145,143,146,0.91);">Dodane przez: <a href="/" th:href="@{|/profile/${discount.getUser().getLogin()}|}">
+                                        <span style="font-weight: 700; font-size: 19px;font-family: Calibri;color: black;overflow: hidden;white-space: nowrap;
+                                    text-overflow: ellipsis;" th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
+                                    </span>
+                            </div>
+                        </div>
+
+                    </div>
+                <div class="col-3 d-flex justify-content-center align-self-start" style="padding-top: 8px;padding-bottom: 15px;padding-left:15px;padding-right: 15px;min-width: fit-content;">
                     <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                 </div>
-                <div class="col-md-9" style="">
-                    <div class="row">
-                        <div class="d-flex justify-content-end" style="width: 90%">
-                            <span style="font-weight: 500;font-size: 17px;font-family: Calibri;color: rgba(145,143,146,0.91);">Dodane przez: <a href="/" th:href="@{|/profile/${discount.getUser().getLogin()}|}">
-                                <span style="font-weight: 700; font-size: 19px;font-family: Calibri;color: black;overflow: hidden;white-space: nowrap;
-                            text-overflow: ellipsis;" th:text="${discount.getUser().getLogin()}">Rafineria</span></a>
-                            </span>
+                <div class="col-xl-9" style="">
+
+                    <div class="row" style="padding-right: 25px;padding-left:25px">
+                        <div class="col-12 item_title d-flex" th:text="${discount.getTitle()}"
+                            style="padding-bottom: 3px">
+                            Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)
+                        </div>
+                        <div style="width: 100%;margin-left:15px;border-bottom: 1px solid rgba(82,73,98,.2);">
 
                         </div>
                     </div>
-                    <div class="row" style="padding-right: 65px;">
-                        <div class="col-md-12 item_title" th:text="${discount.getTitle()}"
-                             style="padding-left: 0;border-bottom: 1px solid rgba(82,73,98,.2);padding-bottom: 3px">
-                            Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12" th:text="${discount.getContent()}" style="padding-right: 65px;padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+
+                    <div class="row" style="padding-right: 25px;padding-left:25px">
+                        <div class="col-md-12" th:text="${discount.getContent()}" style="padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
                              word-wrap: break-word;">
                             Przetworniki neodymowe o średnicy 50 mm zapewniają szeroki i jednocześnie wiernie
                             odwzorowany zakres dźwięków
@@ -228,80 +266,53 @@
                         </div>
 
                     </div>
-                </div>
-            </div>
-            <div class="row" style="padding-bottom: 10px;padding-left: 17px;">
-                <div class="col-md-2 text-center" >
-                    <div class="col-md-8 offset-md-2" style="border-radius: 15px;border: 2px solid #ff0065;">
-                    <div class="row" style="padding-left: 30px" sec:authorize="isAuthenticated()">
-                    <form th:action="@{/addrate}" method="post">
-                        <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
-                                                                                                                                            th:value="${discount.getDiscount_id()}">
-                        <input type="hidden" name="redirect"
-                               id="redirect"
-                               value="" th:value="|discount/${discount.getDiscount_id()}|">
-                    </form>
-                    <span
-                            style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
-                    <form th:action="@{/removerate}" method="post"><input
-                            class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
-                        <input type="hidden" name="redirect_remove"
-                               id="redirect_remove"
-                               th:value="|discount/${discount.getDiscount_id()}|">
-                    </form>
+                    <div class="row" style="padding-top: 10px;padding-right: 40px;padding-left:40px">
+
+
+                        <div class="d-flex justify-content-start" style="width: 60%">
+
+                            <span th th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                            <span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
+                            <span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
+                            <span th:if="${discount.getType().equals('PROMOCJA')}" class="fas fa-truck align-self-center"
+                                  style="font-size: 18px;color: rgba(145,143,146,0.91);padding-right: 3px"></span><span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91); " th:text="|${discount.getShipment_price()}zł|">20zł</span>
+
+                            <span th:if="${discount.getType().equals('KUPONNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}PLN|">-19%</span>
+                            <span th:if="${discount.getType().equals('KUPONPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}%|">-19%</span>
+                            <span th:if="${discount.getType().equals('KODNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOld_price()}PLN|">-19%</span>
+                            <span th:if="${discount.getType().equals('KODPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOld_price()}%|">-19%</span>
+
+                        </div>
                     </div>
-                        <div class="row" style="padding-left: 30px" sec:authorize="!isAuthenticated()">
-                            <form th:action="@{/login}" method="post">
-                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
-                                                                                                                                                    th:value="${discount.getDiscount_id()}">
-                            </form>
-                            <span
-                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
-                            <form th:action="@{/login}" method="post"><input
-                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
-                            </form>
+                    <div class="row" style="padding-bottom: 10px;padding-right: 40px;padding-left:40px">
+                        <div class="d-flex justify-content-end" style="width: 100%">
+                            <span style="font-weight: 500;font-size: 17px;font-family: Calibri;color: rgba(145,143,146,0.91);">Wygasa:<span
+                                    style="font-weight: 900;font-size: 19px;font-family: Calibri;color: #1e7e34;"th:text="${discount.getExpire_date_formated()}">25.06.20</span></span>
+
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-5 offset-md-1">
-
-                    <span th th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
-                    <span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
-                    <span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
-                    <span th:if="${discount.getType().equals('PROMOCJA')}" class="fas fa-truck"
-                          style="font-size: 18px;color: rgba(145,143,146,0.91);padding-right: 3px"></span><span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91); " th:text="|${discount.getShipment_price()}zł|">20zł</span>
-
-                    <span th:if="${discount.getType().equals('KUPONNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}PLN|">-19%</span>
-                    <span th:if="${discount.getType().equals('KUPONPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}%|">-19%</span>
-                    <span th:if="${discount.getType().equals('KODNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOld_price()}PLN|">-19%</span>
-                    <span th:if="${discount.getType().equals('KODPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOld_price()}%|">-19%</span>
-
-                </div>
-                <div class="col-md-3 offset-md-1">
-                    <span style="padding-right: 3px;font-weight: 500;font-size: 17px;font-family: Calibri;color: rgba(145,143,146,0.91);">Oferta wygasa:</span><span
-                        style="font-weight: 900;font-size: 19px;font-family: Calibri;color: #1e7e34;"th:text="${discount.getExpire_date_formated()}">25.06.20</span>
-                </div>
             </div>
+
         </div>
 
 
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-8">
             <div class="row">
                 <div class="col-md-12" style="padding-top: 10px;padding-bottom: 10px;padding-right: 0px;padding-left: 0px">
                     <a th:href="${discount.getDiscount_link()}" href="/discount">
-                        <button type="button" style="width: 100%" class="btn item_button">
-                            <div class="row">
-                            <div class="col-1">
+                        <button type="button" style="width: 100%" class="btn item_button d-flex justify-content-around">
+
+                            <div style="width: 10%" class="d-flex justify-content-center align-self-center">
                                 <span class="fas fa-arrow-right"></span> <span class="fas fa-arrow-right"></span>
                             </div>
-                                <div class="col-10" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-                                    <span th:text="| ${discount.getDiscount_link()} |" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-                            https://www.amazon.de/dp/B01N5VHLUG/?language=pl_PL&tag=pepperpl09-21 </span>
-                                </div>
-                                <div class="col-1">
-                                   <span class="fas fa-arrow-left"> </span> <span class="fas fa-arrow-left"> </span>
-                                </div>
+
+                            <div style="width: 80%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" class="d-flex justify-content-center">
+                                <span th:text="| ${discount.getDiscount_link()} |" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                    https://www.amazon.de/dp/B01N5VHLUG/?language=pl_PL&tag=pepperpl09-21 </span>
+                            </div>
+                            <div style="width: 10%" class="d-flex justify-content-center align-self-center">
+                                <span class="fas fa-arrow-left"> </span> <span class="fas fa-arrow-left"> </span>
                             </div>
                         </button>
                     </a>
@@ -309,32 +320,32 @@
             </div>
         </div>
 
-        <div class="col-md-8 offset-md-2 sort_div" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
-            <div class="row text-center" style="padding-top: 5px;padding-bottom: 5px;">
-                <div class="col-md-2 offset-md-2"
+        <div class="col-md-8 sort_div" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
+            <div class="row d-flex justify-content-around align-self-center" style="padding-top: 5px;padding-bottom: 5px;">
+                <div class=""
                      style="font-family: Calibri;font-weight: 900;font-size: 17px;color: rgba(22, 21, 21, 0.91);padding-top: 3px;"th:text="|KOMENTARZE (${discount.getCommentsSize()}): |">
                     KOMENTARZE (53):
                 </div>
 
-                <div class="col-md-2"
-                     style="font-family: Calibri;font-weight: 900;font-size: 19px;color: rgba(22, 21, 21, 0.91);">
+                <div class=""
+                     style="font-family: Calibri;font-weight: 900;min-width:15%;font-size: 19px;color: rgba(22, 21, 21, 0.91);">
                     <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-rate:desc" class="btn sort_button">najlepsze</button>
 
                 </div>
-                <div class="col-md-2"
-                     style="font-family: Calibri;font-weight: 900;font-size: 19px;color: rgba(22, 21, 21, 0.91);">
+                <div class=""
+                     style="font-family: Calibri;font-weight: 900;min-width:15%;font-size: 19px;color: rgba(22, 21, 21, 0.91);">
                     <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-date:asc" class="btn sort_button">najnowsze</button>
 
                 </div>
-                <div class="col-md-2"
-                     style="font-family: Calibri;font-weight: 900;font-size: 19px;color: rgba(22, 21, 21, 0.91);">
+                <div class=""
+                     style="font-family: Calibri;font-weight: 900;min-width:15%;font-size: 19px;color: rgba(22, 21, 21, 0.91);">
                     <button type="button" style="white-space:pre" data-mixitup-control data-sort="number-date:desc" class="btn sort_button">najstarsze</button>
 
                 </div>
             </div>
         </div>
-        <div class="col-md-8 offset-md-2" style="height: 15px;"></div>
-        <div class="col-md-8 offset-md-2 sort_div" sec:authorize="isAuthenticated()" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
+        <div class="col-md-8" style="height: 15px;"></div>
+        <div class="col-md-8 sort_div" sec:authorize="isAuthenticated()" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
             <form th:action="@{/addcomment}" method="post">
             <div class="row text-center" style="padding-top: 5px;padding-bottom: 5px;">
                 <div class="col-md-12" style="padding-top: 5px">
@@ -346,14 +357,14 @@
                 </div>
 
             </div>
-            <div class="row">
-                <div class="col-md-2 offset-md-10" style="padding-bottom: 10px">
-                    <button type="submit" style="width: 100%" class="btn add_button" >SKOMENTUJ</button>
+                <div class="row">
+                    <div class="d-flex justify-content-end" style="padding-bottom: 10px;width: 100%;padding-right: 15px">
+                        <button type="submit" style="width: 20%;min-width: fit-content" class="btn add_button" >SKOMENTUJ</button>
+                    </div>
                 </div>
-            </div>
             </form>
         </div>
-        <div class="col-md-8 offset-md-2 sort_div" sec:authorize="!isAuthenticated()" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
+        <div class="col-md-8 sort_div" sec:authorize="!isAuthenticated()" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
             <form th:action="@{/login}" method="get">
                 <div class="row text-center" style="padding-top: 5px;padding-bottom: 5px;">
                     <div class="col-md-12" style="padding-top: 5px">
@@ -366,8 +377,8 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-md-2 offset-md-10" style="padding-bottom: 10px">
-                        <button type="submit" style="width: 100%" class="btn add_button" >SKOMENTUJ</button>
+                    <div class="d-flex justify-content-end" style="padding-bottom: 10px;width: 100%;padding-right: 15px">
+                        <button type="submit" style="width: 20%;min-width: fit-content" class="btn add_button" >SKOMENTUJ</button>
                     </div>
                 </div>
             </form>
@@ -380,66 +391,80 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-2 offset-md-1 text-center"
-                                 style="border-bottom: 1px solid rgba(82,73,98,.2)">
-                                <a href="" th:href="@{|/profile/${comment.getUser().getLogin()}|}"> <span style="font-size:14px;font-weight:900;color:#e42d31; padding-right: 5px"th:text="${comment.getUser().getLogin()}">Rafineria</span></a>
-                                <span style="font-size:12px;font-weight: 900;color: rgba(145,143,146,0.91);" th:text="|${comment.getDateDifference()} dni temu|">2 dni temu</span>
-                            </div>
-                            <div class="col-md-2 offset-md-6 text-right">
-                            <span class="fas fa-thumbs-up"
-                                  style="font-size:13px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
-                                    style="font-size:14px;font-weight: 900;color: rgba(145,143,146,0.91);"th:text="${comment.getRatingsSize()}">23</span>
-                            </div>
-                            <div class="col-md-1 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
+                        <div class="row d-flex justify-content-center">
+                            <div class="d-flex justify-content-center" style="width: 90%">
+                                <div class="d-flex justify-content-start"
+                                     style="width: 70%">
+                                    <div style="width: fit-content;border-bottom: 1px solid rgba(82,73,98,.2)">
+                                    <a href="" th:href="@{|/profile/${comment.getUser().getLogin()}|}"> <span style="font-size:14px;font-weight:900;color:#e42d31; padding-right: 5px"th:text="${comment.getUser().getLogin()}">Rafineria</span></a>
+                                    <span style="font-size:12px;font-weight: 900;color: rgba(145,143,146,0.91);" th:text="|${comment.getDateDifference()} dni temu|">2 dni temu</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-self-center align-items-center" style="width: 20%">
+                                <span class="fas fa-thumbs-up"
+                                      style="font-size:13px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
+                                        style="font-size:14px;font-weight: 900;color: rgba(145,143,146,0.91);"th:text="${comment.getRatingsSize()}">23</span>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-end" style="width: 10%" sec:authorize="hasAuthority('ADMIN')">
+                                    <form th:action="@{/removecomment}" method="post">
+                                        <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getComment_id()}">
+                                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style=""></span> </button>
+                                    </form>
 
-                                <form th:action="@{/removecomment}" method="post">
-                                    <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getComment_id()}">
-                                    <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style=""></span> </button>
-                                </form>
+                                </div>
 
                             </div>
+
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12" style="padding-top: 7px;padding-bottom: 10px">
-                        <div class="row">
-                            <div class="col-md-10 offset-md-1" style="font-size: 14px;font-weight: 500;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
-                             word-wrap: break-word;" th:text="${comment.getContent()}">
-                                Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
-                                wypadła im jedna z najlepszych
-                                w historii portalu, za Sennheiserami (6300 zł) i HiFiManami x3 (1500 zł / 3800 zł / 5000
-                                zł). 5. miejsce na 416 przetestowanych słuchawek.
-                                Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
-                                wypadła im jedna z najlepszych w historii portalu, za Sennheiserami (6300 zł)
-                                i HiFiManami x3 (1500 zł / 3800 zł / 5000 zł). 5. miejsce na 416 przetestowanych
-                                słuchawek.
+                        <div class="row d-flex justify-content-center">
+                            <div class="d-flex justify-content-center" style="width: 90%">
+                                <div class="d-flex justify-content-start" style="width:100%;max-width:100%;font-size: 14px;font-weight: 500;display: inline-block;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                                 word-wrap: break-word;">
+                                    <span th:text="${comment.getContent()}" style="max-width: 100%;white-space: pre-wrap;white-space: -moz-pre-wrap;display: inline-block;white-space: -o-pre-wrap;
+                             word-wrap: break-word;">
+                                    Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
+                                    wypadła im jedna z najlepszych
+                                    w historii portalu, za Sennheiserami (6300 zł) i HiFiManami x3 (1500 zł / 3800 zł / 5000
+                                    zł). 5. miejsce na 416 przetestowanych słuchawek.
+                                    Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
+                                    wypadła im jedna z najlepszych w historii portalu, za Sennheiserami (6300 zł)
+                                    i HiFiManami x3 (1500 zł / 3800 zł / 5000 zł). 5. miejsce na 416 przetestowanych
+                                    słuchawek.
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12" style="padding-bottom: 15px">
-                        <div class="row">
-                            <div class="col-md-10 offset-md-1" style="font-size: 14px;font-weight: 500" sec:authorize="!isAuthenticated()">
-                                   <a href="/login" class="comment_like">
-                                    <span class="fas fa-thumbs-up"
-                                         style="font-size:16px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
-                                        style="font-size:15px;font-weight: 900;color: rgba(145,143,146,0.91);">Lubię to</span>
-                                   </a>
-                            </div>
-                            <div class="col-md-10 offset-md-1" style="font-size: 14px;font-weight: 500" sec:authorize="isAuthenticated()">
-                                <form th:action="@{/ratecomment}" method="post">
-                                    <input type="hidden" name="commentid" id="commentid"
-                                           th:value="${comment.getComment_id()}">
-                                    <button type="submit" style="background-color: #f4f4f5;border: 0;" class="comment_like">
+                            <div class="row d-flex justify-content-center">
+                                <div class="d-flex justify-content-start" style="width: 90%">
+                                    <div class="d-flex justify-content-start" style="width:40%;font-size: 14px;font-weight: 500" sec:authorize="!isAuthenticated()">
+                                        <a href="/login" class="comment_like">
                                     <span class="fas fa-thumbs-up"
                                           style="font-size:16px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
-                                            style="font-size:15px;font-weight: 900;color: rgba(145,143,146,0.91);">Lubię to</span>
-                                    </button>
-                                </form>
+                                                style="font-size:15px;font-weight: 900;color: rgba(145,143,146,0.91);">Lubię to</span>
+                                        </a>
+                                    </div>
+                                    <div class="d-flex justify-content-start" style="width:40%;font-size: 14px;font-weight: 500" sec:authorize="isAuthenticated()">
+                                        <form th:action="@{/ratecomment}" method="post">
+                                            <input type="hidden" name="commentid" id="commentid"
+                                                   th:value="${comment.getComment_id()}">
+                                            <button type="submit" style="background-color: #f4f4f5;border: 0;" class="comment_like">
+                                    <span class="fas fa-thumbs-up"
+                                          style="font-size:16px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
+                                                    style="font-size:15px;font-weight: 900;color: rgba(145,143,146,0.91);">Lubię to</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

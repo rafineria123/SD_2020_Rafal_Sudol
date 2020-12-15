@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pl.okazje.project.entities.User;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
@@ -23,5 +25,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "DELETE FROM spring_session WHERE principal_name=?1" ,
             nativeQuery = true)
     public void banUser(String name);
+
+    @Query(value = "Select EXPIRY_TIME FROM spring_session WHERE principal_name=?1" ,
+            nativeQuery = true)
+    public List<String> getUserSession(String name);
 
 }

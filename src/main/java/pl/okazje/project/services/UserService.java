@@ -1,6 +1,7 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +12,9 @@ import pl.okazje.project.repositories.TokenRepository;
 import pl.okazje.project.repositories.UserRepository;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -54,4 +57,6 @@ public class UserService implements UserDetailsService {
         user.setToken(myToken);
         userRepository.save(user);
     }
+
+
 }
