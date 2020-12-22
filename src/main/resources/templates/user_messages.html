@@ -19,69 +19,99 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background: linear-gradient(45deg,#e42d31,#ff0065);">
-    <div class="navbar-brand" style="cursor: pointer;" onclick="window.location='/';">
+<nav class="navbar navbar-expand-xl navbar-light bg-light"
+     style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);">
+    <div class="navbar-brand" style="cursor: pointer;padding-left: 100px;" onclick="window.location='/';">
         <div class="row">
-            <div class="col-md-4 dj text-center"><h1>NG</h1></div>
-            <div class="col-md-6">NORGIE</div>
+            <div class="col-4 dj text-center"><h1>NG</h1></div>
+            <div class="col-6">NORGIE</div>
         </div>
     </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+    <button class="navbar-toggler" id="navbar-toggler-button" type="button" data-target="#navbarTogglerDemo02"
             aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="nav navbar-nav ml-auto" style="padding-right: 250px">
-            <li class="nav_items" data-toggle="collapse"
-                data-target="#kategorie" aria-controls="navbarToggleExternalContent"
-                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a></li>
-            <li class="nav_items" data-toggle="collapse"
-                data-target="#sklepy" aria-controls="navbarToggleExternalContent"
-                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a></li>
-            <li style="padding-right: 50px;"sec:authorize="!isAuthenticated()">
-                <a href="/login"><button type="button" style="white-space:pre;" class="btn add_button"><span class="fas fa-user"
-                                                                                                             style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
-            </li>
-            <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
-                <form th:action="@{/settings}" method="get">
-                    <button style="white-space:pre;" class="btn add_button" type="submit"
-                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO</button>
-                </form>
-            </li>
-            <li>
-                <a href="/add/discount"> <button type="button" style="" class="btn add_button"><span class="fas fa-plus"
-                                                                                                     style="font-size: 12px;"></span>
-                    DODAJ OKAZJE
-                </button></a>
-            </li>
-        </ul>
+    <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 155px">
+        <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+            <div class="nav_items d-flex align-items-center" id="kategorie-button"
+                 data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+                 aria-expanded="false" aria-label="Toggle navigation" style="padding-top: 10px"><a href="#" class="nav_items_clickable">Kategorie</a>
+            </div>
+            <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 10px;"
+                 data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+                 aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
+            </div>
+            <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
+                <a href="/login">
+                    <button type="button" style="" class="btn add_button"><span
+                            class="fas fa-user"
+                            style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                    </button>
+                </a>
+            </div>
+            <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
+                <a href="/settings">
+                    <button style="" class="btn add_button"
+                            aria-haspopup="true" aria-expanded="false"
+                    ><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO
+                    </button>
+                </a>
+            </div>
+            <div class="d-flex align-items-center" style="padding-top: 10px">
+                <a href="/add/discount">
+                    <button type="button"  class="btn add_button"><span
+                            class="fas fa-plus"
+                            style="font-size: 12px;"></span>DODAJ OKAZJE
+                    </button>
+                </a>
+            </div>
+        </div>
     </div>
 </nav>
+
+
+
+
 <div class="container-fluid" style="padding-right: 0px;padding-left: 0px">
 
-    <div class="row collapse"  id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
-     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
-        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
-            <div class="row">
-                <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
-                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></a>
+    <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+         ;margin-top: 0px;margin-left: 0px">
+        <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+            <div class="row" style="padding-left: 20px;padding-right: 20px">
+                <div class="col-xl-2" th:each="shop : ${list_of_shops}"
+                     style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                th:text="${shop.getName()}">DODAJ KUPON
+                        </button>
+                    </a>
                 </div>
+
+
             </div>
         </div>
 
     </div>
-    <div class="row collapse"  id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
-     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
-        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
-            <div class="row">
-                <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
-                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></a>
+
+    <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);margin-top: 0px;margin-left: 0px">
+        <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+            <div class="row" style="padding-left: 20px;padding-right: 20px">
+                <div class="col-xl-2" th:each="tag : ${list_of_tags}"
+                     style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                th:text="${tag.getName()}">DODAJ KUPON
+                        </button>
+                    </a>
                 </div>
+
+
             </div>
         </div>
 
     </div>
+
 
 </div>
 
@@ -95,23 +125,45 @@
                  <a th:href="@{|/messages/${conversation.getConversation_id()}|}">
                     <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${conversation.hasNewMessage(user)}">
                         <div class="col-12" style="border-top: 2px solid rgb(117 117 117);border-bottom: 2px solid rgb(117 117 117);border-right: 1px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;">
-                            <div class="row">
-                                <div class="col-2 offset-1 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
-                                <div class="col-8 align-self-center" style="font-weight: 600;">
+
+                            <div class="row d-flex media_large align-items-center">
+                                <div class="col-2 offset-2 d-flex align-items-center" style=""><img src="/images/user.png" class="user_image"><img></div>
+                                    <div class="col-6 offset-1" style="font-weight: 600;">
+                                        <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
+
+                                            JanzusKowalski123
+
+                                        </div>
+                                        <div class="row">
+
+                                            <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" th:text="${conversation.getNewestMessage(user)}">
+                                                Ty: rafineria123@gmail.com
+                                            </span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row media_small">
+                            <div class="d-flex align-items-center justify-content-center" style="font-weight: 600;">
+                                <div class="">
                                     <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
 
-                                        TrailBlazer
+                                        JanzusKowalski123
 
                                     </div>
                                     <div class="row">
 
-                                        <span style="margin-top:-3px;font-size: 12px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;color: rgba(8,8,8,0.72)" th:text="${conversation.getNewestMessage(user)}">
-                                            Ty: hejka, co tam? Chcesz cos z Avon'u?
+                                        <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" th:text="${conversation.getNewestMessage(user)}">
+                                            Ty: rafineria123@gmail.com
                                         </span>
 
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+
 
                         </div>
                     </div>
@@ -123,9 +175,49 @@
                 <a th:href="@{|/messages/${conversation.getConversation_id()}|}">
                 <div class="row" style="font-size:14px;padding-top: 10px;" th:if="!${conversation.hasNewMessage(user)}">
                     <div class="col-12" style="background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${current_conversation.getConversation_id().equals(conversation.getConversation_id())}">
-                        <div class="row">
-                            <div class="col-2 offset-1 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
-                            <div class="col-8" style="font-weight: 600;">
+
+
+                        <div class="row d-flex media_large align-items-center">
+                            <div class="col-2 offset-2 d-flex align-items-center" style=""><img src="/images/user.png" class="user_image"><img></div>
+                            <div class="col-6 offset-1" style="font-weight: 600;">
+                                <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
+
+                                    JanzusKowalski123
+
+                                </div>
+                                <div class="row">
+
+                                    <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" th:text="${conversation.getNewestMessage(user)}">
+                                        Ty: rafineria123@gmail.com
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row media_small">
+                            <div class="d-flex align-items-center justify-content-center" style="font-weight: 600;">
+                                <div class="">
+                                    <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
+
+                                        JanzusKowalski123
+
+                                    </div>
+                                    <div class="row">
+
+                                        <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" th:text="${conversation.getNewestMessage(user)}">
+                                            Ty: rafineria123@gmail.com
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12" style="background-color:#ffffff;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${!current_conversation.getConversation_id().equals(conversation.getConversation_id())}">
+                        <div class="row d-flex media_large align-items-center">
+                            <div class="col-2 offset-2 d-flex align-items-center" style=""><img src="/images/user.png" class="user_image"><img></div>
+                            <div class="col-6 offset-1" style="font-weight: 600;">
                                 <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
 
                                     JanzusKowalski123
@@ -141,22 +233,21 @@
                             </div>
                         </div>
 
-                    </div>
-                    <div class="col-12" style="background-color:#ffffff;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${!current_conversation.getConversation_id().equals(conversation.getConversation_id())}">
-                        <div class="row">
-                            <div class="col-2 offset-1 align-self-center"><img src="/images/user.png" class="user_image"><img></div>
-                            <div class="col-8" style="font-weight: 600;">
-                                <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
+                        <div class="row media_small">
+                            <div class="d-flex align-items-center justify-content-center" style="font-weight: 600;">
+                                <div class="">
+                                    <div class="row" th:text="${conversation.getOtherUser(user).getLogin()}">
 
-                                    JanzusKowalski123
+                                        JanzusKowalski123
 
-                                </div>
-                                <div class="row">
+                                    </div>
+                                    <div class="row">
 
-                                    <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" th:text="${conversation.getNewestMessage(user)}">
-                                        Ty: rafineria123@gmail.com
-                                    </span>
+                                        <span style="margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" th:text="${conversation.getNewestMessage(user)}">
+                                            Ty: rafineria123@gmail.com
+                                        </span>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -168,7 +259,7 @@
 
 
         </div>
-        <div class="col-6 d-flex flex-column-reverse" id="chat" style="border-left: 1px solid rgba(82,73,98,.2); background-color:white;height: 650px;overflow:auto">
+        <div class="col-6 d-flex flex-column-reverse" id="chat" style="border-left: 1px solid rgba(82,73,98,.2); background-color:white;overflow:auto">
 
 
 
@@ -229,7 +320,7 @@
 <script type="text/javascript">
     function refreshChat() {
         $.ajax({
-            url : "http://localhost:8080/conversation/" + "[[${current_conversation.getConversation_id()}]]",
+            url : "/conversation/" + "[[${current_conversation.getConversation_id()}]]",
             success : function(data) {
                 const obj = data;
                 document.getElementById("chat").innerHTML = "";
@@ -262,11 +353,12 @@
             }
         });
         $.ajax({
-            url : "http://localhost:8080/user_conversations/" + "[[${current_conversation.getConversation_id()}]]",
+            url : "/user_conversations/" + "[[${current_conversation.getConversation_id()}]]",
             success : function(data) {
                 const obj = data;
                 let list = [];
                 for (let i = 0; i < obj.length; i++) {
+
 
                     if (obj[i][2]==="nieodczytane"){
                         if("[[${current_conversation.getConversation_id()}]]"===obj[i][3]){
@@ -274,9 +366,9 @@
                             element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
                                 "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
                                 "                        <div class=\"col-12\" style=\"background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +
-                                "                            <div class=\"row\">\n" +
-                                "                                <div class=\"col-2 offset-1 align-self-center\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
-                                "                                <div class=\"col-8 align-self-center\" style=\"font-weight: 600;\">\n" +
+                                "                            <div class=\"row d-flex media_large align-items-center\">\n" +
+                                "                                 <div class=\"col-2 offset-2 d-flex align-items-center\" style=\"\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
+                                "                                <div class=\"col-6 offset-1\" style=\"font-weight: 600;\">\n" +
                                 "                                    <div class=\"row\">\n" +
                                 "    \n" +
                                 obj[i][4]+"\n" +
@@ -291,7 +383,24 @@
                                 "                                    </div>\n" +
                                 "                                </div>\n" +
                                 "                            </div>\n" +
-                                "    \n" +
+                                "<div class=\"row media_small\">\n" +
+                                "                            <div class=\"d-flex align-items-center justify-content-center\" style=\"font-weight: 600;\">\n" +
+                                "                                <div class=\"\">\n" +
+                                "                                    <div class=\"row\" th:text=\"${conversation.getOtherUser(user).getLogin()}\">\n" +
+                                "\n" +
+                                obj[i][4]+
+                                "\n" +
+                                "                                    </div>\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "\n" +
+                                "                                        <span style=\"margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;\" th:text=\"${conversation.getNewestMessage(user)}\">\n" +
+                                obj[i][5]+"\n" +
+                                "                                        </span>\n" +
+                                "\n" +
+                                "                                    </div>\n" +
+                                "                                </div>\n" +
+                                "                            </div>\n" +
+                                "                        </div>\n" +
                                 "                        </div>\n" +
                                 "                    </div>\n" +
                                 "                 </a>"
@@ -304,9 +413,9 @@
                             element1.innerHTML = "<a href=\"" + "/messages/" + obj[i][3] + "\">\n" +
                                 "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
                                 "                        <div class=\"col-12\" style=\"border-top: 2px solid rgb(117 117 117);border-bottom: 2px solid rgb(117 117 117);border-right: 1px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +
-                                "                            <div class=\"row\">\n" +
-                                "                                <div class=\"col-2 offset-1 align-self-center\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
-                                "                                <div class=\"col-8 align-self-center\" style=\"font-weight: 600;\">\n" +
+                                "                            <div class=\"row d-flex media_large align-items-center\">\n" +
+                                "                                 <div class=\"col-2 offset-2 d-flex align-items-center\" style=\"\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
+                                "                                <div class=\"col-6 offset-1\" style=\"font-weight: 600;\">\n" +
                                 "                                    <div class=\"row\">\n" +
                                 "    \n" +
                                 obj[i][4] + "\n" +
@@ -321,7 +430,24 @@
                                 "                                    </div>\n" +
                                 "                                </div>\n" +
                                 "                            </div>\n" +
-                                "    \n" +
+                                "<div class=\"row media_small\">\n" +
+                                "                            <div class=\"d-flex align-items-center justify-content-center\" style=\"font-weight: 600;\">\n" +
+                                "                                <div class=\"\">\n" +
+                                "                                    <div class=\"row\" th:text=\"${conversation.getOtherUser(user).getLogin()}\">\n" +
+                                "\n" +
+                                obj[i][4]+
+                                "\n" +
+                                "                                    </div>\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "\n" +
+                                "                                        <span style=\"margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;\" th:text=\"${conversation.getNewestMessage(user)}\">\n" +
+                                obj[i][5]+"\n" +
+                                "                                        </span>\n" +
+                                "\n" +
+                                "                                    </div>\n" +
+                                "                                </div>\n" +
+                                "                            </div>\n" +
+                                "                        </div>\n" +
                                 "                        </div>\n" +
                                 "                    </div>\n" +
                                 "                 </a>"
@@ -340,9 +466,9 @@
                         element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
                             "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
                             "                        <div class=\"col-12\" style=\"background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +
-                            "                            <div class=\"row\">\n" +
-                            "                                <div class=\"col-2 offset-1 align-self-center\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
-                            "                                <div class=\"col-8 align-self-center\" style=\"font-weight: 600;\">\n" +
+                            "                           <div class=\"row d-flex media_large align-items-center\">\n" +
+                            "                                 <div class=\"col-2 offset-2 d-flex align-items-center\" style=\"\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
+                            "                                <div class=\"col-6 offset-1\" style=\"font-weight: 600;\">\n" +
                             "                                    <div class=\"row\">\n" +
                             "    \n" +
                             obj[i][4]+"\n" +
@@ -357,7 +483,24 @@
                             "                                    </div>\n" +
                             "                                </div>\n" +
                             "                            </div>\n" +
-                            "    \n" +
+                            "<div class=\"row media_small\">\n" +
+                            "                            <div class=\"d-flex align-items-center justify-content-center\" style=\"font-weight: 600;\">\n" +
+                            "                                <div class=\"\">\n" +
+                            "                                    <div class=\"row\" th:text=\"${conversation.getOtherUser(user).getLogin()}\">\n" +
+                            "\n" +
+                            obj[i][4]+
+                            "\n" +
+                            "                                    </div>\n" +
+                            "                                    <div class=\"row\">\n" +
+                            "\n" +
+                            "                                        <span style=\"margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;\" th:text=\"${conversation.getNewestMessage(user)}\">\n" +
+                            obj[i][5]+"\n" +
+                            "                                        </span>\n" +
+                            "\n" +
+                            "                                    </div>\n" +
+                            "                                </div>\n" +
+                            "                            </div>\n" +
+                            "                        </div>\n" +
                             "                        </div>\n" +
                             "                    </div>\n" +
                             "                 </a>"
@@ -367,9 +510,9 @@
                             element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
                                 "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
                                 "                        <div class=\"col-12\" style=\"background-color:#ffffff;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +
-                                "                            <div class=\"row\">\n" +
-                                "                                <div class=\"col-2 offset-1 align-self-center\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
-                                "                                <div class=\"col-8 align-self-center\" style=\"font-weight: 600;\">\n" +
+                                "                           <div class=\"row d-flex media_large align-items-center\">\n" +
+                                "                                 <div class=\"col-2 offset-2 d-flex align-items-center\" style=\"\"><img src=\"/images/user.png\" class=\"user_image\"><img></div>\n" +
+                                "                                <div class=\"col-6 offset-1\" style=\"font-weight: 600;\">\n" +
                                 "                                    <div class=\"row\">\n" +
                                 "    \n" +
                                 obj[i][4]+"\n" +
@@ -384,7 +527,24 @@
                                 "                                    </div>\n" +
                                 "                                </div>\n" +
                                 "                            </div>\n" +
-                                "    \n" +
+                                "<div class=\"row media_small\">\n" +
+                                "                            <div class=\"d-flex align-items-center justify-content-center\" style=\"font-weight: 600;\">\n" +
+                                "                                <div class=\"\">\n" +
+                                "                                    <div class=\"row\" th:text=\"${conversation.getOtherUser(user).getLogin()}\">\n" +
+                                "\n" +
+                                obj[i][4]+
+                                "\n" +
+                                "                                    </div>\n" +
+                                "                                    <div class=\"row\">\n" +
+                                "\n" +
+                                "                                        <span style=\"margin-top:-3px;font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;\" th:text=\"${conversation.getNewestMessage(user)}\">\n" +
+                                obj[i][5]+"\n" +
+                                "                                        </span>\n" +
+                                "\n" +
+                                "                                    </div>\n" +
+                                "                                </div>\n" +
+                                "                            </div>\n" +
+                                "                        </div>\n" +
                                 "                        </div>\n" +
                                 "                    </div>\n" +
                                 "                 </a>"
@@ -451,10 +611,57 @@
 
 
 </script>
+<script>
+
+
+
+    window.addEventListener('resize', chatSize);
+    var h = window.innerHeight;
+    document.getElementById("chat").style.height=(h/1.6).toString()+"px";
+    function chatSize() {
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        document.getElementById("chat").style.height=(h/1.6).toString()+"px";
+
+    }
+
+
+
+</script>
 
 <script type="text/javascript">
     var intervalId = 0;
     intervalId = setInterval(refreshChat, 3000);
+</script>
+<script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    document.getElementById ("kategorie-button").addEventListener ("click", collapseSklepy, false);
+    document.getElementById ("sklepy-button").addEventListener ("click", collapseKategorie, false);
+    document.getElementById ("navbar-toggler-button").addEventListener ("click", collapseNavbar, false);
+
+
+    async function collapseKategorie() {
+        $('#kategorie').collapse('hide');
+        $('#navbarTogglerDemo02').collapse('hide');
+        await sleep(350);
+        $('#sklepy').collapse('toggle');
+    }
+    async function collapseSklepy() {
+        $('#sklepy').collapse('hide');
+        $('#navbarTogglerDemo02').collapse('hide');
+        await sleep(350);
+        $('#kategorie').collapse('toggle');
+
+    }
+    async function collapseNavbar() {
+        $('#sklepy').collapse('hide');
+        $('#kategorie').collapse('hide');
+        await sleep(350);
+        $('#navbarTogglerDemo02').collapse('toggle');
+    }
 </script>
 </body>
 </html>

@@ -49,14 +49,14 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("login")
                 .passwordParameter("password")
                 .permitAll().failureHandler((req,res,exp)->{
-                                                            if(exp.getClass().isAssignableFrom(BadCredentialsException.class)){
-                                                                res.sendRedirect("/login?error=true");
-                                                            }else if(exp.getClass().isAssignableFrom(DisabledException.class)){
-                                                                res.sendRedirect("/login?token=true");
-                                                            }else {
-                                                                res.sendRedirect("/login?ban=true");
-                                                            }
-                                                        })
+                    if(exp.getClass().isAssignableFrom(BadCredentialsException.class)){
+                        res.sendRedirect("/login?error=true");
+                    }else if(exp.getClass().isAssignableFrom(DisabledException.class)){
+                        res.sendRedirect("/login?token=true");
+                    }else {
+                        res.sendRedirect("/login?ban=true");
+                    }
+                })
                 .and()
                 .logout()
                 .permitAll().and()

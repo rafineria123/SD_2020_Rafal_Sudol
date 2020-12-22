@@ -24,6 +24,22 @@
 
 }
 
+.media_small{
+
+    display: none;
+
+}
+
+@media only screen and (min-width: 1200px) {
+
+    .media_small{
+
+        display: block;
+
+    }
+
+}
+
 .left_message{
 
     color: black;
@@ -38,6 +54,41 @@
     overflow-wrap: break-word;
 
 }
+
+
+.media_small{
+
+    display: none!important;
+
+}
+
+.media_large{
+
+    display: flex!important;
+
+}
+
+@media only screen and (max-width: 1000px) {
+
+    .div_min_width{
+
+        min-width: 100%!important;
+
+    }
+
+    .media_small{
+
+        display: block!important;
+
+    }
+    .media_large{
+
+        display: none!important;
+
+    }
+
+}
+
 
 .right_message{
 

@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -688,10 +690,11 @@ public class MainController {
             User uzytkownik = userRepository.findUserByLogin(authentication.getName());
 
 
-            String uploadDir = "/static/images";
-            String realPath = request.getServletContext().getRealPath(uploadDir);
+            Path currentPath = Paths.get("");
+            Path absolutePath = currentPath.toAbsolutePath();
+            System.out.println(absolutePath +"tutaj2");
 
-            File transferFile = new File("C:/projekt inz/project/src/main/resources/static/images/" + file.getOriginalFilename());
+            File transferFile = new File(absolutePath+"/src/main/resources/static/images/" + file.getOriginalFilename());
             file.transferTo(transferFile);
 
             if(type.equals("PROMOCJA")){
@@ -754,6 +757,7 @@ public class MainController {
 
 
         } catch (Exception e) {
+            e.printStackTrace();
 
             ModelAndView modelAndView = new ModelAndView("add_discount");
             modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -779,7 +783,7 @@ public class MainController {
 
     @PostMapping("/search")
     public ModelAndView searchForm(@ModelAttribute("searchform") String searchform) throws UnsupportedEncodingException {
-        String encodedId = URLEncoder.encode(searchform, "UTF-8");
+        String encodedId = URLEncoder.encode(searchform, "UTF-8").replace("+", "%20");
         ModelAndView m = new ModelAndView(new RedirectView("/search/" + encodedId, true, true, false));
         return m;
 

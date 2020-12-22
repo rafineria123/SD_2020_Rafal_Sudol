@@ -329,4 +329,12 @@ public class Discount {
         return false;
 
     }
+
+    public String getTypeFormatted(){
+
+        if(this.type.equals(Type.KODNORMALNY)||this.type.equals(Type.KODPROCENT)) return "KOD";
+        if(this.type.equals(Type.KUPONNORMALNY)||this.type.equals(Type.KUPONPROCENT)) return "KUPON";
+        return this.type.name();
+
+    }
 }

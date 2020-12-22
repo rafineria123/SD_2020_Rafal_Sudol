@@ -19,69 +19,98 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background: linear-gradient(45deg,#e42d31,#ff0065);">
-    <div class="navbar-brand" style="cursor: pointer;" onclick="window.location='/';">
+<nav class="navbar navbar-expand-xl navbar-light bg-light"
+     style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);">
+    <div class="navbar-brand" style="cursor: pointer;padding-left: 100px;" onclick="window.location='/';">
         <div class="row">
-            <div class="col-md-4 dj text-center"><h1>NG</h1></div>
-            <div class="col-md-6">NORGIE</div>
+            <div class="col-4 dj text-center"><h1>NG</h1></div>
+            <div class="col-6">NORGIE</div>
         </div>
     </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+    <button class="navbar-toggler" id="navbar-toggler-button" type="button" data-target="#navbarTogglerDemo02"
             aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="nav navbar-nav ml-auto" style="padding-right: 250px">
-            <li class="nav_items" data-toggle="collapse"
-                data-target="#kategorie" aria-controls="navbarToggleExternalContent"
-                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Kategorie</a></li>
-            <li class="nav_items" data-toggle="collapse"
-                data-target="#sklepy" aria-controls="navbarToggleExternalContent"
-                aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable">Sklepy</a></li>
-            <li style="padding-right: 50px;"sec:authorize="!isAuthenticated()">
-                <a href="/login"><button type="button" style="white-space:pre;" class="btn add_button"><span class="fas fa-user"
-                                                                                                             style="font-size: 12px;"></span>ZALOGUJ SIĘ</button></a>
-            </li>
-            <li style="padding-right: 50px;"sec:authorize="isAuthenticated()">
-                <form th:action="@{/logout}" method="post">
-                    <button style="white-space:pre;" class="btn add_button" type="submit"
-                            value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
-                </form>
-            </li>
-            <li>
-                <a href="/add/discount"> <button type="button" style="" class="btn add_button"><span class="fas fa-plus"
-                                                                                                     style="font-size: 12px;"></span>
-                    DODAJ OKAZJE
-                </button></a>
-            </li>
-        </ul>
+    <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 155px">
+        <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+            <div class="nav_items d-flex align-items-center" id="kategorie-button"
+                 data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+                 aria-expanded="false" aria-label="Toggle navigation" style="padding-top: 10px"><a href="#" class="nav_items_clickable">Kategorie</a>
+            </div>
+            <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 10px;"
+                 data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+                 aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
+            </div>
+            <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
+                <a href="/login">
+                    <button type="button" style="" class="btn add_button"><span
+                            class="fas fa-user"
+                            style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                    </button>
+                </a>
+            </div>
+            <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button style="white-space:pre;" class="btn add_button" type="submit"
+                                value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                    </form>
+
+            </div>
+            <div class="d-flex align-items-center" style="padding-top: 10px">
+                <a href="/add/discount">
+                    <button type="button"  class="btn add_button"><span
+                            class="fas fa-plus"
+                            style="font-size: 12px;"></span>DODAJ OKAZJE
+                    </button>
+                </a>
+            </div>
+        </div>
     </div>
 </nav>
+
+
+
+
 <div class="container-fluid" style="padding-right: 0px;padding-left: 0px">
 
-    <div class="row collapse"  id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
-     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
-        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
-            <div class="row">
-                <div class="col-md-2" th:each="shop : ${list_of_shops}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
-                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${shop.getName()}">DODAJ KUPON</button></a>
+    <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+         ;margin-top: 0px;margin-left: 0px">
+        <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+            <div class="row" style="padding-left: 20px;padding-right: 20px">
+                <div class="col-xl-2" th:each="shop : ${list_of_shops}"
+                     style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                th:text="${shop.getName()}">DODAJ KUPON
+                        </button>
+                    </a>
                 </div>
+
+
             </div>
         </div>
 
     </div>
-    <div class="row collapse"  id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
-     padding-bottom: 30px;padding-top: 30px;margin-top: -5px;padding-left:0px;padding-right: 0px;margin-left: 0;margin-right: 0">
-        <div class="col-md-8 offset-md-2" style="padding-bottom: 20px;margin-top: -5px;">
-            <div class="row">
-                <div class="col-md-2" th:each="tag : ${list_of_tags}" style="padding-bottom: 5px;padding-right:0px;padding-left: 5px;">
-                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka"><button type="button" style="white-space:pre;width: 100%" class="btn category_button" th:text="${tag.getName()}">DODAJ KUPON</button></a>
+
+    <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);margin-top: 0px;margin-left: 0px">
+        <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+            <div class="row" style="padding-left: 20px;padding-right: 20px">
+                <div class="col-xl-2" th:each="tag : ${list_of_tags}"
+                     style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                th:text="${tag.getName()}">DODAJ KUPON
+                        </button>
+                    </a>
                 </div>
+
+
             </div>
         </div>
 
     </div>
+
 
 </div>
 
@@ -89,17 +118,58 @@
 
     <div class="row">
 
-        <div class="col-3" style="font-weight: 400;font-size: 14px;">
+        <div class="d-flex flex-column media_small" style="font-weight: 400;font-size: 14px;padding-bottom: 50px;width: 25%">
+            <span style="" class="d-flex justify-content-center">Cześć,</span>
+            <a href="" class="d-flex justify-content-center" style="font-size: 20px;font-weight: 600;padding-bottom: 15px" th:href="@{|/profile/${user.getLogin()}|}"> <span style="" th:text="${user.getLogin()}">Rafał</span></a>
+
+            <a href="/settings" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-sliders-h" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+
+            <a href="/settings/discounts" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                       <span class="far fa-clipboard" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/messages" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                       <span class="far fa-envelope" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/admin/discounts" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-calendar-check" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+
+        </div>
+
+        <div class="col-3 media_large" style="font-weight: 400;font-size: 14px;padding-bottom: 50px">
             <div class="row">
                 <span style="padding-left: 25px">Cześć,</span>
             </div>
             <div class="row" style="font-size: 20px;font-weight: 600;padding-bottom: 15px">
                 <a href="" th:href="@{|/profile/${user.getLogin()}|}"> <span style="padding-left: 25px" th:text="${user.getLogin()}">Rafał</span></a>
             </div>
+
             <div class="row">
                 <a href="/settings" style="width: 100%">
                     <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
-                        <div class="row">
+                        <div class="row d-flex justify-content-lg-center align-items-lg-center">
                             <div class="col-2 text-center"><span class="fas fa-sliders-h" style="font-size: 16px;padding-left:18px"></span></div>
                             <div class="col-10"><span>Ustawienia konta</span></div>
                         </div>
@@ -144,7 +214,7 @@
 
         </div>
 
-        <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
+        <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px;padding-bottom: 50px;">
             <div class="row" th:if="${status}!=null">
                 <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
                     <div class="col-9" style="padding-left: 0px;padding-right: 0px">
@@ -176,10 +246,10 @@
                 Twoje dane
             </div>
             <div class="row"  style="font-size:14px;padding-top: 10px;">
-                <div class="col-9" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                <div class="col-9 div_min_width" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
                     <div class="row">
-                        <div class="col-4" style="font-weight: 600;"th:text="|${user.getInformation().getName()} ${user.getInformation().getSurname()}|">Rafał Sudoł</div>
-                        <div class="col-1 offset-7" style="padding-left: 0;padding-right: 0">
+                        <div class="col-6" style="font-weight: 600;"th:text="|${user.getInformation().getName()} ${user.getInformation().getSurname()}|">Rafał Sudoł</div>
+                        <div class="col-1 offset-5" style="padding-left: 0;padding-right: 0">
                             <button class="edit_button" data-toggle="modal" data-target="#dane"
                                     aria-haspopup="true" aria-expanded="false" style="padding-left: 0;width: 100%;padding-bottom: 7px;padding-top:7px">
                                 <span class="far fa-edit" style="padding-left: 6px"></span>
@@ -196,7 +266,7 @@
                 Opis
             </div>
             <div class="row"  style="font-size:14px;padding-top: 10px;">
-                <div class="col-9" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                <div class="col-9 div_min_width" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
                     <div class="row">
                         <div class="col-11" style="overflow-wrap: break-word;" th:text="${user.getInformation().getDescription()}">Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł Rafał Sudoł</div>
                         <div class="col-1" style="padding-left: 0;padding-right: 0">
@@ -214,7 +284,7 @@
                 Hasło
             </div>
             <div class="row"  style="font-size:14px;padding-top: 10px;">
-                <div class="col-9" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
+                <div class="col-9 div_min_width" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
                     <div class="row">
                         <div class="col-4" style="font-weight: 900;padding-top:10px">*********</div>
                         <div class="col-1 offset-7" style="padding-left: 0;padding-right: 0">
@@ -393,5 +463,34 @@
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    document.getElementById ("kategorie-button").addEventListener ("click", collapseSklepy, false);
+    document.getElementById ("sklepy-button").addEventListener ("click", collapseKategorie, false);
+    document.getElementById ("navbar-toggler-button").addEventListener ("click", collapseNavbar, false);
+
+
+    async function collapseKategorie() {
+        $('#kategorie').collapse('hide');
+        $('#navbarTogglerDemo02').collapse('hide');
+        await sleep(350);
+        $('#sklepy').collapse('toggle');
+    }
+    async function collapseSklepy() {
+        $('#sklepy').collapse('hide');
+        $('#navbarTogglerDemo02').collapse('hide');
+        await sleep(350);
+        $('#kategorie').collapse('toggle');
+
+    }
+    async function collapseNavbar() {
+        $('#sklepy').collapse('hide');
+        $('#kategorie').collapse('hide');
+        await sleep(350);
+        $('#navbarTogglerDemo02').collapse('toggle');
+    }
+</script>
 </body>
 </html>

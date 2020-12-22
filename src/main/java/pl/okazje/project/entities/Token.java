@@ -2,6 +2,7 @@ package pl.okazje.project.entities;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Date;
 
 
 @Entity
-public class Token {
+public class Token implements Serializable {
     private static final int EXPIRATION = 60 * 24;
 
 
