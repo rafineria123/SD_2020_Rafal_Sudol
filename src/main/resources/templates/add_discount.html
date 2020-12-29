@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Norgie - Nowa promocja</title>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -144,9 +144,9 @@
                 <div class="col-md-12">
                     <div class="row">
 
-                        <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('promocja')">
-                            <input type="radio" id="type_promocja" name="type" value="PROMOCJA">
-                            <label for="type_promocja" class="w-100">PROMOCJA</label>
+                        <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('obnizka')">
+                            <input type="radio" id="type_obnizka" name="type" value="OBNIZKA">
+                            <label for="type_obnizka" class="w-100">OBNIZKA</label>
                         </div>
                         <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('kupon')">
                             <input type="radio" id="type_kupon" name="type" value="KUPON">
@@ -171,7 +171,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <input type="text" class="add_input" id="url" name="url" placeholder=" http://www.example.com/greatdeal...">
+                    <input type="text" class="add_input" id="url" name="url" maxlength="499" placeholder=" http://www.example.com/greatdeal...">
                 </div>
 
             </div>
@@ -229,7 +229,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <input type="text" class="add_input" id="title" name="title" placeholder=" Tytuł opisujący znalezioną oferte">
+                    <input type="text" class="add_input" maxlength="199" id="title" name="title" placeholder=" Tytuł opisujący znalezioną oferte">
                 </div>
             </div>
 
@@ -265,7 +265,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <textarea rows="5" cols="33" style="width: 100%;border-radius: 6px" id="content" name="content"></textarea>
+                    <textarea rows="5" cols="33" style="width: 100%;border-radius: 6px" maxlength="499" id="content" name="content"></textarea>
                 </div>
             </div>
 
@@ -277,7 +277,7 @@
                 </div>
                 <div class="d-flex justify-content-center flex-column align-items-center" style="width: 40%">
                     <span class="add_big">Dodaj obrazek</span>
-                    <input type="file" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;" class="add_input" id="image_url" name="image_url" placeholder="DD.MM.YYYY">
+                    <input type="file" accept="image/*" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;" class="add_input" id="image_url" name="image_url" placeholder="DD.MM.YYYY">
                 </div>
 
             </div>
@@ -311,11 +311,11 @@
         nazwy_cen.innerHTML="";
         var ceny = document.querySelector("#ceny");
         ceny.innerHTML="";
-        if(typ=="promocja"){
+        if(typ=="obnizka"){
 
             nazwy_cen.innerHTML="<div class=\"d-flex justify-content-around\" style=\" width:100%;padding-top: 10px;padding-bottom: 5px;\">\n" +
                 "                    <span class=\"add_big\">Cena regularna</span>\n" +
-                "                    <span class=\"add_big\">Cena promocji</span>\n" +
+                "                    <span class=\"add_big\">Cena po obniżce</span>\n" +
                 "                    <span class=\"add_big\">Cena dostawy</span>\n" +
                 "                </div>";
             ceny.innerHTML="<div class=\"d-flex justify-content-around\" style=\" width:100%;padding-top: 10px;padding-bottom: 5px;\">\n" +

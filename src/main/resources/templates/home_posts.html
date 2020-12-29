@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
+    <link type="text/css" href="/css/home.css" rel="stylesheet"/>
+
+
+</head>
+<body>
+
+
+<div class="d-flex justify-content-center" style="width: 100%">
+
+     <span style="font-weight: 900;font-size: 45px;color: white;margin-bottom: -31px;cursor: pointer;-webkit-text-stroke: 1px #ff0065;z-index: 10;font-family: fantasy;" onclick="window.location='/forum';">Mikroblog</span>
+
+</div>
+<div class="container-fluid d-flex justify-content-center" style="width: 100%">
+    <div style="width: 90%">
+
+        <div class="row" style="width: 100%;margin-left: 0;margin-right: 0">
+            <nav class="navbar navbar-expand-xl navbar-light bg-light"
+                 style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px; padding-bottom: 30px;padding-top: 30px">
+                <div class="navbar-brand" style="cursor: pointer;padding-left: 50px;" onclick="window.location='/';">
+                    <div class="row">
+                        <div class="col-4 dj text-center"><h1>NG</h1></div>
+                        <div class="col-6">NORGIE</div>
+                    </div>
+                </div>
+                <button class="navbar-toggler" id="navbar-toggler-button" type="button" data-target="#navbarTogglerDemo02"
+                        aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 60px">
+                    <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+                        <div class="nav_items d-flex align-items-center" id="kategorie-button"
+                             data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+                             aria-expanded="false" aria-label="Toggle navigation" style="padding-bottom: 5px"><a href="#" class="nav_items_clickable">Kategorie</a>
+                        </div>
+                        <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 5px;padding-bottom: 5px"
+                             data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+                             aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
+                        </div>
+                        <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
+                            <a href="/login">
+                                <button type="button" style="" class="btn add_button"><span
+                                        class="fas fa-user"
+                                        style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                                </button>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
+                            <a href="/settings">
+                                <button style="" class="btn add_button"
+                                        aria-haspopup="true" aria-expanded="false"
+                                ><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO
+                                </button>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center" style="padding-top: 10px">
+                            <a href="/add/discount">
+                                <button type="button"  class="btn add_button"><span
+                                        class="fas fa-plus"
+                                        style="font-size: 12px;"></span>DODAJ POSTA
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
+         ;margin-top: -25px;margin-left: 0px">
+            <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+                <div class="row" style="padding-left: 20px;padding-right: 20px">
+                    <div class="col-xl-2" th:each="tag : ${list_of_tags}"
+                         style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                        <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                            <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                    th:text="${tag.getName()}">DODAJ KUPON
+                            </button>
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);border-radius: 10px;
+         ;margin-top: -25px;margin-left: 0px">
+            <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+                <div class="row" style="padding-left: 20px;padding-right: 20px">
+                    <div class="col-xl-2" th:each="shop : ${list_of_shops}"
+                         style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                        <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                            <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                    th:text="${shop.getName()}">DODAJ KUPON
+                            </button>
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row d-flex justify-content-center" style="width: 100%;margin-top: -25px;margin-right: 0;margin-left: 0">
+            <div class="col-xl-6">
+                <form th:action="@{/search}" method="post">
+                    <input class="form-control mr-sm-0 input nav_search" minlength="3"  id="searchform" name="searchform"
+                           data-ref="input-search" type="search" placeholder="np. Adidas, Neonet, Telefon, CCC"
+                           aria-label="Search">
+                    <input type="submit" style="height: 0px; width: 0px; border: none; padding: 0px;" hidefocus="true" />
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="container" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
+    <span class="over_items">Posty od naszych użytkowników! </span>
+    <div style="height: 15px"></div>
+</div>
+
+<div class="container d-flex flex-column justify-content-center align-items-center" style="padding-top: 25px;padding-bottom: 20px">
+    <div class="d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;width: 95%;margin-bottom: 10px;">
+        <a th:href="|${sort_buttons_prefix +'most-comments'}|" style="padding-left: 10px">
+            <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
+                    class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
+            </button>
+            <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
+                    class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
+            </button>
+        </a>
+        <a th:href="|${sort_buttons_prefix +'date'}|">
+            <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
+                    class="btn sort_button sort_button_activated">Niedawno dodane
+            </button>
+            <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
+                    class="btn sort_button">Niedawno dodane
+            </button>
+        </a>
+    </div>
+
+    <div class="d-flex" style="padding-bottom: 15px;width: 95%" th:each="post : ${list_of_posts}">
+        <!--/*@thymesVar id="post" type="pl.okazje.project.entities.Post"*/-->
+        <div class="item_div d-flex flex-column align-items-center justify-content-center" style="width: 100%;height:fit-content;">
+
+            <div class="d-flex flex-row justify-content-between" style="padding-top: 10px;padding-bottom:5px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 14px;color: #000000a6;">
+                <span class="" style="padding-left: 10px">Post użytkownika: <a href="/profile/rafineria" th:href="@{|/profile/${post.getUser().getLogin()}|}" th:text="${post.getUser().getLogin()}" style="color: #000000b3;font-weight: bolder">rafineria</a></span><span class="" style=";padding-right: 10px">Dodany: <span style="color: #000000b3;font-weight: bolder" th:text="${post.getCreation_date_formated()}">2 dni temu</span></span>
+            </div>
+            <div class="d-flex flex-row align-items-start" style="border-bottom: 1px solid rgba(82,73,98,.2); width: 98%;font-family: Calibri;font-weight: 900;font-size: 22px;color: black;">
+                <a href="" class="item_title" style="font-family: Calibri;font-weight: 900;font-size: 20px;color: black;" th:href="@{|/post/${post.getPost_id()}|}" ><span style="padding-left: 10px;padding-right: 10px" th:text="${post.getTitle()}">Ładowarka Liitokala Lii-500 za 68 zł, czy warto w tej cenie?</span></a>
+            </div>
+            <div class="d-flex flex-row align-items-start" style="padding-top: 10px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 17px;color: #000000a6;">
+
+                <span style="padding-left: 10px;padding-right: 10px" th:text="${post.getContent()}">Czy Waszym zdaniem 68,35 zł za ładowarkę Liitokala Lii-500 razem z zasilaczem to dobra cena? Czym różni się sklep liitokala Official Store od LiitoKala Official Flagship Store?</span>
+            </div>
+            <div class="d-flex flex-row align-items-start" style="padding-top: 15px;padding-bottom:10px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 17px;color: #000000a6;">
+                <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button class="btn" type="button" style="margin-left:10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px"><span class="fas fa-comments"></span>: <span th:text="${post.getCommentsSize()}">3</span></button></a>
+                <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button type="button" class="btn" style="margin-left: 10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px">Czytaj dalej</button></a>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    </div>
+
+    <nav aria-label="Page navigation example" style="padding-top: 50px">
+        <ul class="pagination justify-content-center">
+
+
+            <li th:if="${number_of_page == 1}" class="page-item disabled" style="padding-left: 5px">
+                <a class="page-link" href="/forum/page/1" tabindex="-1">Poprzednia</a>
+            </li>
+            <li th:if="${number_of_page != 1}" class="page-item" style="padding-left: 5px">
+
+                <a class="page-link" th:href="@{|${next_and_previous.replaceFirst('id',number_of_page -1)}|}">Poprzednia</a>
+            </li>
+
+            <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
+                <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
+                    <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
+                </li>
+                <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
+                    <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
+                </li>
+            </div>
+
+
+
+            <li th:if="${number_of_page == quantity_of_pages}" class="page-item disabled" style="padding-left: 5px">
+                <a class="page-link" href="/forum/page/1" tabindex="-1">Następna</a>
+            </li>
+            <li th:if="${number_of_page != quantity_of_pages}" class="page-item" style="padding-left: 5px">
+
+                <a class="page-link" th:href="@{${next_and_previous.replaceFirst('id',number_of_page+1)}}">Następna</a>
+            </li>
+
+
+        </ul>
+    </nav>
+
+</div>
+
+
+
+
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script
+        src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="/js/home.js"></script>
+</body>
+</html>

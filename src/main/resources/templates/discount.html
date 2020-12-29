@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Norgie - Promocja</title>
 
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -165,7 +165,7 @@
         <div class="col-md-8" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
             <div class="row">
                 <div class="col-10">
-                    <span class="over_items">Informacje o okazji</span>
+                    <span class="over_items">Informacje o promocji</span>
                 </div>
 <!--                <div class="col-2 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')" th:if="${!discount.getStatus().equals('Oczekuje')}">-->
 
@@ -245,9 +245,11 @@
                 <div class="col-xl-9" style="">
 
                     <div class="row" style="padding-right: 25px;padding-left:25px">
-                        <div class="col-12 item_title d-flex" th:text="${discount.getTitle()}"
-                            style="padding-bottom: 3px">
-                            Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)
+                        <div class="col-12 item_title d-flex"
+                            style="padding-bottom: 3px;">
+                            <span th:text="${discount.getTitle()}" style="white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                             word-wrap: break-word;max-width: 100%">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span>
+
                         </div>
                         <div style="width: 100%;margin-left:15px;border-bottom: 1px solid rgba(82,73,98,.2);">
 
@@ -271,11 +273,11 @@
 
                         <div class="d-flex justify-content-start" style="width: 60%">
 
-                            <span th th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
-                            <span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
-                            <span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
-                            <span th:if="${discount.getType().equals('PROMOCJA')}" class="fas fa-truck align-self-center"
-                                  style="font-size: 18px;color: rgba(145,143,146,0.91);padding-right: 3px"></span><span th:if="${discount.getType().equals('PROMOCJA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91); " th:text="|${discount.getShipment_price()}zł|">20zł</span>
+                            <span th th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                            <span th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
+                            <span th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
+                            <span th:if="${discount.getType().equals('OBNIZKA')}" class="fas fa-truck align-self-center"
+                                  style="font-size: 18px;color: rgba(145,143,146,0.91);padding-right: 3px"></span><span th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91); " th:text="|${discount.getShipment_price()}zł|">20zł</span>
 
                             <span th:if="${discount.getType().equals('KUPONNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}PLN|">-19%</span>
                             <span th:if="${discount.getType().equals('KUPONPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}%|">-19%</span>
@@ -350,7 +352,7 @@
             <div class="row text-center" style="padding-top: 5px;padding-bottom: 5px;">
                 <div class="col-md-12" style="padding-top: 5px">
 
-                     <textarea rows="5" COLS="72" id="comment" maxlength="200" name="comment" WRAP="comment" style="width: 100%;border-radius: 6px"></textarea>
+                     <textarea rows="5" COLS="72" id="comment" maxlength="400" name="comment" WRAP="comment" style="width: 100%;border-radius: 6px"></textarea>
                     <input type="hidden" name="discountidaddcomment" id="discountidaddcomment"
                            th:value="${discount.getDiscount_id()}">
 
@@ -384,7 +386,7 @@
             </form>
         </div>
 
-        <div class="mix w-100" th:each="comment : ${discount.getComments()}" th:attr="data-number-rate=${comment.getRatingsSize()}, data-number-date=${comment.getDataToNumber()}" data-number-rate="5">
+        <div class="mix w-100" th:each="comment : ${discount.getCommentsSorted()}" th:attr="data-number-rate=${comment.getRatingsSize()}, data-number-date=${comment.getDataToNumber()}" data-number-rate="5">
             <div class="col-md-8 offset-md-2" style="height: 15px;"></div>
             <div class="col-md-8 offset-md-2 sort_div w-100"
                  style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);padding-top: 10px;width: 100%">

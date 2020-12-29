@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -14,7 +16,7 @@ import java.util.Set;
 @Entity
 public class Discount {
 
-    public enum Type{ KUPONNORMALNY,KUPONPROCENT,KODPROCENT, KODNORMALNY, PROMOCJA }
+    public enum Type{ KUPONNORMALNY,KUPONPROCENT,KODPROCENT, KODNORMALNY, OBNIZKA }
     public enum Status{ USUNIETE, OCZEKUJACE, ZATWIERDZONE }
 
     private static Date data = new Date();
@@ -22,6 +24,7 @@ public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long discount_id;
+    @Column(length = 200)
     private String title;
     @Column(length = 500)
     private String content;
@@ -34,9 +37,10 @@ public class Discount {
     private Double old_price;
     private Double current_price;
     private Double shipment_price;
+    @Column(length = 500)
     private String discount_link;
     @Enumerated(EnumType.STRING)
-    private Type type = Type.PROMOCJA;
+    private Type type = Type.OBNIZKA;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -285,6 +289,14 @@ public class Discount {
         } else {
             return comments.size();
         }
+
+    }
+
+    public ArrayList<Comment> getCommentsSorted(){
+
+        ArrayList<Comment> list = new ArrayList(getComments());
+        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
+        return  list;
 
     }
 

@@ -12,6 +12,8 @@ import java.util.*;
 @Entity
 public class User implements UserDetails {
 
+    private static final long serialVersionUID = -1113427347189094885L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
@@ -282,6 +284,36 @@ public class User implements UserDetails {
     public int getDiscountsAmount(){
 
         return new ArrayList<Discount>(discounts).size();
+
+    }
+
+    public boolean hasName(){
+        if(information!=null){
+            if(information.getName()!=null){
+                if(!information.getName().isEmpty()||!information.getName().equals("")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean hasSurname(){
+
+        if(this.information!=null){
+
+            if(information.getSurname()!=null){
+
+                if(!information.getSurname().isEmpty()||!information.getSurname().equals("")){
+
+                    return true;
+
+                }
+
+            }
+
+        }
+        return false;
 
     }
 

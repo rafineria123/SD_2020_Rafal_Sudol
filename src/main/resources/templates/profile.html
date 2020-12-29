@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Norgie - Profil</title>
 
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -129,13 +129,9 @@
                     </div>
         </div>
         <div class="row">
-            <div class="col-xl-10" style="padding-left: 0px">
-            <span class="over_items">Profil użytkownika <span style="color: #ed1d43;padding-left: 5px" th:text="${user.getLogin()}">rafineria123</span></span>
-            </div>
-            <div class="col-2 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
-
-                    <button type="submit" class="remove_button" data-toggle="modal" data-target="#ban" style="">  <span class="over_items fas fa-ban" style="padding-bottom: 5px"></span> </button>
-
+            <div class="col-xl-12 d-flex justify-content-between" style="padding-left: 0px">
+                <span class="over_items">Profil użytkownika <span style="color: #ed1d43;padding-left: 5px" th:text="${user.getLogin()}">rafineria123</span></span>
+                <button type="submit" class="remove_button"  sec:authorize="hasAuthority('ADMIN')" data-toggle="modal" data-target="#ban" style="">  <span class="over_items fas fa-ban" style="padding-bottom: 5px"></span> </button>
             </div>
         </div>
     </div>
@@ -156,13 +152,16 @@
                         </div>
                         <div class="col-10">
                             <div class="row">
-                                <div class="col-4" style="padding-left: 15px;font-size:23px;font-weight: 600" th:text="${user.getLogin()}">
-                                    rafineria123
+                                <div class="col-8" style="padding-left: 15px;font-size:23px;font-weight: 600">
+                                    <span th:if="${user.hasName()}" th:text="${user.getInformation().getName()}"></span>
+                                    <span th:if="${user.hasSurname()}" th:text="${user.getInformation().getSurname()}"></span>
+                                    <span th:if="${user.hasName()||user.hasSurname()}"> aka </span>
+                                    <span th:text="${user.getLogin()}">rafineria123</span>
                                 </div>
-                                <div class="d-flex justify-content-end" style="padding-left: 0px;width: 60%" sec:authorize="isAuthenticated()">
+                                <div class="d-flex justify-content-end" style="padding-left: 0px;width: 30%" sec:authorize="isAuthenticated()">
                                     <button type="button" style="" data-toggle="modal" data-target="#dane" class="btn new_msg"><span class="far fa-envelope" style="font-size: 15px;font-weight: 600;padding-right: 0px;"></span></button>
                                 </div>
-                                <div class="d-flex justify-content-end" style="padding-left: 0px;width: 60%" sec:authorize="!isAuthenticated()">
+                                <div class="d-flex justify-content-end" style="padding-left: 0px;width: 30%" sec:authorize="!isAuthenticated()">
                                     <a href="/login" style="width: fit-content">
                                         <button type="button" style="" data-toggle="modal" data-target="#dane" class="btn new_msg"><span class="far fa-envelope" style="font-size: 15px;font-weight: 600;padding-right: 0px;"></span></button>
                                     </a>

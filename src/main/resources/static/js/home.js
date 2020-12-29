@@ -25,3 +25,12 @@ async function collapseNavbar() {
     await sleep(350);
     $('#navbarTogglerDemo02').collapse('toggle');
 }
+
+$('#searchform1').submit(function() {
+    if (!document.getElementById('searchform').value.replace(/\s/g, '').length) {
+        alert("Błąd wyszukiwania. Wyszukiwany tekst nie może składać się jedynie ze spacji.")
+        return false;
+    }
+    return true;
+});
+

@@ -11,8 +11,6 @@ public class Tag {
     private Long tag_id;
     private String name;
 
-    @OneToMany(mappedBy="tag")
-    private Set<Post> posts;
 
     @OneToMany(mappedBy="tag")
     private Set<Discount> discounts;
@@ -42,13 +40,6 @@ public class Tag {
         this.name = name;
     }
 
-    public Set<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<Post> posts) {
-        this.posts = posts;
-    }
 
     public Set<Discount> getDiscounts() {
         return discounts;
