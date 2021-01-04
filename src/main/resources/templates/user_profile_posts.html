@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
-    <title>Norgie - Wiadomości</title>
+    <title>Norgie - Moje Posty</title>
 
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -119,7 +119,6 @@
 
 </div>
 
-
 <div class="container" style="padding-top: 70px">
 
     <div class="row">
@@ -129,7 +128,7 @@
             <a href="" class="d-flex justify-content-center" style="font-size: 20px;font-weight: 600;padding-bottom: 15px" th:href="@{|/profile/${user.getLogin()}|}"> <span style="" th:text="${user.getLogin()}">Rafał</span></a>
 
             <a href="/settings" style="width: 100%">
-                <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
                     <div class="row d-flex justify-content-center align-items-center">
                         <span class="fas fa-sliders-h" style="font-size: 16px;"></span>
                     </div>
@@ -146,13 +145,14 @@
             </a>
 
             <a href="/settings/posts" style="width: 100%">
-                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
                     <div class="row d-flex justify-content-center align-items-center">
                         <span class="fas fa-blog" style="font-size: 16px;"></span>
                     </div>
 
                 </button>
             </a>
+
 
             <a href="/settings/messages" style="width: 100%">
                 <button type="button" style="width: 100%" class="text-left left_menu_button">
@@ -204,7 +204,7 @@
             </div>
             <div class="row">
                 <a href="/settings/posts" style="width: 100%">
-                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
                         <div class="row">
                             <div class="col-2 text-center"><span class="fas fa-blog" style="font-size: 16px;padding-left: 20px"></span></div>
                             <div class="col-10"><span>Moje posty</span></div>
@@ -216,7 +216,7 @@
             </div>
             <div class="row">
                 <a href="/settings/messages" style="width: 100%">
-                    <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
                         <div class="row">
                             <div class="col-2 text-center"><span class="far fa-envelope" style="font-size: 16px;padding-left: 17px"></span></div>
                             <div class="col-10"><span>Moje wiadomości</span></div>
@@ -239,113 +239,69 @@
             </div>
 
         </div>
-        <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px;padding-bottom: 50px;">
-                <div class="row" th:if="${good_status}!=null">
-                    <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
-                        <div class="col-7" style="padding-left: 0px;padding-right: 0px">
-                            <div class="alert">
-                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                <strong th:text="${good_status.toString()}"></strong>
-                            </div>
+        <div class="col-8 padding_when_small" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
+            <div class="row" th:if="${good_status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
+                    <div class="col-12" style="padding-left: 0px;padding-right: 0px">
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${good_status.toString()}"></strong>
                         </div>
                     </div>
                 </div>
-                <div class="row" th:if="${bad_status}!=null">
-                    <div class="container-fluid" style="padding-right: 0;padding-left: 0;">
-                        <div class="col-7" style="padding-left: 0px;padding-right: 0px;padding-bottom: 15px">
-                            <div class="bad_alert">
-                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                <strong th:text="${bad_status.toString()}"></strong>
-                            </div>
+            </div>
+            <div class="row" th:if="${bad_status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;">
+                    <div class="col-12" style="padding-left: 0px;padding-right: 0px;padding-bottom: 15px">
+                        <div class="bad_alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${bad_status.toString()}"></strong>
                         </div>
                     </div>
                 </div>
-            <div class="row div_min_width d-flex justify-content-start" style="font-weight: 400;font-size: 29px;padding-bottom: 20px">
-                <div class="" style="font-weight:400;padding-left:0px">
-                    Moje wiadomości
-                </div>
-                <div class="" style="padding-right: 0px;padding-left: 20px">
-                    <button type="button" style="" data-toggle="modal" data-target="#dane" class="btn new_msg"><span class="fas fa-plus" style="font-size: 13px;padding-right:5px"></span>Nowa wiadomość</button>
-                </div>
             </div>
 
-            <div class="row" style="font-size:16px;font-weight:500;padding-bottom: 10px;height: 30px">
+
+            <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
+                Moje posty
             </div>
 
-            <span th:each="conversation : ${list_of_conversations}">
-                <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${conversation.hasNewMessage(user)}">
-                    <a th:href="@{|/messages/${conversation.getConversation_id()}|}" style="width: 100%">
-                    <div class="col-7 div_min_width pink_shadow" style="border: 2px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
-                        <div class="row" style="padding-left: 8px">
-                            <div class="" style="width:auto;margin-top: -26px;z-index: 2;background-color: white;color: rgba(8,8,8,0.72)">Nowa wiadomość</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3 d-flex align-self-center"><img src="/images/user.png" class="user_image"><img></div>
-                            <div class="col-8 d-flex align-self-center flex-column" style="font-weight: 600;">
-                                <div th:text="${conversation.getOtherUser(user).getLogin()}">
-
-                                    TrailBlazer
-
-                                </div>
-                                <div style="margin-top: -5px">
-
-                                    <span style="font-size: 12px;color: rgba(8,8,8,0.72);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block" th:text="${conversation.getNewestMessage(user)}">
-                                        Ty: hejka, co tam? Chcesz cos z Avon'u?
-                                    </span>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    </a>
-                </div>
-
-            </span>
-
-            <div class="row" style="font-size:16px;font-weight: 500;padding-bottom: 0px;padding-top:10px;color: #000000bf;">
-                Odczytane wiadomości
-            </div>
-
-            <div class="page-wrap d-flex flex-row align-items-center" style="padding-top: 35px" th:if="${list_of_conversations.isEmpty()}">
+            <div style="height: 15px"></div>
+            <div class="page-wrap d-flex flex-row align-items-center" th:if="${list_of_posts.isEmpty()}" style="padding-top: 35px">
                 <div class="container">
-                    <div class="row justify-content-left">
-                        <div class="col-md-6 text-center">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 text-center">
                             <div class="mb-4 lead">
-                                <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Nie posiadasz żadnych wiadomości! :(</span>
+                                <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Nie dodałes jeszcze żadnego postu! :(</span>
                             </div>
 
                         </div>
                     </div>
                 </div>
             </div>
-            <span th:each="conversation : ${list_of_conversations}">
-                <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${!conversation.hasNewMessage(user)}">
-                    <a th:href="@{|/messages/${conversation.getConversation_id()}|}" style="width: 100%">
-                    <div class="col-7 div_min_width pink_shadow" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
-                        <div class="row">
-                            <div class="col-3 d-flex align-self-center"><img src="/images/user.png" class="user_image"><img></div>
-                            <div class="col-8 d-flex align-self-center flex-column" style="font-weight: 600;">
-                                <div th:text="${conversation.getOtherUser(user).getLogin()}">
+            <div class="d-flex" style="padding-bottom: 15px;width: 95%" th:each="post : ${list_of_posts}">
+                <!--/*@thymesVar id="post" type="pl.okazje.project.entities.Post"*/-->
+                <div class="item_div d-flex flex-column align-items-center justify-content-center pink_shadow" style="width: 100%;height:fit-content;border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
 
-                                    JanzusKowalski123
-
-                                </div>
-                                <div style="margin-top: -5px">
-
-                                    <span style="font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block"  th:text="${conversation.getNewestMessage(user)}">
-                                        Ty: rafineria123@gmail.com
-                                    </span>
-
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="d-flex flex-row justify-content-between" style="padding-top: 10px;padding-bottom:5px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 14px;color: #000000a6;">
+                        <span class="" style="padding-left: 10px">Post użytkownika: <a href="/profile/rafineria" th:href="@{|/profile/${post.getUser().getLogin()}|}" th:text="${post.getUser().getLogin()}" style="color: #000000b3;font-weight: bolder">rafineria</a></span><span class="" style=";padding-right: 10px">Dodany: <span style="color: #000000b3;font-weight: bolder" th:text="${post.getCreation_date_formated()}">2 dni temu</span></span>
                     </div>
-                    </a>
-                </div>
-            </span>
+                    <div class="d-flex flex-row align-items-start" style="border-bottom: 1px solid rgba(82,73,98,.2); width: 98%;font-family: Calibri;font-weight: 900;font-size: 22px;color: black;">
+                        <a href="" class="item_title" style="font-family: Calibri;font-weight: 900;font-size: 20px;color: black;padding-left: 10px;padding-right: 10px;hite-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                             word-wrap: break-word;max-width: 100%" th:href="@{|/post/${post.getPost_id()}|}" ><span style="" th:text="${post.getTitle()}">Ładowarka Liitokala Lii-500 za 68 zł, czy warto w tej cenie?</span></a>
+                    </div>
+                    <div class="d-flex flex-row align-items-start" style="padding-top: 10px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 17px;color: #000000a6;">
 
+                        <span style="padding-left: 10px;padding-right: 10px;white-space: break-spaces;text-overflow: ellipsis;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;max-width: 250ch;" th:text="${post.getContent()}">Czy Waszym zdaniem 68,35 zł za ładowarkę Liitokala Lii-500 razem z zasilaczem to dobra cena? Czym różni się sklep liitokala Official Store od LiitoKala Official Flagship Store?</span>
+                    </div>
+                    <div class="d-flex flex-row align-items-start" style="padding-top: 15px;padding-bottom:10px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 17px;color: #000000a6;">
+                        <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button class="btn" type="button" style="margin-left:10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px"><span class="fas fa-comments"></span>: <span th:text="${post.getCommentsSize()}">3</span></button></a>
+                        <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button type="button" class="btn" style="margin-left: 10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px">Zobacz więcej</button></a>
+                    </div>
+
+
+                </div>
+            </div>
 
         </div>
 
@@ -356,51 +312,12 @@
 </div>
 
 
-<div class="modal fade" id="dane" tabindex="-1" role="dialog" aria-labelledby="daneTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <form th:action="@{/settings/messages}" method="post"class="modal-content">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
-                <h5 class="modal-title" id="daneLongTitle" style="padding-left: 15px">Nowa wiadomość</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <div class="row" style="padding-left: 36px">
-                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Do</div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="login" name="login" placeholder="Wpisz nazwę osoby" value="" style="border: 1px solid rgba(82,73,98,0.2);
-                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
-                        </div>
-                    </div>
-
-                    <div class="row" style="padding-left: 36px">
-                        <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Treść</div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-12" style="width:100%">
-                            <textarea rows="4" COLS="72" id="message" maxlength="400" name="message" WRAP="description" placeholder="Treść wiadomości" style="border: 1px solid rgba(82,73,98,0.2);
-                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
-
-                        </div>
-                    </div>
 
 
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px">Napisz</button>
-            </div>
-        </div>
-        </form>
-    </div>
-</div>
+
+
+
+
 
 
 

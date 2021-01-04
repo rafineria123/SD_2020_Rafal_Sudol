@@ -330,5 +330,19 @@ public class User implements UserDetails {
         return false;
 
     }
+
+    public boolean hasPost(Long post_id){
+
+        for (Post p:posts) {
+
+            if (p.getPost_id()==post_id){
+
+                return true;
+            }
+
+        }
+        return false;
+
+    }
 }
 

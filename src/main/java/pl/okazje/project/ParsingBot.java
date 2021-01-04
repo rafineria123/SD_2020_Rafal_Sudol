@@ -75,7 +75,6 @@ public class ParsingBot {
                     divscnd = divscnd.child(0);
                     divscnd = divscnd.child(3);
                     String img = divscnd.select("img").first().attr("src");
-                    System.out.println(img);
 
                     //title
                     try {
@@ -167,10 +166,8 @@ public class ParsingBot {
                     discount.setDiscount_link(link);
                     String upToNCharacters = desc.substring(0, Math.min(desc.length(), 500));
                     discount.setContent(upToNCharacters);
-                    System.out.println(price);
                     price = price.replaceAll("[^\\d,.]", "");
                         price = price.replaceAll(",", ".");
-                    System.out.println(price);
 
                     discount.setCurrent_price(Double.parseDouble(price));
                     discount.setOld_price(discount.getCurrent_price() * 1.3);
@@ -192,7 +189,7 @@ public class ParsingBot {
                 System.out.println("Błąd przy parsowaniu jednego z produktow. Ten produkt zostanie pominięty.");
 
             }
-//            fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
+            fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
 //            fetchAmazon("https://www.amazon.com/Best-Sellers-Grocery-Gourmet-Food/zgbs/grocery","Artykuły Spożywcze");
 //            fetchAmazon("https://www.amazon.com/Best-Sellers-Sports-Outdoors/zgbs/sporting-goods", "Sport i Turystyka");
 

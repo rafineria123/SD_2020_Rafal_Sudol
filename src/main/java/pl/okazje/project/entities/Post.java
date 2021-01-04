@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -23,7 +25,7 @@ public class Post {
     private Long post_id;
     @Column(length = 500)
     private String title;
-    @Column(length = 900)
+    @Column(length = 1500)
     private String content;
     private Date creationdate;
     @Enumerated(EnumType.STRING)
@@ -119,6 +121,14 @@ public class Post {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
         String s = formatter.format(this.creationdate);
         return s;
+    }
+
+    public ArrayList<Comment> getCommentsSorted(){
+
+        ArrayList<Comment> list = new ArrayList(getComments());
+        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
+        return  list;
+
     }
 
 

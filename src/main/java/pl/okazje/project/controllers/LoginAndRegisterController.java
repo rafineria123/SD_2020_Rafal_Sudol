@@ -67,6 +67,19 @@ public class LoginAndRegisterController {
 
     @GetMapping("/login")
     public ModelAndView login() {
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
+
+
+            ModelAndView modelAndView = new ModelAndView(new RedirectView("", true, true, false));
+            return modelAndView;
+
+
+        }
+
         ModelAndView modelAndView = new ModelAndView("login");
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
@@ -119,7 +132,6 @@ public class LoginAndRegisterController {
             return redirectView;
         }
 
-        System.out.println(reg);
 
         if (!reg.equals("on")) {
 

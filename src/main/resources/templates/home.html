@@ -41,14 +41,14 @@
 
                 <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 60px">
                     <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+                        <div class="nav_items d-flex align-items-center" style="padding-top: 5px;padding-bottom:7px"
+                             aria-controls="navbarToggleExternalContent"
+                             ><a href="/forum" class="nav_items_clickable" >Forum</a>
+                        </div>
                         <div class="nav_items d-flex align-items-center" id="kategorie-button"
                             data-target="#kategorie" aria-controls="navbarToggleExternalContent"
                             aria-expanded="false" aria-label="Toggle navigation" style="padding-bottom: 5px"><a href="#" class="nav_items_clickable">Kategorie</a>
                         </div>
-<!--                        <div class="nav_items d-flex align-items-center" id="forum-button" style="padding-top: 5px;padding-bottom: 5px"-->
-<!--                             data-target="#sklepy" aria-controls="navbarToggleExternalContent"-->
-<!--                             aria-expanded="false" aria-label="Toggle navigation"><a href="/forum" class="nav_items_clickable" >Forum</a>-->
-<!--                        </div>-->
                         <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 5px;padding-bottom: 5px"
                             data-target="#sklepy" aria-controls="navbarToggleExternalContent"
                             aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
@@ -293,7 +293,7 @@
                 <!-- Rate + Comments-->
                 <div class="row item_parts_padding d-flex justify-content-around" style="padding-top: 10px">
                     <div class="">
-                        <div class="row" sec:authorize="isAuthenticated()">
+                        <div class="row">
                             <form th:action="@{/addrate}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
                                        value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
@@ -316,21 +316,7 @@
                                        value="">
                             </form>
                         </div>
-                        <div class="row" sec:authorize="!isAuthenticated()">
-                            <form th:action="@{/login}" method="get"
-                                  sec:authorize="!isAuthenticated()">
-                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
-                                       value="&#xf067;" type="submit">
-                            </form>
-                            <span
-                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
-                                    th:text="|${discount.getRatingsSize()}|">  255  </span>
-                            <form th:action="@{/login}" method="get"
-                                  sec:authorize="!isAuthenticated()"><input
-                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
-                                    value="&#xf068;" type="submit">
-                            </form>
-                        </div>
+
 
                     </div>
                     <div class="">
@@ -347,7 +333,7 @@
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
                             <button type="button"  class="btn item_button" th:if="${!discount.isOutDated()}">
 
-                                    Przejdz do oferty
+                                    Przejdz do promocji
                                 <span class="fas fa-arrow-right"></span></button>
 <!--                            <button type="button"  class="btn item_button" th:if="${discount.isOutDated()}" style="background: linear-gradient(45deg,lightblue,lightblue);">-->
 
@@ -433,7 +419,7 @@
                 <!-- Rate + Comments-->
                 <div class="row item_parts_padding d-flex justify-content-around" style="padding-top: 10px">
                     <div class="">
-                        <div class="row" sec:authorize="isAuthenticated()">
+                        <div class="row">
                             <form th:action="@{/addrate}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
                                        value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
@@ -456,21 +442,7 @@
                                        value="">
                             </form>
                         </div>
-                        <div class="row" sec:authorize="!isAuthenticated()">
-                            <form th:action="@{/login}" method="get"
-                                  sec:authorize="!isAuthenticated()">
-                                <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
-                                       value="&#xf067;" type="submit">
-                            </form>
-                            <span
-                                    style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
-                                    th:text="|${discount.getRatingsSize()}|">  255  </span>
-                            <form th:action="@{/login}" method="get"
-                                  sec:authorize="!isAuthenticated()"><input
-                                    class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
-                                    value="&#xf068;" type="submit">
-                            </form>
-                        </div>
+
 
                     </div>
                     <div class="">
@@ -487,7 +459,7 @@
                         <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
                                                         <button type="button"  class="btn item_button" th:if="${discount.isOutDated()}" style="background: linear-gradient(45deg,lightblue,lightblue);">
 
-                                                            Przejdz do oferty
+                                                            Przejdz do promocji
                                                             <span class="fas fa-arrow-right"></span></button>
                         </a>
                     </div>

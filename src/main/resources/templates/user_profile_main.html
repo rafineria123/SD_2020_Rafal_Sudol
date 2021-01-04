@@ -34,6 +34,10 @@
 
     <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 155px">
         <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+            <div class="nav_items d-flex align-items-center" style="padding-top: 10px;"
+                 aria-controls="navbarToggleExternalContent"
+            ><a href="/forum" class="nav_items_clickable" >Forum</a>
+            </div>
             <div class="nav_items d-flex align-items-center" id="kategorie-button"
                  data-target="#kategorie" aria-controls="navbarToggleExternalContent"
                  aria-expanded="false" aria-label="Toggle navigation" style="padding-top: 10px"><a href="#" class="nav_items_clickable">Kategorie</a>
@@ -46,14 +50,14 @@
                 <a href="/login">
                     <button type="button" style="" class="btn add_button"><span
                             class="fas fa-user"
-                            style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                            style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
                     </button>
                 </a>
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
                     <form th:action="@{/logout}" method="post">
                         <button style="white-space:pre;" class="btn add_button" type="submit"
-                                value="Sign Out"><span class="fas fa-user" style="font-size: 12px;"></span>WYLOGUJ SIĘ</button>
+                                value="Sign Out"><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>WYLOGUJ SIĘ</button>
                     </form>
 
             </div>
@@ -61,7 +65,7 @@
                 <a href="/add/discount">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
-                            style="font-size: 12px;"></span>DODAJ OKAZJE
+                            style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
                     </button>
                 </a>
             </div>
@@ -139,6 +143,15 @@
                 </button>
             </a>
 
+            <a href="/settings/posts" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-blog" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
             <a href="/settings/messages" style="width: 100%">
                 <button type="button" style="width: 100%" class="text-left left_menu_button">
                     <div class="row d-flex justify-content-center align-items-center">
@@ -181,7 +194,19 @@
                     <button type="button" style="width: 100%" class="text-left left_menu_button">
                         <div class="row">
                             <div class="col-2 text-center"><span class="far fa-clipboard" style="font-size: 16px;padding-left: 20px"></span></div>
-                            <div class="col-10"><span>Moje okazje</span></div>
+                            <div class="col-10"><span>Moje promocje</span></div>
+
+                        </div>
+
+                    </button>
+                </a>
+            </div>
+            <div class="row">
+                <a href="/settings/posts" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="fas fa-blog" style="font-size: 16px;padding-left: 20px"></span></div>
+                            <div class="col-10"><span>Moje posty</span></div>
 
                         </div>
 
@@ -205,7 +230,7 @@
                     <button type="button" style="width: 100%" class="text-left left_menu_button">
                         <div class="row">
                             <div class="col-2 text-center"><span class="far fa-calendar-check" style="font-size: 16px;padding-left: 17px"></span></div>
-                            <div class="col-10"><span>Oczekujące okazje</span></div>
+                            <div class="col-10"><span>Oczekujące promocje</span></div>
 
                         </div>
                     </button>
@@ -326,7 +351,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="name" name="name" placeholder="" th:value="${user.getInformation().getName()}" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="text" class="add_input" id="name" maxlength="15" name="name" placeholder="" th:value="${user.getInformation().getName()}" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -337,7 +362,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="surname" name="surname" placeholder="" th:value="${user.getInformation().getSurname()}" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="text" class="add_input" id="surname" maxlength="15" name="surname" placeholder="" th:value="${user.getInformation().getSurname()}" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -348,7 +373,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <input type="text" class="add_input" id="email" name="email" placeholder="JanKowalski@gmail.com" th:value="${user.getEmail()}" style="border: 1px solid rgba(82,73,98,0.2);
+                            <input type="text" class="add_input" maxlength="50" id="email" name="email" placeholder="JanKowalski@gmail.com" th:value="${user.getEmail()}" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%">
                         </div>
                     </div>
@@ -380,7 +405,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12" style="width:100%">
-                            <textarea rows="3" COLS="72" id="description" maxlength="200" name="description" WRAP="description" placeholder="Twoj opis..." style="border: 1px solid rgba(82,73,98,0.2);
+                            <textarea rows="3" COLS="72" id="description" maxlength="299" name="description" WRAP="description" placeholder="Twoj opis..." style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%" th:text="${user.getInformation().getDescription()}">Twoj opis...</textarea>
 
                         </div>

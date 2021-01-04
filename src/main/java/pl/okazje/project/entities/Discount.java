@@ -333,7 +333,6 @@ public class Discount {
 
     public boolean isGlobalLink(){
 
-        System.out.println("global link: "+this.image_url);
 
         if(this.image_url.contains("http")){
             return true;

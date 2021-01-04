@@ -4,8 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
-    <title>Norgie - Logowanie</title>
-
+    <title>Norgie - Nowa promocja</title>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -14,11 +13,9 @@
           href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
           integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
           crossorigin="anonymous">
-    <link type="text/css" href="/css/login.css" rel="stylesheet"/>
-
+    <link type="text/css" href="/css/add_discount.css" rel="stylesheet"/>
 </head>
 <body>
-
 <nav class="navbar navbar-expand-xl navbar-light bg-light"
      style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);">
     <div class="navbar-brand" style="cursor: pointer;padding-left: 100px;" onclick="window.location='/';">
@@ -63,10 +60,10 @@
                 </a>
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
-                <a href="/add/discount">
+                <a href="/post/add">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
-                            style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
+                            style="font-size: 12px;padding-right: 3px;"></span>DODAJ POST
                     </button>
                 </a>
             </div>
@@ -85,7 +82,7 @@
             <div class="row" style="padding-left: 20px;padding-right: 20px">
                 <div class="col-xl-2" th:each="shop : ${list_of_shops}"
                      style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
-                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                    <a th:href="|/forum/search/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
                         <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
                                 th:text="${shop.getName()}">DODAJ KUPON
                         </button>
@@ -103,7 +100,7 @@
             <div class="row" style="padding-left: 20px;padding-right: 20px">
                 <div class="col-xl-2" th:each="tag : ${list_of_tags}"
                      style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
-                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                    <a th:href="|/forum/search/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
                         <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
                                 th:text="${tag.getName()}">DODAJ KUPON
                         </button>
@@ -121,136 +118,64 @@
 
 
 <div class="container-fluid">
-    <div class="col-md-6 offset-md-3" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
-        <span class="over_items">Zaloguj sie!</span>
+    <div class="col-xl-6 offset-xl-3" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
+        <span class="over_items">Dodaj nowego posta!</span>
     </div>
     <div style="height: 15px"></div>
 </div>
-
-<div class="row" th:if="${param.error}">
-    <div class="container" style="padding-bottom: 15px">
-        <div class="col-lg-6 offset-lg-3" style="padding-left: 15px;padding-right: 15px">
-            <div class="bad_alert" style="margin-left: 45px;margin-right: 45px">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                <strong>Błędna nazwa użytkownika lub hasło.</strong>
-            </div>
+<div class="container-fluid" th:if="${error}">
+    <div class="col-xl-6 offset-xl-3" style="padding-left: 0px;padding-right: 0px">
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <strong>Wypełnij wszystkie pola!</strong>
         </div>
     </div>
 </div>
-
-<div class="row" th:if="${param.logout}">
-    <div class="container" style="padding-bottom: 15px">
-        <div class="col-lg-6 offset-lg-3" style="padding-left: 15px;padding-right: 15px">
-            <div class="alert" style="margin-left: 45px;margin-right: 45px">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                <strong>Zostałeś pomyślnie wylogowany.</strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row" th:if="${param.ban}">
-    <div class="container" style="padding-bottom: 15px">
-        <div class="col-lg-6 offset-lg-3" style="padding-left: 15px;padding-right: 15px">
-            <div class="bad_alert" style="margin-left: 45px;margin-right: 45px">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                <strong>To konto jest zablokowane. Sprawdź swojego maila.</strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row" th:if="${param.token}">
-    <div class="container" style="padding-bottom: 15px">
-        <div class="col-lg-6 offset-lg-3" style="padding-left: 15px;padding-right: 15px">
-            <div class="bad_alert" style="margin-left: 45px;margin-right: 45px">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                <strong>To konto nie jest jeszcze zweryfikowane. Sprawdź swojego maila.</strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row" th:if="${param.session}">
-    <div class="container" style="padding-bottom: 15px">
-        <div class="col-lg-6 offset-lg-3" style="padding-left: 15px;padding-right: 15px">
-            <div class="bad_alert" style="margin-left: 45px;margin-right: 45px">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                <strong>Twoja sesja wygasła. Zaloguj się ponownie.</strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row" th:if="${good_status}!=null">
-    <div class="container" style="padding-bottom: 15px">
-        <div class="col-lg-6 offset-lg-3" style="padding-left: 15px;padding-right: 15px">
-            <div class="alert" style="margin-left: 45px;margin-right: 45px">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                <strong th:text="${good_status.toString()}"></strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row" th:if="${bad_status}!=null">
-    <div class="container" style="padding-bottom: 15px">
-        <div class="col-lg-6 offset-lg-3" style="padding-left: 15px;padding-right: 15px">
-            <div class="bad_alert" style="margin-left: 45px;margin-right: 45px">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                <strong th:text="${bad_status.toString()}"></strong>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div class="container-fluid ">
-            <div class="d-flex justify-content-center h-100">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <h3 >LOGOWANIE</h3>
+    <div class="row" sec:authorize="isAuthenticated()">
+        <form th:action="@{/post/add}" class="w-100" method="post" enctype="multipart/form-data">
+            <div class="col-xl-6 offset-xl-3 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);border-width: 2px;border-style: dashed;border-color: rgb(193 188 188);">
+
+                <div class="row">
+
+                    <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Nowy post</span>
                     </div>
-                    <div class="card-body">
-                        <form  action="/login" method="post">
-                            <div class="input-group form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="login" name="login" placeholder="nazwa uzytkownika">
 
-                            </div>
-                            <div class="input-group form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
-                                </div>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="haslo">
-                            </div>
-
-                            <div class="form-group input-group input-group-prepend" style="padding-top:25px;">
-                                <input type="submit" value="Zaloguj" class="btn form-control login_btn">
-                            </div>
-                        </form>
-
-
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-center links">
-                            Nie masz jeszcze swojego konta?
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <a href="/register" style="font-weight: 900;color: #005aff94">Zarejestruj sie!</a>
-                        </div>
+                </div>
+                <div class="row" style="padding-bottom: 10px">
+                    <div class="col-md-12">
+                        <input type="text" class="add_input" maxlength="499" id="title" minlength="3" name="title" value="" placeholder=" Tytuł zwięźle opisujący treść posta">
                     </div>
                 </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea rows="15" cols="33" style="width: 100%;border-radius: 6px" minlength="3" maxlength="1499" id="content" name="content"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+
+                    <div class="col-md-12 offset-md-" style="padding-top: 15px;">
+                        <button type="submit" style="white-space:pre;font-size: 18px;border-radius: 10px" class="btn item_button">Dodaj Posta</button>
+                    </div>
+
+                </div>
+                <div style="height: 20px"></div>
+
+
+
             </div>
-
+            <div style="height: 50px;width: 100%"></div>
+        </form>
+    </div>
 </div>
-
-
-
-
-
 
 
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>

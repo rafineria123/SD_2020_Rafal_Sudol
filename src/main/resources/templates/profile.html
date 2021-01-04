@@ -34,6 +34,10 @@
 
     <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 155px">
         <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+            <div class="nav_items d-flex align-items-center" style="padding-top: 10px;"
+                 aria-controls="navbarToggleExternalContent"
+            ><a href="/forum" class="nav_items_clickable" >Forum</a>
+            </div>
             <div class="nav_items d-flex align-items-center" id="kategorie-button"
                  data-target="#kategorie" aria-controls="navbarToggleExternalContent"
                  aria-expanded="false" aria-label="Toggle navigation" style="padding-top: 10px"><a href="#" class="nav_items_clickable">Kategorie</a>
@@ -46,7 +50,7 @@
                 <a href="/login">
                     <button type="button" style="" class="btn add_button"><span
                             class="fas fa-user"
-                            style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                            style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
                     </button>
                 </a>
             </div>
@@ -54,7 +58,7 @@
                 <a href="/settings">
                     <button style="" class="btn add_button"
                             aria-haspopup="true" aria-expanded="false"
-                    ><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO
+                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
                     </button>
                 </a>
             </div>
@@ -62,7 +66,7 @@
                 <a href="/add/discount">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
-                            style="font-size: 12px;"></span>DODAJ OKAZJE
+                            style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
                     </button>
                 </a>
             </div>
@@ -161,11 +165,7 @@
                                 <div class="d-flex justify-content-end" style="padding-left: 0px;width: 30%" sec:authorize="isAuthenticated()">
                                     <button type="button" style="" data-toggle="modal" data-target="#dane" class="btn new_msg"><span class="far fa-envelope" style="font-size: 15px;font-weight: 600;padding-right: 0px;"></span></button>
                                 </div>
-                                <div class="d-flex justify-content-end" style="padding-left: 0px;width: 30%" sec:authorize="!isAuthenticated()">
-                                    <a href="/login" style="width: fit-content">
-                                        <button type="button" style="" data-toggle="modal" data-target="#dane" class="btn new_msg"><span class="far fa-envelope" style="font-size: 15px;font-weight: 600;padding-right: 0px;"></span></button>
-                                    </a>
-                                </div>
+
                             </div>
                             <div class="row d-flex justify-content-start" style="padding-left: 15px">
                                 <div class="comm_disc_date">Okazje:<span class="comm_disc_date_number" th:text="${user.getDiscountsAmount()}">15</span></div>
@@ -288,7 +288,7 @@
             <div class="mix w-100" th:if="${comments_page}" th:each="comment : ${user.getComments()}">
                 <div class="col-12" style="height: 15px;"></div>
 
-                <a href="jd" class="sort_div_comm" th:href="@{|/discount/${comment.getDiscount().getDiscount_id()}|}">
+                <a href="" class="sort_div_comm" th:href="@{|/discount/${comment.getDiscount().getDiscount_id()}|}" th:if="${comment.getDiscount()!=null}">
                     <div class="sort_div_comm pink_shadow" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);width: 100%;padding-top: 15px;padding-bottom: 15px;
                     border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
                     <div class="row">
@@ -346,6 +346,67 @@
                             </div>
                         </div>
                     </div>
+                    </div>
+                </a>
+
+                <a href="" class="sort_div_comm" th:href="@{|/post/${comment.getPost().getPost_id()}|}" th:if="${comment.getPost()!=null}">
+                    <div class="sort_div_comm pink_shadow" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);width: 100%;padding-top: 15px;padding-bottom: 15px;
+                    border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
+                        <div class="row">
+
+
+                            <div class="col-md-12">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="d-flex justify-content-center" style="width: 90%">
+                                        <div class="d-flex justify-content-start"
+                                             style="width: 80%">
+                                            <div style="width: fit-content;border-bottom: 1px solid rgba(82,73,98,.2)">
+                                                <span style="font-size:14px;font-weight:900;color:#e42d31; padding-right: 5px"th:text="${comment.getUser().getLogin()}">Rafineria</span>
+                                                <span style="font-size:12px;font-weight: 900;color: rgba(145,143,146,0.91);" th:text="|${comment.getDateDifference()} dni temu|">2 dni temu</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end align-self-center align-items-center" style="width: 20%">
+                                <span class="fas fa-thumbs-up"
+                                      style="font-size:13px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
+                                                style="font-size:14px;font-weight: 900;color: rgba(145,143,146,0.91);"th:text="${comment.getRatingsSize()}">23</span>
+                                        </div>
+                                        <div class="d-flex justify-content-end align-items-end" style="width: 10%" sec:authorize="hasAuthority('ADMIN')">
+                                            <form th:action="@{/removecomment}" method="post">
+                                                <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getComment_id()}">
+                                                <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style=""></span> </button>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12" style="padding-top: 7px;padding-bottom: 10px">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="d-flex justify-content-center" style="width: 90%">
+                                        <div class="d-flex justify-content-start" style="width:100%;max-width:100%;font-size: 14px;font-weight: 500;display: inline-block;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                                 word-wrap: break-word;">
+                                    <span th:text="${comment.getContent()}" style="max-width: 100%;white-space: pre-wrap;white-space: -moz-pre-wrap;display: inline-block;white-space: -o-pre-wrap;
+                             word-wrap: break-word;">
+                                    Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
+                                    wypadła im jedna z najlepszych
+                                    w historii portalu, za Sennheiserami (6300 zł) i HiFiManami x3 (1500 zł / 3800 zł / 5000
+                                    zł). 5. miejsce na 416 przetestowanych słuchawek.
+                                    Ostatnio wyszedł ich test na rtings i jeśli idzie o dźwięk, to ocena (neutral sound)
+                                    wypadła im jedna z najlepszych w historii portalu, za Sennheiserami (6300 zł)
+                                    i HiFiManami x3 (1500 zł / 3800 zł / 5000 zł). 5. miejsce na 416 przetestowanych
+                                    słuchawek.
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </a>
 

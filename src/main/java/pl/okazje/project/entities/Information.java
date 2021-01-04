@@ -9,8 +9,11 @@ public class Information implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer information_id;
+    @Column(length = 15)
     private String name = "";
+    @Column(length = 15)
     private String surname = "";
+    @Column(length = 300)
     private String description = "";
     @OneToOne(mappedBy = "information")
     private User user;

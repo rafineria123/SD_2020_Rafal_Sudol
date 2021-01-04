@@ -85,19 +85,8 @@ public class DiscountController {
 
 
     @GetMapping("/add/discount")
-    public ModelAndView add_discount_get(RedirectAttributes redir) {
+    public ModelAndView add_discount_get() {
         ModelAndView modelAndView = new ModelAndView("add_discount");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
-            RedirectView redirectView = new RedirectView("/login");
-            redir.addFlashAttribute("bad_status", "Musisz się zalogować aby dodać okazje.");
-            modelAndView =  new ModelAndView(redirectView);
-            return modelAndView;
-
-
-        }
-
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         modelAndView.addObject("error", false);
@@ -116,11 +105,13 @@ public class DiscountController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+            if(content.isEmpty()||title.isEmpty()||url.isEmpty()){
+                throw new IllegalArgumentException();
+            }
 
 
             Path currentPath = Paths.get("");
             Path absolutePath = currentPath.toAbsolutePath();
-            System.out.println(absolutePath +"tutaj2");
 
             File transferFile = new File(absolutePath+"/src/main/resources/static/images/" + file.getOriginalFilename());
             file.transferTo(transferFile);

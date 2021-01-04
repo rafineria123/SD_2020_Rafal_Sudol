@@ -2,6 +2,7 @@ package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,6 +41,8 @@ public class SettingsController {
     ConversationRepository conversationRepository;
     @Autowired
     InformationRepository informationRepository;
+    @Autowired
+    PostRepository postRepository;
     @Autowired
     SendMail sendMail;
     @Autowired
@@ -89,6 +92,25 @@ public class SettingsController {
 
         }
         modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+
+    }
+
+    @GetMapping("/settings/posts")
+    public ModelAndView settingsPosts() {
+
+        ModelAndView modelAndView = new ModelAndView("user_profile_posts");
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+
+        modelAndView.addObject("list_of_posts", postRepository.sortPostsByDateWithGivenUser(uzytkownik.getLogin()));
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("user", uzytkownik);
+
         return modelAndView;
 
 

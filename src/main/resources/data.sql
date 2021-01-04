@@ -61,9 +61,26 @@ INSERT INTO `post` (`post_id`, `content`, `creationdate`, `status`, `title`, `us
 
 Głównie do przeglądania neta i simsów! Praca licencjacka itd.
 
-Interesuje mnie tylko apple, rocznik 2020, 2019, 2018(ewentualnie). Specyfikacje może i znam, ale nie wiem w co jakiej cenie polować. WIdziałem w empiku za 4600 nie wiem czy to super oferta, a szukam nie dla siebie, więc chce znaleźć okazję super','2020-06-18 08:52:39','ZATWIERDZONE', 'Szukam Macbook Air, ale nie z m1', 1);
+Interesuje mnie tylko apple, rocznik 2020, 2019, 2018(ewentualnie). Specyfikacje może i znam, ale nie wiem w co jakiej cenie polować. WIdziałem w empiku za 4600 nie wiem czy to super oferta, a szukam nie dla siebie, więc chce znaleźć okazję super','2020-06-18 08:52:39','ZATWIERDZONE', 'Szukam Macbook Air, ale nie z m1', 1),
+(3, 'Będę bardzo wdzięczny za odstąpienie kodu rabatowego do Media Expert (50/1000)
+Z góry dziękuję za pomoc','2020-06-16 08:52:39','ZATWIERDZONE', 'Kod rabatowy ING do Media Expert', 2),
+(4, 'Czy ktoś może mi wyłożyć dlaczego warto założyć VPN? I czy NordVPN to jest dobra opcja?
+
+Rozumiem zasadę działania VPN
+Wiem co daje VPN ogólnie
+Pytam bardziej czy NordVPN to godny zaufania provider i
+Czy jakikolwiek provider jest godny zaufania, czy to nie jest po prostu rerouting całej wiedzy o aktywności w internecie z mojego ISP do NordVPN lub innego
+Jakie są gwarancje prywatności itd?
+
+Nie interesuje mnie aspekt zmiany lokalizacji (hulu itd), raczej prywatnościowy.
+
+Z góry dzięki','2020-06-17 08:52:39','ZATWIERDZONE', 'Dlaczego warto VPN', 2),
+(5, 'Ktoś może używał tego sprzętu Sharp UA-HG50E-L
+
+Prosze o konstruktywne opinie ','2020-06-19 08:52:39','ZATWIERDZONE', 'OCZYSZCZACZ-NAWILŻACZ SHARP', 3);
 INSERT INTO `comment` (`comment_id`, `content`, `cr_date`, `discount_id`, `post_id`, `user_id`) VALUES
-(1, 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', 3, NULL, 1);
+(1, 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', 3, NULL, 1),
+(2, 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', NULL, 1, 1);
 
 
 INSERT INTO `conversation` (`conversation_id`) VALUES

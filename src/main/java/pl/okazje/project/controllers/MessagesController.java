@@ -106,7 +106,6 @@ public class MessagesController {
         User otheruser = conversationRepository.findById(Long.parseLong(new_message_conv_id)).get().getOtherUser(uzytkownik);
         ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(otheruser.getLogin()));
         if(!list.isEmpty()){
-            System.out.println(1);
 
             for (String s:list) {
                 if(Long.parseLong(s)-System.currentTimeMillis()<0){
@@ -118,7 +117,6 @@ public class MessagesController {
             }
 
         }else {
-            System.out.println(2);
 
             sendMail.sendingMail(otheruser.getEmail(),
                     "NORGIE - Otrzymales nową wiadomość","Witaj "+otheruser.getLogin()+",\n Otrzymałeś nową wiadomość od "
@@ -194,7 +192,6 @@ public class MessagesController {
         User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
         User uzytkownik2 = userRepository.findUserByLogin(user2);
 
-        System.out.println(3);
 
         Message m = new Message();
         m.setUser(uzytkownik1);

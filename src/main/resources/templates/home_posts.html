@@ -57,7 +57,7 @@
                             <a href="/login">
                                 <button type="button" style="" class="btn add_button"><span
                                         class="fas fa-user"
-                                        style="font-size: 12px;"></span>ZALOGUJ SIĘ
+                                        style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
                                 </button>
                             </a>
                         </div>
@@ -65,15 +65,15 @@
                             <a href="/settings">
                                 <button style="" class="btn add_button"
                                         aria-haspopup="true" aria-expanded="false"
-                                ><span class="fas fa-user" style="font-size: 12px;"></span>TWOJE KONTO
+                                ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
                                 </button>
                             </a>
                         </div>
                         <div class="d-flex align-items-center" style="padding-top: 10px">
-                            <a href="/add/discount">
+                            <a href="/post/add">
                                 <button type="button"  class="btn add_button"><span
                                         class="fas fa-plus"
-                                        style="font-size: 12px;"></span>DODAJ POSTA
+                                        style="font-size: 12px;padding-right: 3px;"></span>DODAJ POST
                                 </button>
                             </a>
                         </div>
@@ -87,7 +87,7 @@
                 <div class="row" style="padding-left: 20px;padding-right: 20px">
                     <div class="col-xl-2" th:each="tag : ${list_of_tags}"
                          style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
-                        <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <a th:href="|/forum/search/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
                             <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
                                     th:text="${tag.getName()}">DODAJ KUPON
                             </button>
@@ -105,7 +105,7 @@
                 <div class="row" style="padding-left: 20px;padding-right: 20px">
                     <div class="col-xl-2" th:each="shop : ${list_of_shops}"
                          style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
-                        <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <a th:href="|/forum/search/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
                             <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
                                     th:text="${shop.getName()}">DODAJ KUPON
                             </button>
@@ -120,7 +120,7 @@
 
         <div class="row d-flex justify-content-center" style="width: 100%;margin-top: -25px;margin-right: 0;margin-left: 0">
             <div class="col-xl-6">
-                <form th:action="@{/search}" method="post">
+                <form th:action="@{/forum/search}" method="post">
                     <input class="form-control mr-sm-0 input nav_search" minlength="3"  id="searchform" name="searchform"
                            data-ref="input-search" type="search" placeholder="np. Adidas, Neonet, Telefon, CCC"
                            aria-label="Search">
@@ -136,6 +136,10 @@
 <div class="container" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
     <span class="over_items">Posty od naszych użytkowników! </span>
     <div style="height: 15px"></div>
+    <span th:if="${additional_results_info!=null}"style="color: rgba(0,0,0,0.78);font-size: 20px;font-weight: 400;margin-top: -15px;">Wyniki dla<span th:if="${additional_results_info_more!=null}"
+      th:text="${additional_results_info_more}"></span> "<span th:text="${additional_results_info}"
+                                                               style="color: #ed1d43;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                                 word-wrap: break-word;">Adidas</span>"</span>
 </div>
 
 <div class="container d-flex flex-column justify-content-center align-items-center" style="padding-top: 25px;padding-bottom: 20px">
@@ -160,21 +164,22 @@
 
     <div class="d-flex" style="padding-bottom: 15px;width: 95%" th:each="post : ${list_of_posts}">
         <!--/*@thymesVar id="post" type="pl.okazje.project.entities.Post"*/-->
-        <div class="item_div d-flex flex-column align-items-center justify-content-center" style="width: 100%;height:fit-content;">
+        <div class="item_div d-flex flex-column align-items-center justify-content-center pink_shadow" style="width: 100%;height:fit-content;border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
 
             <div class="d-flex flex-row justify-content-between" style="padding-top: 10px;padding-bottom:5px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 14px;color: #000000a6;">
                 <span class="" style="padding-left: 10px">Post użytkownika: <a href="/profile/rafineria" th:href="@{|/profile/${post.getUser().getLogin()}|}" th:text="${post.getUser().getLogin()}" style="color: #000000b3;font-weight: bolder">rafineria</a></span><span class="" style=";padding-right: 10px">Dodany: <span style="color: #000000b3;font-weight: bolder" th:text="${post.getCreation_date_formated()}">2 dni temu</span></span>
             </div>
             <div class="d-flex flex-row align-items-start" style="border-bottom: 1px solid rgba(82,73,98,.2); width: 98%;font-family: Calibri;font-weight: 900;font-size: 22px;color: black;">
-                <a href="" class="item_title" style="font-family: Calibri;font-weight: 900;font-size: 20px;color: black;" th:href="@{|/post/${post.getPost_id()}|}" ><span style="padding-left: 10px;padding-right: 10px" th:text="${post.getTitle()}">Ładowarka Liitokala Lii-500 za 68 zł, czy warto w tej cenie?</span></a>
+                <a href="" class="item_title" style="font-family: Calibri;font-weight: 900;font-size: 20px;color: black;padding-left: 10px;padding-right: 10px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                             word-wrap: break-word;max-width: 100%" th:href="@{|/post/${post.getPost_id()}|}" ><span style="" th:text="${post.getTitle()}">Ładowarka Liitokala Lii-500 za 68 zł, czy warto w tej cenie?</span></a>
             </div>
             <div class="d-flex flex-row align-items-start" style="padding-top: 10px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 17px;color: #000000a6;">
 
-                <span style="padding-left: 10px;padding-right: 10px" th:text="${post.getContent()}">Czy Waszym zdaniem 68,35 zł za ładowarkę Liitokala Lii-500 razem z zasilaczem to dobra cena? Czym różni się sklep liitokala Official Store od LiitoKala Official Flagship Store?</span>
+                <span style="padding-left: 10px;padding-right: 10px;white-space: break-spaces;text-overflow: ellipsis;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;max-width: 250ch;" th:text="${post.getContent()}">Czy Waszym zdaniem 68,35 zł za ładowarkę Liitokala Lii-500 razem z zasilaczem to dobra cena? Czym różni się sklep liitokala Official Store od LiitoKala Official Flagship Store?</span>
             </div>
             <div class="d-flex flex-row align-items-start" style="padding-top: 15px;padding-bottom:10px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 17px;color: #000000a6;">
                 <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button class="btn" type="button" style="margin-left:10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px"><span class="fas fa-comments"></span>: <span th:text="${post.getCommentsSize()}">3</span></button></a>
-                <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button type="button" class="btn" style="margin-left: 10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px">Czytaj dalej</button></a>
+                <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button type="button" class="btn" style="margin-left: 10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px">Zobacz więcej</button></a>
             </div>
 
 
@@ -182,6 +187,23 @@
     </div>
 
 
+    </div>
+
+    <div class="page-wrap d-flex flex-row align-items-center" th:if="${list_of_posts.isEmpty()}" style="padding-top: 35px">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 text-center">
+                    <div class="mb-4 lead">
+                            <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Przepraszamy, nie znaleźliśmy wyników dla<span
+                                    th:if="${additional_results_info_more!=null}" th:text="${additional_results_info_more}"></span> "<span
+                                    th:text="${additional_results_info}" style="color: #ed1d43;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                                 word-wrap: break-word;
+    ">Adidas</span>"</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 
     <nav aria-label="Page navigation example" style="padding-top: 50px">

@@ -7,23 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.core.userdetails.UserDetails;
 import pl.okazje.project.services.UserService;
-
-import javax.sql.DataSource;
 
 
 @Configuration
@@ -32,8 +22,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
 
 
-    @Autowired
-    private DataSource dataSource;
     @Autowired
     private UserService userService;
 
@@ -45,7 +33,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register", "/resources/**",
                         "/css/**", "/js/**","/js/mixitup/dist/**","/js/mixitup/**", "/images/**").permitAll().and().formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/")
                 .usernameParameter("login")
                 .passwordParameter("password")
                 .permitAll().failureHandler((req,res,exp)->{
@@ -62,7 +49,13 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .permitAll().and()
                 .logout()
                 .logoutSuccessUrl("/login?logout")
-                .permitAll().and().authorizeRequests().antMatchers("/settings/*","/settings","/messages").hasAnyAuthority("USER","ADMIN")
+                .permitAll().and().authorizeRequests().antMatchers(
+                        "/settings/*","/settings","/messages","/add/discount","/ratecomment","/addrate","/removerate","removecomment","/addcomment",
+                "sendMessage","/conversation/*","/user_conversations/*","/sendNewMessage","/post/addcomment","/post/removecomment","/post/ratecomment",
+                "changeUserDetails","changeDescription","changePassword","/post/add","/messages/*")
+                .hasAnyAuthority("USER","ADMIN").and().authorizeRequests().antMatchers(
+                "/acceptdiscount","/removediscount","/post/remove","/banuser")
+                .hasAnyAuthority("ADMIN")
                 .and().sessionManagement().maximumSessions(3).expiredUrl("/login?session=true").and().invalidSessionUrl("/login?session=true");
 
     }
@@ -88,6 +81,11 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserService getUserService() {
+        return new UserService();
     }
 
 
