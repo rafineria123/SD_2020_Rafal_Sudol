@@ -87,7 +87,7 @@
                 <div class="row" style="padding-left: 20px;padding-right: 20px">
                     <div class="col-xl-2" th:each="tag : ${list_of_tags}"
                          style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
-                        <a th:href="|/forum/search/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <a th:href="|/forum/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
                             <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
                                     th:text="${tag.getName()}">DODAJ KUPON
                             </button>
@@ -105,7 +105,7 @@
                 <div class="row" style="padding-left: 20px;padding-right: 20px">
                     <div class="col-xl-2" th:each="shop : ${list_of_shops}"
                          style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
-                        <a th:href="|/forum/search/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <a th:href="|/forum/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
                             <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
                                     th:text="${shop.getName()}">DODAJ KUPON
                             </button>
@@ -154,10 +154,10 @@
         </a>
         <a th:href="|${sort_buttons_prefix +'date'}|">
             <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
-                    class="btn sort_button sort_button_activated">Niedawno dodane
+                    class="btn sort_button sort_button_activated">Najnowsze posty
             </button>
             <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
-                    class="btn sort_button">Niedawno dodane
+                    class="btn sort_button">Najnowsze posty
             </button>
         </a>
     </div>

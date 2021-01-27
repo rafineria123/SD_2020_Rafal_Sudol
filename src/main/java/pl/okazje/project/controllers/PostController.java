@@ -134,11 +134,12 @@ public class PostController {
         ModelAndView modelAndView = new ModelAndView("add_post");
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
+
         return modelAndView;
     }
 
     @PostMapping("/add")
-    public ModelAndView addPost(@ModelAttribute("content") String content,@ModelAttribute("title") String title, RedirectAttributes redir){
+    public ModelAndView addPost(@ModelAttribute("content") String content,@ModelAttribute("title") String title,@ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop, RedirectAttributes redir){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findUserByLogin(authentication.getName());
@@ -146,7 +147,7 @@ public class PostController {
 
         Post post = new Post();
         try {
-            if(title.isEmpty()||content.isEmpty()){
+            if(title.isEmpty()||content.isEmpty()||tag.isEmpty()||shop.isEmpty()){
                 throw new IllegalArgumentException();
             }
             post.setTitle(title);
@@ -154,6 +155,8 @@ public class PostController {
             post.setCreationdate(new Date());
             post.setStatus(Post.Status.ZATWIERDZONE);
             post.setUser(uzytkownik);
+            post.setTag(tagRepository.findById(Long.parseLong(tag)).get());
+            post.setShop(shopRepository.findById(Long.parseLong(shop)).get());
         }catch (Exception e){
 
 

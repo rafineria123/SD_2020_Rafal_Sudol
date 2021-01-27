@@ -234,5 +234,202 @@ public class ForumController {
         return modelAndView;
     }
 
+    @GetMapping("/categories/{category}/page/{id}/sort/{sort}")
+    public ModelAndView categories(@PathVariable("category") String category, @PathVariable("id") String id, @PathVariable("sort") String sort) {
+        ModelAndView modelAndView = new ModelAndView("home_posts");
+        PagedListHolder page = new PagedListHolder();
+        if(sort.equals("most-comments")){
+
+            modelAndView.addObject("picked_sort", 2);
+            page = new PagedListHolder(postRepository.sortPostsByCommentsWithGivenTag(category));
+
+        }
+        if(sort.equals("date")){
+
+            modelAndView.addObject("picked_sort", 3);
+            page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndTag("ZATWIERDZONE", category));
+
+        }
+
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        page.setPageSize(page_size_for_home); // number of items per page
+        page.setPage(Integer.parseInt(id) - 1);
+        modelAndView.addObject("list_of_posts", page.getPageList());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous", "/forum/categories/" + category + "/page/id/sort/"+sort);
+        modelAndView.addObject("sort_buttons_prefix", "/forum/categories/" + category + "/page/1/sort/");
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/forum/categories/"+category+"/page/"+i+"/sort/"+sort);
+
+        }
+        modelAndView.addObject("additional_results_info", category);
+        modelAndView.addObject("additional_results_info_more", " kategorii");
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+
+        return modelAndView;
+    }
+
+    @GetMapping("/categories/{category}/page/{id}")
+    public ModelAndView categories(@PathVariable("category") String category, @PathVariable("id") String id) {
+
+        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndTag("ZATWIERDZONE", category));
+        page.setPageSize(page_size_for_home); // number of items per page
+        page.setPage(Integer.parseInt(id) - 1);
+
+        ModelAndView modelAndView = new ModelAndView("home_posts");
+        modelAndView.addObject("list_of_posts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id) - 1);
+        modelAndView.addObject("next_and_previous", "/forum/categories/" + category + "/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/forum/categories/" + category + "/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/forum/categories/" + category + "/page/" + i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", category);
+        modelAndView.addObject("additional_results_info_more", " kategorii");
+        return modelAndView;
+
+    }
+
+    @GetMapping("/categories/{category}")
+    public ModelAndView categories(@PathVariable("category") String category) {
+
+        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndTag("ZATWIERDZONE", category));
+        page.setPageSize(page_size_for_home); // number of items per page
+        page.setPage(0);
+
+        ModelAndView modelAndView = new ModelAndView("home_posts");
+        modelAndView.addObject("list_of_posts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("next_and_previous", "/forum/categories/" + category + "/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/forum/categories/" + category + "/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/forum/categories/" + category + "/page/" + i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", category);
+        modelAndView.addObject("additional_results_info_more", " kategorii");
+        return modelAndView;
+
+    }
+    @GetMapping("/shops/{shop}")
+    public ModelAndView shops(@PathVariable("shop") String shop) {
+
+        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndShop("ZATWIERDZONE", shop));
+        page.setPageSize(page_size_for_home); // number of items per page
+        page.setPage(0);
+
+        ModelAndView modelAndView = new ModelAndView("home_posts");
+        modelAndView.addObject("list_of_posts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("next_and_previous", "/forum/shops/" + shop + "/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/forum/shops/" + shop + "/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/forum/shops/" + shop + "/page/" + i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", shop);
+        modelAndView.addObject("additional_results_info_more", " sklepu");
+        return modelAndView;
+
+    }
+
+    @GetMapping("/shops/{shop}/page/{id}")
+    public ModelAndView shops(@PathVariable("shop") String shop, @PathVariable("id") String id) {
+
+        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndShop("ZATWIERDZONE", shop));
+        page.setPageSize(page_size_for_home); // number of items per page
+        page.setPage(Integer.parseInt(id) - 1);
+
+        ModelAndView modelAndView = new ModelAndView("home_posts");
+        modelAndView.addObject("list_of_posts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id) - 1);
+        modelAndView.addObject("next_and_previous", "/forum/shops/" + shop + "/page/id");
+        modelAndView.addObject("sort_buttons_prefix", "/forum/shops/" + shop + "/page/1/sort/");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/forum/shops/" + shop + "/page/" + i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("additional_results_info", shop);
+        modelAndView.addObject("additional_results_info_more", " sklepu");
+        return modelAndView;
+
+    }
+
+    @GetMapping("/shops/{shop}/page/{id}/sort/{sort}")
+    public ModelAndView shops(@PathVariable("shop") String shop, @PathVariable("id") String id, @PathVariable("sort") String sort) {
+        ModelAndView modelAndView = new ModelAndView("home_posts");
+        PagedListHolder page = new PagedListHolder();
+        if(sort.equals("most-comments")){
+
+            modelAndView.addObject("picked_sort", 2);
+            page = new PagedListHolder(postRepository.sortPostsByCommentsWithGivenShop(shop));
+
+        }
+        if(sort.equals("date")){
+
+            modelAndView.addObject("picked_sort", 3);
+            page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndShop("ZATWIERDZONE", shop));
+
+        }
+
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        page.setPageSize(page_size_for_home); // number of items per page
+        page.setPage(Integer.parseInt(id) - 1);
+        modelAndView.addObject("list_of_posts", page.getPageList());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous", "/forum/shops/" + shop + "/page/id/sort/"+sort);
+        modelAndView.addObject("sort_buttons_prefix", "/forum/shops/" + shop + "/page/1/sort/");
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/forum/shops/"+shop+"/page/"+i+"/sort/"+sort);
+
+        }
+        modelAndView.addObject("additional_results_info", shop);
+        modelAndView.addObject("additional_results_info_more", " sklepu");
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+
+        return modelAndView;
+    }
+
+
+
+
+
 
 }

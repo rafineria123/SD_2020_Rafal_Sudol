@@ -15,6 +15,9 @@ public class Shop {
     @OneToMany(mappedBy="shop")
     private Set<Discount> discounts;
 
+    @OneToMany(mappedBy="shop")
+    private Set<Post> posts;
+
     public Shop() {
     }
 
@@ -23,6 +26,14 @@ public class Shop {
         this.name = name;
         this.image_url = image_url;
 
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 
     public Long getShop_id() {

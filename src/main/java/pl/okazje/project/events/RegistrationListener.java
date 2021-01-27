@@ -44,7 +44,7 @@ public class RegistrationListener implements
         String subject = "Norgie - Aktywuj swoje konto";
         String confirmationUrl = "/registrationConfirm?token=" + token;
 
-        mailSender.sendingMail(recipientAddress,subject,"Aby aktywowac swoje konto kliknij w poniższy link,\n http://54.92.215.34/" + confirmationUrl);
+        mailSender.sendingMail(recipientAddress,subject,"Aby aktywowac swoje konto kliknij w poniższy link,\n http://54.92.215.34" + confirmationUrl);
 
     }
 }

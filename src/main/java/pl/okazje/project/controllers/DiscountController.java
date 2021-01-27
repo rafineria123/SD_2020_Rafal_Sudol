@@ -92,7 +92,6 @@ public class DiscountController {
         modelAndView.addObject("error", false);
         return modelAndView;
     }
-
     @PostMapping(path = "/add/discount", consumes = {"multipart/form-data"})
     public ModelAndView add_discount(
             @ModelAttribute("url") String url, @ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop,

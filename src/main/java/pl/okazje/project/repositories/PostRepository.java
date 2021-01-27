@@ -17,10 +17,30 @@ public interface PostRepository extends CrudRepository<Post, Long> {
             nativeQuery = true)
     public List<Post> sortPostsByDateWithGivenStatus(String status);
 
+    @Query(value = "SELECT * from post where status = ?1 AND tag_id in (select tag_id from tag where tag.name=?2)" +
+            " ORDER BY creationdate DESC" ,
+            nativeQuery = true)
+    public List<Post> sortPostsByDateWithGivenStatusAndTag(String status, String tag);
+
+    @Query(value = "SELECT * from post where status = ?1 AND shop_id in (select shop_id from shop where shop.name=?2)" +
+            " ORDER BY creationdate DESC" ,
+            nativeQuery = true)
+    public List<Post> sortPostsByDateWithGivenStatusAndShop(String status, String shop);
+
     @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT post_id, COUNT(*) AS disc_count" +
             " FROM comment GROUP BY post_id ) AS c ON d.post_id = c.post_id ORDER BY  c.disc_count DESC " ,
             nativeQuery = true)
     public List<Post> sortPostsByComments();
+
+    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT post_id, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY post_id ) AS c ON d.post_id = c.post_id where d.tag_id in (select tag_id from tag where tag.name=?1) ORDER BY  c.disc_count DESC " ,
+            nativeQuery = true)
+    public List<Post> sortPostsByCommentsWithGivenTag(String tag);
+
+    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT post_id, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY post_id ) AS c ON d.post_id = c.post_id where d.shop_id in (select shop_id from shop where shop.name=?1) ORDER BY  c.disc_count DESC " ,
+            nativeQuery = true)
+    public List<Post> sortPostsByCommentsWithGivenShop(String shop);
 
     @Query(value = "SELECT * from post"+
             " where content like ?1 or title like ?1 or user_id in (SELECT user_id from user where login like ?1) ORDER BY creationdate DESC" ,

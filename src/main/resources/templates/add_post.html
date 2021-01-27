@@ -137,10 +137,55 @@
         <form th:action="@{/post/add}" class="w-100" method="post" enctype="multipart/form-data">
             <div class="col-xl-6 offset-xl-3 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);border-width: 2px;border-style: dashed;border-color: rgb(193 188 188);">
 
+
+                <div class="row">
+
+                    <div class="col-lg-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Kategoria</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+
+                            <div class="col-md-3 radio-toolbar text-center" th:each="tag : ${list_of_tags}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin: 0px;"><input type="radio" th:id="|tag_${tag.getTag_id()}|" name="tag" th:value="${tag.getTag_id()}">
+                                <label th:for="|tag_${tag.getTag_id()}|" class="w-100" th:text="${tag.getName()}" style="">Apple</label>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="row">
 
                     <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
-                        <span class="add_big">Nowy post</span>
+                        <span class="add_big">Sklep</span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+
+                            <div class="col-md-3 radio-toolbar text-center" th:each="shop : ${list_of_shops}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin: 0px;"><input type="radio" th:id="|shop_${shop.getShop_id()}|" name="shop" th:value="${shop.getShop_id()}">
+                                <label th:for="|shop_${shop.getShop_id()}|" class="w-100" th:text="${shop.getName()}">Apple</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Tytuł</span>
                     </div>
 
                 </div>
@@ -151,12 +196,19 @@
                 </div>
 
 
+                <div class="row">
 
+                    <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                        <span class="add_big">Opis</span>
+                    </div>
+
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <textarea rows="15" cols="33" style="width: 100%;border-radius: 6px" minlength="3" maxlength="1499" id="content" name="content"></textarea>
                     </div>
                 </div>
+
 
 
 
