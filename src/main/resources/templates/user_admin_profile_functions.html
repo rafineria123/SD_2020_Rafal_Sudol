@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
-    <title>Norgie - Admin</title>
+    <title>Norgie - Ustawienia</title>
 
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -59,6 +59,7 @@
                     <button style="white-space:pre;" class="btn add_button" type="submit"
                             value="Sign Out"><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>WYLOGUJ SIĘ</button>
                 </form>
+
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
                 <a href="/add/discount">
@@ -117,22 +118,86 @@
 
 </div>
 
-
 <div class="container" style="padding-top: 70px">
 
     <div class="row">
 
-        <div class="col-3" style="font-weight: 400;font-size: 14px;">
+        <div class="d-flex flex-column media_small" style="font-weight: 400;font-size: 14px;padding-bottom: 50px;width: 25%">
+            <span style="" class="d-flex justify-content-center">Cześć,</span>
+            <a href="" class="d-flex justify-content-center" style="font-size: 20px;font-weight: 600;padding-bottom: 15px" th:href="@{|/profile/${user.getLogin()}|}"> <span style="" th:text="${user.getLogin()}">Rafał</span></a>
+
+            <a href="/settings" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-sliders-h" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+
+            <a href="/settings/discounts" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-clipboard" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/posts" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-blog" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/messages" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-envelope" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+            <a href="/settings/liked/page/1" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fab fa-gratipay" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/admin/discounts" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-calendar-check" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+            <a href="/settings/admin/functions" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-tools" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+
+        </div>
+
+        <div class="col-3 media_large" style="font-weight: 400;font-size: 14px;padding-bottom: 50px">
             <div class="row">
                 <span style="padding-left: 25px">Cześć,</span>
             </div>
             <div class="row" style="font-size: 20px;font-weight: 600;padding-bottom: 15px">
                 <a href="" th:href="@{|/profile/${user.getLogin()}|}"> <span style="padding-left: 25px" th:text="${user.getLogin()}">Rafał</span></a>
             </div>
+
             <div class="row">
                 <a href="/settings" style="width: 100%">
                     <button type="button" style="width: 100%" class="text-left left_menu_button">
-                        <div class="row">
+                        <div class="row d-flex justify-content-lg-center align-items-lg-center">
                             <div class="col-2 text-center"><span class="fas fa-sliders-h" style="font-size: 16px;padding-left:18px"></span></div>
                             <div class="col-10"><span>Ustawienia konta</span></div>
                         </div>
@@ -189,7 +254,7 @@
             </div>
             <div class="row" sec:authorize="hasAuthority('ADMIN')">
                 <a href="/settings/admin/discounts" style="width: 100%">
-                    <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
                         <div class="row">
                             <div class="col-2 text-center"><span class="far fa-calendar-check" style="font-size: 16px;padding-left: 17px"></span></div>
                             <div class="col-10"><span>Oczekujące promocje</span></div>
@@ -200,7 +265,7 @@
             </div>
             <div class="row" sec:authorize="hasAuthority('ADMIN')">
                 <a href="/settings/admin/functions" style="width: 100%">
-                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
                         <div class="row">
                             <div class="col-2 text-center"><span class="fas fa-tools" style="font-size: 16px;padding-left: 17px"></span></div>
                             <div class="col-10"><span>Funkcjonalności</span></div>
@@ -212,124 +277,52 @@
 
         </div>
 
-
-        <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
-            <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
-                Oczekujące promocje
-            </div>
-            <div style="height: 15px"></div>
-            <div class="page-wrap d-flex flex-row align-items-center" th:if="${list_of_discounts.isEmpty()}" style="padding-top: 35px">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-12 text-center">
-                            <div class="mb-4 lead">
-                                <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Brak oczekujących promocji! :(</span>
-                            </div>
-
+        <div class="col-8" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px;padding-bottom: 50px;">
+            <div class="row">
+                <div id="status_row" class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px;display: none">
+                    <div class="col-9" style="padding-left: 0px;padding-right: 0px">
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.parentElement.parentElement.style.display='none';">&times;</span>
+                            <strong id="status_text" class="d-flex flex-column"></strong>
                         </div>
                     </div>
                 </div>
             </div>
-            <div  th:each="discount : ${list_of_discounts}">
-                <div style="height: 25px"></div>
-                <a href="" th:href="@{|/discount/${discount.getDiscount_id()}|}" style="text-decoration:none;color: black">
-                    <div class="row" style="box-shadow: 0px 2px 6px 1px rgb(173, 173, 173);border-radius: 15px">
-
-                        <div class="col-4" style="border-radius: 15px 0px 0px 15px;background-color: #e5e5e6">
-
-                            <div class="row" style="padding-left: 20px;padding-top:20px;">
-
-                                <span style="font-weight: 600;font-size: 16px" th:text="|dodane przez: ${discount.getUser().getLogin()}|">Zatwierdzone</span>
-
-                            </div>
-
-                            <div class="row" style="padding-left: 20px;padding-top:10px;">
-
-                                <span style="font-weight: 400;font-size: 13px;">Dodane:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getCreation_date_formated()}"> 29.10.2020</span>
-
-                            </div>
-
-                            <div class="row" style="padding-left: 20px;padding-top:10px;">
-
-                                <span style="font-weight: 400;font-size: 13px;">Wygasa:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getExpire_date_formated()}"> 29.10.2020</span>
-
-                            </div>
-
-                            <div class="row" style="padding-left: 20px;padding-bottom: 20px;padding-top:10px">
-
-
-                                <span style="font-weight: 500;font-size: 15px">id: </span><span style="font-weight: 500;font-size: 15px"th:text="${discount.getDiscount_id()}">3324176</span>
-
-                            </div>
-
+            <div class="row" th:if="${bad_status}!=null">
+                <div class="container-fluid" style="padding-right: 0;padding-left: 0;">
+                    <div class="col-9" style="padding-left: 0px;padding-right: 0px;padding-bottom: 15px">
+                        <div class="bad_alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            <strong th:text="${bad_status.toString()}"></strong>
                         </div>
-                        <div class="col-8">
-                            <div class="row" style="height: 100%">
-
-                                <div class="col-2 align-self-center" style="height: 66px">
-
-                                    <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
-
-                                </div>
-
-                                <div class="col-9 align-self-center">
-
-                                    <span style="font-weight: 600;font-size: 16px;color: rgba(0,0,0,0.71);white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
-                             word-wrap: break-word;" th:text="${discount.getTitle()}">Płyn do chłodnic samochodowych</span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
                     </div>
-                </a>
+                </div>
+            </div>
+            <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
+                Funkcjonalności
             </div>
 
-            <nav aria-label="Page navigation example" style="padding-top: 50px">
-                <ul class="pagination justify-content-center">
+            <div class="row" style="font-size:20px;font-weight:600;padding-bottom: 20px">
+                Skanowanie stron
+            </div>
 
+            <div class="d-flex flex-column" style="width: 55%" id="scanners">
 
-                    <li th:if="${number_of_page == 1}" class="page-item disabled" style="padding-left: 5px">
-                        <a class="page-link" href="/page/1" tabindex="-1">Poprzednia</a>
-                    </li>
-                    <li th:if="${number_of_page != 1}" class="page-item" style="padding-left: 5px">
+            <button type="button" onclick="scanXkom()" class="btn" style="margin-left: 10px;color: white;width:100%;min-width:fit-content;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px">Skanuj sklep X-Kom</button>
+            <button type="button"  onclick="scanAmazon()" class="btn" style="margin-left: 10px;color: white;width:100%;min-width:fit-content;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px;margin-top: 10px">Skanuj sklep Amazon</button>
+            </div>
+            <div class="d-flex flex-column align-items-center justify-content-center" id="loader" style="width: 55%;visibility: hidden;margin-top:-70px">
+                <div class="loader"></div>
+                <span style="font-weight: 500;">Skanowanie... Nie zamykaj tej strony.</span>
+            </div>
 
-                        <a class="page-link" th:href="@{|${next_and_previous.replaceFirst('id',number_of_page -1)}|}">Poprzednia</a>
-                    </li>
-
-                    <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
-                        <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
-                            <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
-                        </li>
-                        <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
-                            <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
-                        </li>
-                    </div>
-
-
-
-                    <li th:if="${number_of_page == quantity_of_pages}" class="page-item disabled" style="padding-left: 5px">
-                        <a class="page-link" href="/page/1" tabindex="-1">Następna</a>
-                    </li>
-                    <li th:if="${number_of_page != quantity_of_pages}" class="page-item" style="padding-left: 5px">
-
-                        <a class="page-link" th:href="@{${next_and_previous.replaceFirst('id',number_of_page+1)}}">Następna</a>
-                    </li>
-
-
-                </ul>
-            </nav>
 
         </div>
-
 
 
     </div>
 
 </div>
-
 
 
 
@@ -352,6 +345,71 @@
     document.getElementById ("kategorie-button").addEventListener ("click", collapseSklepy, false);
     document.getElementById ("sklepy-button").addEventListener ("click", collapseKategorie, false);
     document.getElementById ("navbar-toggler-button").addEventListener ("click", collapseNavbar, false);
+
+    async function scanXkom(){
+
+        document.getElementById("scanners").style.visibility = 'collapse';
+        document.getElementById("loader").style.visibility = 'visible';
+        $.ajax({
+            type : "POST",
+            url : "/settings/admin/xkom",
+            success : function (data) {
+
+
+
+            }
+        })
+        await sleep(2000);
+        checkStatus();
+
+
+    }
+
+    async function scanAmazon(){
+
+        document.getElementById("scanners").style.visibility = 'collapse';
+        document.getElementById("loader").style.visibility = 'visible';
+        $.ajax({
+            type : "POST",
+            url : "/settings/admin/amazon",
+            success : function (data) {
+
+
+
+            }
+        })
+        await sleep(2000);
+        checkStatus();
+    }
+
+    function checkStatus(){
+
+        $.ajax({
+            url : "/settings/admin/status",
+            success : async function (data) {
+                const obj = data;
+                if (obj[0] == "working") {
+
+                    await sleep(2000);
+                    checkStatus();
+
+
+                }
+                if (obj[0] == "ok") {
+
+                    document.getElementById("status_text").innerHTML="<span>"+obj[1]+"</span>"+"<span>"+obj[2]+"</span>"+"<span>"+obj[3]+"</span>"+"<span>"+obj[4]+"</span>";
+                    document.getElementById("status_row").style.display = 'flex';
+                    document.getElementById("loader").style.visibility = 'hidden';
+                    document.getElementById("scanners").style.visibility = 'visible';
+
+
+                }
+
+
+            }
+        });
+
+    }
 
 
     async function collapseKategorie() {

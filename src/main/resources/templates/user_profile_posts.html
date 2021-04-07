@@ -160,11 +160,26 @@
 
                 </button>
             </a>
+            <a href="/settings/liked/page/1" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fab fa-gratipay" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
 
             <a href="/settings/admin/discounts" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
                 <button type="button" style="width: 100%" class="text-left left_menu_button">
                     <div class="row d-flex justify-content-center align-items-center">
                         <span class="far fa-calendar-check" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+            <a href="/settings/admin/functions" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-tools" style="font-size: 16px;"></span>
                     </div>
                 </button>
             </a>
@@ -224,12 +239,35 @@
                     </button>
                 </a>
             </div>
+            <div class="row">
+                <a href="/settings/liked/page/1" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="fab fa-gratipay" style="font-size: 16px;padding-left: 17px"></span></div>
+                            <div class="col-10"><span>Polubione promocje</span></div>
+
+                        </div>
+
+                    </button>
+                </a>
+            </div>
             <div class="row" sec:authorize="hasAuthority('ADMIN')">
                 <a href="/settings/admin/discounts" style="width: 100%">
                     <button type="button" style="width: 100%" class="text-left left_menu_button">
                         <div class="row">
                             <div class="col-2 text-center"><span class="far fa-calendar-check" style="font-size: 16px;padding-left: 17px"></span></div>
                             <div class="col-10"><span>Oczekujące promocje</span></div>
+
+                        </div>
+                    </button>
+                </a>
+            </div>
+            <div class="row" sec:authorize="hasAuthority('ADMIN')">
+                <a href="/settings/admin/functions" style="width: 100%">
+                    <button type="button" style="width: 100%" class="text-left left_menu_button">
+                        <div class="row">
+                            <div class="col-2 text-center"><span class="fas fa-tools" style="font-size: 16px;padding-left: 17px"></span></div>
+                            <div class="col-10"><span>Funkcjonalności</span></div>
 
                         </div>
                     </button>

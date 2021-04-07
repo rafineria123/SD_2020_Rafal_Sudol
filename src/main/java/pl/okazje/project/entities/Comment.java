@@ -14,7 +14,7 @@ public class Comment {
     @Column(length = 700)
     private String content;
     private String status="";
-    private Date cr_date;
+    private Date cr_date = new Date();
 
     @OneToMany(mappedBy="comment")
     private Set<Rating> ratings;
@@ -37,7 +37,6 @@ public class Comment {
     public Comment(String content) {
 
         this.content = content;
-        this.cr_date = new Date();
 
     }
 

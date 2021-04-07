@@ -10,6 +10,5 @@ import pl.okazje.project.entities.User;
 public interface TokenRepository extends CrudRepository<Token, Long> {
 
     public Token findByToken(String token);
-    public Token findByUser(User user);
 
 }

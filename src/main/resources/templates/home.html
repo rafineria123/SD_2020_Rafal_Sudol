@@ -147,70 +147,92 @@
 
 <!--main menu-->
 <div class="container" style="padding-top: 25px;">
+
     <div class="row" style="padding-left: 15px;padding-right: 15px;">
         <div class="container-fluid sort_div" style="width: 100%">
             <div class="row">
-            <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;">
-                <a th:href="|${sort_buttons_prefix +'top-rated'}|">
+                <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;">
+                    <a th:href="|${sort_buttons_prefix +'top-rated'}|">
 
-                    <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                            class="btn sort_button sort_button_activated" style="margin-right: 10px">Najlepiej oceniane
-                    </button>
-                    <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                            class="btn sort_button" style="margin-right: 10px">Najlepiej oceniane
-                    </button>
-                </a>
-                <a th:href="|${sort_buttons_prefix +'most-comments'}|">
-                    <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
-                            class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
-                    </button>
-                    <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
-                            class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
-                    </button>
-                </a>
-                <a th:href="|${sort_buttons_prefix +'date'}|">
-                    <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button_activated">Najnowsze promocje
-                    </button>
-                    <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button">Najnowsze promocje
-                    </button>
-                </a>
-            </div>
-            <div class="col-lg-6 d-flex flex-row-reverse sort_div" style="padding-top: 10px;padding-bottom: 10px;" th:if="${picked_time!=null}">
-                <a th:href="|${time_buttons_prefix +'day'}|" th:if="${picked_sort != 3}">
-                    <button type="button" th:if="${picked_time!=1}"  data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button" style="margin-left: 10px">Ostatnie 24h
-                    </button>
-                    <button type="button" th:if="${picked_time==1}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button_activated" style="margin-left: 10px">Ostatnie 24h
-                    </button>
+                        <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                                class="btn sort_button sort_button_activated" style="margin-right: 10px">Najlepiej oceniane
+                        </button>
+                        <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                                class="btn sort_button" style="margin-right: 10px">Najlepiej oceniane
+                        </button>
+                    </a>
+                    <a th:href="|${sort_buttons_prefix +'most-comments'}|">
+                        <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
+                                class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
+                        </button>
+                        <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
+                                class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
+                        </button>
+                    </a>
+                    <a th:href="|${sort_buttons_prefix +'date'}|">
+                        <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button sort_button_activated">Najnowsze promocje
+                        </button>
+                        <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button">Najnowsze promocje
+                        </button>
+                    </a>
+                </div>
+                <div class="col-lg-6 d-flex flex-row-reverse sort_div" style="padding-top: 10px;padding-bottom: 10px;">
 
-                </a>
-                <a th:href="|${time_buttons_prefix +'week'}|" th:if="${picked_sort != 3}">
-                    <button type="button" th:if="${picked_time!=2}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button" style="margin-left: 10px">Ostatni tydzien
-                    </button>
-                    <button type="button" th:if="${picked_time==2}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button_activated" style="margin-left: 10px">Ostatni tydzien
-                    </button>
+                    <form th:action="@{/filter}" method="post">
+                        <button type="submit" data-mixitup-control data-sort="number-comment:desc"
+                                class="btn sort_button" style="border-radius: 5px" th:if="${session.filter==null||session.filter.equals('false')}"><i class="fas fa-filter"></i> Filtruj nieaktualne
+                        </button>
+                        <button type="submit" data-mixitup-control data-sort="number-comment:desc"
+                                class="btn sort_button sort_button_activated" style="border-radius: 5px" th:if="${session.filter!=null&&session.filter.equals('true')}"><i class="fas fa-filter"></i> Filtruj nieaktualne
+                        </button>
+                    </form>
 
-                </a>
+                </div>
 
-                <a th:href="|${time_buttons_prefix +'all'}|" th:if="${picked_sort != 3}">
-                    <button type="button" th:if="${picked_time!=3}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button">Wszystkie
-                    </button>
-                    <button type="button" th:if="${picked_time==3}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button_activated">Wszystkie
-                    </button>
-
-                </a>
-
-            </div>
             </div>
         </div>
     </div>
+    <div class="row" style="padding-left: 15px;padding-right: 15px;margin-top: -8px;">
+        <div class="container-fluid sort_div" style="width: 100%">
+            <div class="row">
+
+                <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;" th:if="${picked_time!=null}">
+                    <a th:href="|${time_buttons_prefix +'day'}|" th:if="${picked_sort != 3}">
+                        <button type="button" th:if="${picked_time!=1}"  data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button sort_button" style="">Ostatnie 24h
+                        </button>
+                        <button type="button" th:if="${picked_time==1}" data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button sort_button_activated" style="">Ostatnie 24h
+                        </button>
+
+                    </a>
+                    <a th:href="|${time_buttons_prefix +'week'}|" th:if="${picked_sort != 3}">
+                        <button type="button" th:if="${picked_time!=2}" data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button sort_button" style="margin-left: 10px">Ostatni tydzien
+                        </button>
+                        <button type="button" th:if="${picked_time==2}" data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button sort_button_activated" style="margin-left: 10px">Ostatni tydzien
+                        </button>
+
+                    </a>
+
+                    <a th:href="|${time_buttons_prefix +'all'}|" th:if="${picked_sort != 3}">
+                        <button type="button" th:if="${picked_time!=3}" data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button sort_button" style="margin-left: 10px">Wszystkie
+                        </button>
+                        <button type="button" th:if="${picked_time==3}" data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button sort_button_activated" style="margin-left: 10px">Wszystkie
+                        </button>
+
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
         <div class="col-lg-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.deletedOrNotReady()}"
@@ -474,11 +496,11 @@
             <div class="row justify-content-center">
                 <div class="col-md-12 text-center">
                     <div class="mb-4 lead">
-                        <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Przepraszamy, nie znaleźliśmy wyników dla<span
+                        <span style="color: rgba(0,0,0,0.78);font-size: 30px;font-weight: 400;margin-top: -15px;">Przepraszamy, nie znaleźliśmy wyników <span th:if="${!list_of_discounts.isEmpty()}">dla<span
                                 th:if="${additional_results_info_more!=null}" th:text="${additional_results_info_more}"></span> "<span
                                 th:text="${additional_results_info}" style="color: #ed1d43;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
                              word-wrap: break-word;
-">Adidas</span>"</span>
+">Adidas</span>"</span></span>
                     </div>
 
                 </div>

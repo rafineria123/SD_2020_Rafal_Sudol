@@ -26,7 +26,7 @@ public class Discount {
     private Long discount_id;
     @Column(length = 200)
     private String title;
-    @Column(length = 500)
+    @Column(length = 1500)
     private String content;
     @Column(length = 500)
     private String image_url;

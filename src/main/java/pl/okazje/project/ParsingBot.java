@@ -41,23 +41,63 @@ public class ParsingBot {
     @Autowired
     UserRepository userRepository;
 
-    @PostConstruct
+    public static int status = 0;
+    public static String info = "";
+    public static String good_scan = "";
+    public static String bad_scan = "";
+    public static String new_prom = "";
+
+//    @PostConstruct
     public void init() throws IOException {
+
+            fetchXkom();
+            //fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
+            //fetchAmazon("https://www.amazon.com/Best-Sellers-Grocery-Gourmet-Food/zgbs/grocery","Artykuły Spożywcze");
+            //fetchAmazon("https://www.amazon.com/Best-Sellers-Sports-Outdoors/zgbs/sporting-goods", "Sport i Turystyka");
+
+
+
+    }
+
+    private static String translate(String langFrom, String langTo, String text) throws IOException {
+        String urlStr = "https://script.google.com/macros/s/AKfycbxDUcLMCm5DQKS4dkzu-nDkleIqGHf9b5TYmUxD-91W3xYwXlA/exec" +
+                "?q=" + URLEncoder.encode(text, "UTF-8") +
+                "&target=" + langTo +
+                "&source=" + langFrom;
+        URL url = new URL(urlStr);
+        StringBuilder response = new StringBuilder();
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestProperty("User-Agent", "Mozilla/5.0");
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        return response.toString();
+    }
+
+    public void fetchXkom(){
+
+        status = 1;
         Thread t = new Thread(() -> {
+            info = "Wyniki skanowania sklepu X-kom: ";
+            int good_counter = 0;
+            int bad_counter = 0;
+            int new_prom_counter = 0;
+        try {
 
+            Document docfirst = null;
             try {
+                docfirst = Jsoup.connect("https://www.x-kom.pl/bestsellery").get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Element div = docfirst.getElementById("listing-container");
 
-                Document docfirst = null;
-                try {
-                    docfirst = Jsoup.connect("https://www.x-kom.pl/bestsellery").get();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Element div = docfirst.getElementById("listing-container");
-
-                Elements divsy = div.children();
-                for (Element e : divsy) {
-                    try{
+            Elements divsy = div.children();
+            for (Element e : divsy) {
+                try{
 
 
                     String link = "https:/www.x-kom.pl" + e.selectFirst("a[href]").attr("href");
@@ -146,82 +186,81 @@ public class ParsingBot {
 
                     String desc = divscnd.text();
 
+                    good_counter++;
 
-                    Discount discount = new Discount();
-                    discount.setImage_url(img);
-                    discount.setShop(shopRepository.findFirstByName("X-kom"));
-                    discount.setTag(tagRepository.findFirstByName("Elektronika"));
-                    discount.setUser(userRepository.findUserByLogin("xkom"));
-                    discount.setStatus(Discount.Status.ZATWIERDZONE);
-                    Date dt = new Date();
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(dt);
-                    c.add(Calendar.DATE, 2);
-                    dt = c.getTime();
-                    discount.setExpire_date(dt);
-                    discount.setCreationdate(new Date());
+
+
+
                     String upToNCharacters1 = title.substring(0, Math.min(title.length(), 80));
-                    discount.setTitle(upToNCharacters1);
-                    discount.setShipment_price(0.0);
-                    discount.setDiscount_link(link);
-                    String upToNCharacters = desc.substring(0, Math.min(desc.length(), 500));
-                    discount.setContent(upToNCharacters);
-                    price = price.replaceAll("[^\\d,.]", "");
+                    if(!discountRepository.findDiscountByTitleEquals(upToNCharacters1).isPresent()){
+
+                        new_prom_counter++;
+                        Discount discount = new Discount();
+                        discount.setImage_url(img);
+                        discount.setShop(shopRepository.findFirstByName("X-kom"));
+                        discount.setTag(tagRepository.findFirstByName("Elektronika"));
+                        discount.setUser(userRepository.findUserByLogin("xkom"));
+                        discount.setStatus(Discount.Status.ZATWIERDZONE);
+                        Date dt = new Date();
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(dt);
+                        c.add(Calendar.DATE, 2);
+                        dt = c.getTime();
+                        discount.setExpire_date(dt);
+                        discount.setCreationdate(new Date());
+                        discount.setTitle(upToNCharacters1);
+                        discount.setShipment_price(0.0);
+                        discount.setDiscount_link(link);
+                        String upToNCharacters = desc.substring(0, Math.min(desc.length(), 500));
+                        discount.setContent(upToNCharacters);
+                        price = price.replaceAll("[^\\d,.]", "");
                         price = price.replaceAll(",", ".");
 
-                    discount.setCurrent_price(Double.parseDouble(price));
-                    discount.setOld_price(discount.getCurrent_price() * 1.3);
+                        discount.setCurrent_price(Double.parseDouble(price));
+                        discount.setOld_price(discount.getCurrent_price() * 1.3);
 
-                    discountRepository.save(discount);
+                        discountRepository.save(discount);
+
+                    }else {
+
+                    }
+
 
 
                 }catch (Exception eb){
-                        eb.printStackTrace();
-                    }
+                    eb.printStackTrace();
+                    bad_counter++;
                 }
-
-
-                //System.out.println(translate("en", "pl", "Meet the all-new Echo Dot - Our most popular smart speaker with Alexa. The sleek, compact design delivers crisp vocals and balanced bass for full sound."));
-
-
-            }catch (Exception e){
-
-                System.out.println("Błąd przy parsowaniu jednego z produktow. Ten produkt zostanie pominięty.");
-
             }
-            //fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
-//            fetchAmazon("https://www.amazon.com/Best-Sellers-Grocery-Gourmet-Food/zgbs/grocery","Artykuły Spożywcze");
-//            fetchAmazon("https://www.amazon.com/Best-Sellers-Sports-Outdoors/zgbs/sporting-goods", "Sport i Turystyka");
 
 
+            //System.out.println(translate("en", "pl", "Meet the all-new Echo Dot - Our most popular smart speaker with Alexa. The sleek, compact design delivers crisp vocals and balanced bass for full sound."));
 
 
+        }catch (Exception e){
+
+            System.out.println("Błąd przy parsowaniu jednego z produktow. Ten produkt zostanie pominięty.");
+
+
+        }
+        status = 0;
+        good_scan="Przeskanowano "+good_counter+" promocji.";
+        bad_scan ="Błednie przeskanowane promocje: "+bad_counter+".";
+        new_prom ="Dodano "+new_prom_counter+" nowych promocji.";
         });
         t.start();
 
 
     }
 
-    private static String translate(String langFrom, String langTo, String text) throws IOException {
-        String urlStr = "https://script.google.com/macros/s/AKfycbxDUcLMCm5DQKS4dkzu-nDkleIqGHf9b5TYmUxD-91W3xYwXlA/exec" +
-                "?q=" + URLEncoder.encode(text, "UTF-8") +
-                "&target=" + langTo +
-                "&source=" + langFrom;
-        URL url = new URL(urlStr);
-        StringBuilder response = new StringBuilder();
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-        return response.toString();
-    }
+    public void fetchAmazon(String linktopage, String category){
 
-    private void fetchAmazon(String linktopage, String category){
-
+        status = 1;
+            Thread t = new Thread(() -> {
+                info = "Wyniki skanowania sklepu Amazon: ";
+                int good_counter = 0;
+                int bad_counter = 0;
+                int new_prom_counter = 0;
         try {
             Document docfirst = Jsoup.connect(linktopage).get();
             Element div = docfirst.getElementById("zg-ordered-list");
@@ -253,7 +292,9 @@ public class ParsingBot {
                     pricetofix = pricetofix.replaceAll(",", ".");
                     Double price = Double.parseDouble(pricetofix);
 
-                    Discount discount = new Discount();
+                    good_counter++;
+                    if (!discountRepository.findDiscountByTitleEquals(translate("en", "pl", title)).isPresent()){
+                        Discount discount = new Discount();
                     discount.setImage_url(linktoimg);
                     discount.setShop(shopRepository.findFirstByName("Amazon"));
                     discount.setTag(tagRepository.findFirstByName(category));
@@ -274,6 +315,8 @@ public class ParsingBot {
                     discount.setCurrent_price(price);
                     discount.setOld_price(discount.getCurrent_price() * 1.3);
                     discountRepository.save(discount);
+                    new_prom_counter++;
+                }
 
 
                     if (counter > 1) {
@@ -282,6 +325,7 @@ public class ParsingBot {
                     counter++;
                 } catch (Exception e) {
                     e.printStackTrace();
+                    bad_counter++;
                 }
 
 
@@ -291,6 +335,13 @@ public class ParsingBot {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        good_scan="Przeskanowano "+good_counter+" promocji.";
+        bad_scan ="Błednie przeskanowane promocje: "+bad_counter+".";
+        new_prom ="Dodano "+new_prom_counter+" nowych promocji.";
+        status = 0;
+            });
+        t.start();
+
 
     }
 }

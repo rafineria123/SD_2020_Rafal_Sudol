@@ -176,17 +176,22 @@
 <!--                    <span class="over_items fas fa-ban" style="padding-bottom: 5px"></span>-->
 
 <!--                </div>-->
-                <div class="col-2 d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
+                <div class="col-2 d-flex justify-content-end align-items-end" style="" >
 
-                    <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('OCZEKUJACE')}">
+                        <button type="button" onclick="share()" class="remove_button popup" style=""> <span class="popuptext" id="myPopup">
+                            Dodano do schowka!</span><span class="over_items far fa-share-square" style="padding-bottom: 5px"></span> </button>
+
+
+                    <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('OCZEKUJACE')}" sec:authorize="hasAuthority('ADMIN')">
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
-                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 20px"></span> </button>
+                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
                     </form>
 
-                    <form th:action="@{/removediscount}" method="post">
+                    <form th:action="@{/removediscount}" method="post" sec:authorize="hasAuthority('ADMIN')">
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
                         <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
                     </form>
+
 
 
 
@@ -473,6 +478,27 @@
     document.getElementById ("kategorie-button").addEventListener ("click", collapseSklepy, false);
     document.getElementById ("sklepy-button").addEventListener ("click", collapseKategorie, false);
     document.getElementById ("navbar-toggler-button").addEventListener ("click", collapseNavbar, false);
+
+    function share(){
+
+        const el = document.createElement('textarea');
+        el.value = "http://54.227.52.123/discount/"+"[[${discount.getDiscount_id()}]]";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+        setTimeout(closewindow, 3000);
+
+    }
+
+    function closewindow(){
+
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+
+    }
 
 
     async function collapseKategorie() {

@@ -11,10 +11,15 @@ import pl.okazje.project.entities.Information;
 import pl.okazje.project.entities.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface DiscountRepository extends CrudRepository<Discount, Long>, PagingAndSortingRepository<Discount, Long> {
+
+    @Query(value = "SELECT * from discount ORDER BY discount.creationdate DESC" ,
+            nativeQuery = true)
+    public List<Discount> sortDiscountByDate();
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
             " FROM rating GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id ORDER BY r.disc_count DESC " ,
@@ -222,6 +227,11 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
 
     public List<Discount> findDiscountsByStatusEquals(Discount.Status status);
 
+    @Query(value = "SELECT * FROM discount where discount_id in (Select discount_id from rating where user_id in(Select user_id from user where login = ?1))" ,
+            nativeQuery = true)
+    public List<Discount> DiscountsLikedByUser(String user);
+
+    public Optional<Discount> findDiscountByTitleEquals(String title);
 
 
 

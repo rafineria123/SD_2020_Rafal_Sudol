@@ -7,18 +7,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import pl.okazje.project.ParsingBot;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.SendMail;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -47,6 +47,8 @@ public class SettingsController {
     SendMail sendMail;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    ParsingBot parsingBot;
 
     @GetMapping("/settings")
     public ModelAndView settings() {
@@ -61,6 +63,7 @@ public class SettingsController {
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         modelAndView.addObject("user", uzytkownik);
+
         return modelAndView;
 
     }
@@ -133,6 +136,7 @@ public class SettingsController {
         modelAndView.addObject("quantity_of_pages", page.getPageCount());
         modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("number_of_page", 1);
+        modelAndView.addObject("next_and_previous", "/settings/admin/discounts/page/id");
         modelAndView.addObject("picked_sort", 3);
         List<String> listOfAdresses = new ArrayList<>();
         for (int i = 1; i <= page.getPageCount(); i++) {
@@ -458,5 +462,97 @@ public class SettingsController {
         return redirectView;
 
     }
+
+    @GetMapping("/settings/liked/page/{id}")
+    public ModelAndView liked(@PathVariable("id") String id){
+
+        ModelAndView modelAndView = new ModelAndView("user_profile_liked");
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        PagedListHolder page = new PagedListHolder(discountRepository.DiscountsLikedByUser(uzytkownik.getLogin()));
+        page.setPageSize(2); // number of items per page
+        page.setPage(Integer.parseInt(id)-1);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("user", uzytkownik);
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous", "/settings/liked/page/id");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/settings/liked/page/" + i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+
+    @GetMapping("/settings/admin/functions")
+    public ModelAndView functions() {
+
+        ModelAndView modelAndView = new ModelAndView("user_admin_profile_functions");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        modelAndView.addObject("user", uzytkownik);
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
+
+
+    }
+
+    @PostMapping("/settings/admin/xkom")
+    public @ResponseBody void xkom(){
+
+        parsingBot.fetchXkom();
+
+
+    }
+
+    @PostMapping("/settings/admin/amazon")
+    public @ResponseBody void amazon(){
+
+        parsingBot.fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
+
+
+    }
+
+    //[0] - status
+    //[1] - informacja o skanowaniu
+    //[2] - ilosc poprawnie przeskanowanych
+    //[3] - blednie przeskanowane promocje
+    //[4] - ilosc dodanych nowych promocji
+    @GetMapping("/settings/admin/status")
+    public @ResponseBody String[] statusXkom(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String array[] = new String[5];
+        if (ParsingBot.status == 1){
+
+            array[0] = "working";
+            return array;
+
+        }
+        if(ParsingBot.status == 0){
+
+            array[0] = "ok";
+            array[1] = ParsingBot.info;
+            array[2] = ParsingBot.good_scan;
+            array[3] = ParsingBot.bad_scan;
+            array[4] = ParsingBot.new_prom;
+            return array;
+
+        }
+
+
+        return array;
+
+    }
+
 
 }
