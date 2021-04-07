@@ -2,7 +2,6 @@ package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,7 +53,7 @@ public class SettingsController {
     public ModelAndView settings() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         if (uzytkownik.getInformation() == null) {
             uzytkownik.setInformation(new Information());
         }
@@ -75,7 +74,7 @@ public class SettingsController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenUserId(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
@@ -107,7 +106,7 @@ public class SettingsController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
         modelAndView.addObject("list_of_posts", postRepository.sortPostsByDateWithGivenUser(uzytkownik.getLogin()));
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -126,7 +125,7 @@ public class SettingsController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals(Discount.Status.OCZEKUJACE));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
@@ -153,7 +152,7 @@ public class SettingsController {
     @GetMapping("/settings/admin/discounts/page/{id}")
     public ModelAndView pageSettingsAdminDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals(Discount.Status.OCZEKUJACE));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
@@ -180,7 +179,7 @@ public class SettingsController {
     @GetMapping("/settings/discounts/page/{id}")
     public ModelAndView pageSettingsDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         PagedListHolder page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
@@ -210,7 +209,7 @@ public class SettingsController {
         List<String> listOfAdresses = new ArrayList<>();
         ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         PagedListHolder page = null;
         if (sort.equals("date")) {
             modelAndView.addObject("picked_sort", 3);
@@ -267,7 +266,7 @@ public class SettingsController {
     public ModelAndView profileMessages() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
 
         ModelAndView modelAndView = new ModelAndView("user_profile_messages");
@@ -284,13 +283,13 @@ public class SettingsController {
 
         RedirectView redirectView = new RedirectView("/settings/messages", true);
 
-        if (userRepository.findUserByLogin(login) == null) {
+        if (userRepository.findFirstByLogin(login) == null) {
             redir.addFlashAttribute("bad_status", "Użytkownik o takim loginie nie istnieje.");
             return redirectView;
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
         if (login.equals(uzytkownik.getLogin())) {
 
@@ -301,8 +300,8 @@ public class SettingsController {
 
         ArrayList<User> uzytkownicy = new ArrayList<>();
         uzytkownicy.add(uzytkownik);
-        uzytkownicy.add(userRepository.findUserByLogin(login));
-        Conversation conversation = conversationRepository.findConversationWhereUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id());
+        uzytkownicy.add(userRepository.findFirstByLogin(login));
+        Conversation conversation = conversationRepository.findByUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id());
 
         if (conversation != null) {
 
@@ -384,7 +383,7 @@ public class SettingsController {
     public RedirectView changeUserDetails(@ModelAttribute("name") String name, @ModelAttribute("surname") String surname, @ModelAttribute("email") String email, RedirectAttributes redir) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
         uzytkownik.setEmail(email);
         Information info = new Information();
@@ -413,7 +412,7 @@ public class SettingsController {
     public RedirectView changeDescription(@ModelAttribute("description") String description, RedirectAttributes redir) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
         Information info = new Information();
         if (uzytkownik.getInformation() == null) {
@@ -446,7 +445,7 @@ public class SettingsController {
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
         if (!passwordEncoder.matches(currentpassword, uzytkownik.getPassword())) {
 
@@ -470,7 +469,7 @@ public class SettingsController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         PagedListHolder page = new PagedListHolder(discountRepository.DiscountsLikedByUser(uzytkownik.getLogin()));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id)-1);
@@ -498,7 +497,7 @@ public class SettingsController {
 
         ModelAndView modelAndView = new ModelAndView("user_admin_profile_functions");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());

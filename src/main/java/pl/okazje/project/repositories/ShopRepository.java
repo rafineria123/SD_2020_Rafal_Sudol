@@ -7,6 +7,6 @@ import pl.okazje.project.entities.Shop;
 @Repository
 public interface ShopRepository extends CrudRepository<Shop, Long> {
 
-    public Shop findFirstByName(String name);
+    Shop findFirstByName(String name);
 
 }

@@ -1,40 +1,22 @@
 package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.*;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.events.OnRegistrationCompleteEvent;
 import pl.okazje.project.repositories.*;
-import pl.okazje.project.services.DiscountService;
 import pl.okazje.project.services.SendMail;
-import pl.okazje.project.services.UserService;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Controller
 public class LoginAndRegisterController {
@@ -119,7 +101,7 @@ public class LoginAndRegisterController {
 
         }
 
-        if (userRepository.findUserByLogin(login) != null) {
+        if (userRepository.findFirstByLogin(login) != null) {
 
             redir.addFlashAttribute("bad_status", "Ten login jest juz zajęty.");
             return redirectView;
@@ -164,7 +146,7 @@ public class LoginAndRegisterController {
 
 
 
-        Token verificationToken = tokenRepository.findByToken(token);
+        Token verificationToken = tokenRepository.findFirstByToken(token);
         if (verificationToken == null) {
 
             RedirectView redirectView = new RedirectView("/login",true);

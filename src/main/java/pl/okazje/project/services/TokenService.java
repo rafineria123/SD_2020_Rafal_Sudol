@@ -1,6 +1,5 @@
 package pl.okazje.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.Token;
 import pl.okazje.project.repositories.TokenRepository;
@@ -16,7 +15,7 @@ public class TokenService {
 
     public Token findByToken(String token){
 
-        return tokenRepository.findByToken(token);
+        return tokenRepository.findFirstByToken(token);
 
     }
 

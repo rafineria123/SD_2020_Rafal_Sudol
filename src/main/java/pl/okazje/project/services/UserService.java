@@ -1,7 +1,6 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,9 +11,6 @@ import pl.okazje.project.repositories.TokenRepository;
 import pl.okazje.project.repositories.UserRepository;
 
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -28,7 +24,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        final User optionalUser = userRepository.findUserByLogin(s);
+        final User optionalUser = userRepository.findFirstByLogin(s);
 
         if (optionalUser!=null) {
             return optionalUser;
@@ -40,12 +36,12 @@ public class UserService implements UserDetailsService {
 
 
     public User getUser(String verificationToken) {
-        User user = tokenRepository.findByToken(verificationToken).getUser();
+        User user = tokenRepository.findFirstByToken(verificationToken).getUser();
         return user;
     }
 
     public Token getVerificationToken(String token) {
-        return tokenRepository.findByToken(token);
+        return tokenRepository.findFirstByToken(token);
     }
 
 

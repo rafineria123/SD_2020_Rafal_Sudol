@@ -1,6 +1,5 @@
 package pl.okazje.project.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,6 +13,7 @@ import pl.okazje.project.entities.Discount;
 import pl.okazje.project.entities.Rating;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.*;
+import pl.okazje.project.services.CommentService;
 import pl.okazje.project.services.SendMail;
 
 import javax.mail.MessagingException;
@@ -29,20 +29,25 @@ import java.util.Date;
 @Controller
 public class DiscountController {
 
-    @Autowired
     DiscountRepository discountRepository;
-    @Autowired
     ShopRepository shopRepository;
-    @Autowired
     TagRepository tagRepository;
-    @Autowired
     UserRepository userRepository;
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
+    CommentService commentService;
     RatingRepository ratingRepository;
-    @Autowired
     SendMail sendMail;
+
+    public DiscountController(DiscountRepository discountRepository, ShopRepository shopRepository, TagRepository tagRepository,
+                              UserRepository userRepository, CommentService commentService, RatingRepository ratingRepository, SendMail sendMail) {
+        this.discountRepository = discountRepository;
+        this.shopRepository = shopRepository;
+        this.tagRepository = tagRepository;
+        this.userRepository = userRepository;
+        this.commentService = commentService;
+        this.ratingRepository = ratingRepository;
+        this.sendMail = sendMail;
+    }
+
 
 
     @GetMapping("/discount/{id}")
@@ -53,7 +58,7 @@ public class DiscountController {
             if (authentication.getAuthorities().stream()
                     .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
 
-                User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+                User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
                 if (uzytkownik1.hasDiscount(id) || uzytkownik1.getROLE().equals("ADMIN")) {
 
                     ModelAndView modelAndView = new ModelAndView("discount");
@@ -103,7 +108,7 @@ public class DiscountController {
         Discount discount = new Discount();
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+            User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
             if(content.isEmpty()||title.isEmpty()||url.isEmpty()){
                 throw new IllegalArgumentException();
             }
@@ -195,7 +200,7 @@ public class DiscountController {
     public String addrate(@ModelAttribute("discountidadd") String discountid, @ModelAttribute("redirect") String redirect) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
         Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
         for (Rating r : discount.getRatings()) {
@@ -222,7 +227,7 @@ public class DiscountController {
 
         Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         for (Rating r : discount.getRatings()) {
 
             if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {
@@ -240,13 +245,13 @@ public class DiscountController {
     @PostMapping("/addcomment")
     public String addcomment(@ModelAttribute("discountidaddcomment") String discountaddcomment, @ModelAttribute("comment") String comment) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
         Comment comment1 = new Comment();
         comment1.setDiscount(discountRepository.findById(Long.parseLong(discountaddcomment)).get());
         comment1.setUser(uzytkownik);
         comment1.setContent(comment);
         comment1.setCr_date(new Date());
-        commentRepository.save(comment1);
+        commentService.save(comment1);
 
         return "redirect:/discount/" + Long.parseLong(discountaddcomment);
     }
@@ -255,13 +260,13 @@ public class DiscountController {
     public String removecomment(@ModelAttribute("comment_id") String comment_id){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
-        Comment comment = commentRepository.findById(Long.parseLong(comment_id)).get();
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
+        Comment comment = commentService.findById(Long.parseLong(comment_id));
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
 
             comment.setStatus("Usuniete");
-            commentRepository.save(comment);
+            commentService.save(comment);
 
         }
 
@@ -274,7 +279,7 @@ public class DiscountController {
     public String acceptdiscount(@ModelAttribute("discount_id") String discount_id) throws MessagingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
@@ -294,7 +299,7 @@ public class DiscountController {
     public String removediscount(@ModelAttribute("discount_id") String discount_id){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
@@ -310,8 +315,8 @@ public class DiscountController {
     @PostMapping("/ratecomment")
     public String ratecomment(@ModelAttribute("commentid") String commentid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        Comment comment = commentRepository.findById((Long.parseLong(commentid))).get();
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        Comment comment = commentService.findById((Long.parseLong(commentid)));
         for (Rating r : comment.getRatings()) {
 
             if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {

@@ -53,7 +53,7 @@ public class MessagesController {
     public ModelAndView pageMessages(@PathVariable("id") String id) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
         if (!conversationRepository.findById(Long.parseLong(id)).isPresent()) {
 
@@ -94,7 +94,7 @@ public class MessagesController {
     public String sendMessage(@ModelAttribute("new_message_conv_id") String new_message_conv_id, @ModelAttribute("new_message") String new_message) throws MessagingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
 
         Message message = new Message();
@@ -138,10 +138,10 @@ public class MessagesController {
     String[][] conversation(HttpServletRequest request, HttpServletResponse response, @PathVariable String id) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
         User uzytkownik2 = conversationRepository.findById(Long.parseLong(id)).get().getOtherUser(uzytkownik1);
 
-        ArrayList<Message> list = conversationRepository.findConversationWhereUsers(uzytkownik1.getUser_id(), uzytkownik2.getUser_id()).getMessagesSorted();
+        ArrayList<Message> list = conversationRepository.findByUsers(uzytkownik1.getUser_id(), uzytkownik2.getUser_id()).getMessagesSorted();
         String array[][] = new String[list.size()][2];
 
         for (int i = 0; i < list.size(); i++) {
@@ -162,7 +162,7 @@ public class MessagesController {
     String[][] userConversations(HttpServletRequest request, HttpServletResponse response, @PathVariable String id) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
 
         ArrayList<Conversation> list = uzytkownik1.getConversationsSorted();
         String array[][] = new String[list.size()][6];
@@ -189,14 +189,14 @@ public class MessagesController {
     String sendNewMessage(HttpServletRequest request, HttpServletResponse response, @RequestParam("message") String message, @RequestParam("user") String user2) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
-        User uzytkownik2 = userRepository.findUserByLogin(user2);
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik2 = userRepository.findFirstByLogin(user2);
 
 
         Message m = new Message();
         m.setUser(uzytkownik1);
         m.setCr_date(new Date());
-        m.setConversation(conversationRepository.findConversationWhereUsers(uzytkownik1.getUser_id(),uzytkownik2.getUser_id()));
+        m.setConversation(conversationRepository.findByUsers(uzytkownik1.getUser_id(),uzytkownik2.getUser_id()));
         m.setContent(message);
         m.setStatus("nieodczytane");
         messageRepository.save(m);
