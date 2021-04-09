@@ -1,5 +1,6 @@
 package pl.okazje.project.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ public class ProfileController {
     private final BanService banService;
     private final SendMail sendMail;
 
+    @Autowired
     public ProfileController(DiscountRepository discountRepository, ShopRepository shopRepository, TagRepository tagRepository,
                              UserRepository userRepository, BanService banService, SendMail sendMail) {
         this.discountRepository = discountRepository;

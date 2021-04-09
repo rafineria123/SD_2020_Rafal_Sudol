@@ -13,233 +13,204 @@ import java.util.Optional;
 @Repository
 public interface DiscountRepository extends CrudRepository<Discount, Long>, PagingAndSortingRepository<Discount, Long> {
 
-    @Query(value = "SELECT * from discount ORDER BY discount.creationdate DESC" ,
+    @Query(value = "SELECT * from discount ORDER BY discount.creationdate DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByDate();
-
     List<Discount> findAllByOrderByCreationdateDesc();
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
-            " FROM rating GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id ORDER BY r.disc_count DESC " ,
+            " FROM rating GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id ORDER BY r.disc_count DESC ",
             nativeQuery = true)
-    List<Discount> sortDiscountByRating();
-    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
-            " FROM rating GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id where d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY r.disc_count DESC " ,
-            nativeQuery = true)
-    List<Discount> sortDiscountByRatingDay();
-    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
-            " FROM rating GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id where d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY r.disc_count DESC " ,
-            nativeQuery = true)
-    List<Discount> sortDiscountByRatingWeek();
-    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
-            " FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id ORDER BY  c.disc_count DESC " ,
-            nativeQuery = true)
-    List<Discount> sortDiscountByComments();
+    List<Discount> findAllByOrderByRatingDesc();
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
-            " FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY  c.disc_count DESC " ,
+            " FROM rating GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id where d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY r.disc_count DESC ",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsDay();
+    List<Discount> findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc();
+
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
-            " FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY  c.disc_count DESC " ,
+            " FROM rating GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id where d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY r.disc_count DESC ",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWeek();
+    List<Discount> findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc();
 
-    @Query(value = "SELECT * from discount where discount.tag_id in (select tag_id from tag where tag.name=?1) ORDER BY discount.creationdate DESC" ,
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id ORDER BY  c.disc_count DESC ",
             nativeQuery = true)
-    List<Discount> discountByTag(String tag);
-    // TODO: tag arg instead of string
-    List<Discount> findDiscountsByTagOrderByCreationdateDesc(Tag tag);
+    List<Discount> findAllByOrderByCommentDesc();
 
-    @Query(value = "SELECT * from discount where discount.shop_id in (select shop_id from shop where shop.name=?1) ORDER BY discount.creationdate DESC" ,
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY  c.disc_count DESC ",
             nativeQuery = true)
-    List<Discount> discountByShop(String shop);
-    // TODO: shop arg instead of string
-    List<Discount> findDiscountsByShopOrderByCreationdateDesc(Shop shop);
+    List<Discount> findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc();
+
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY  c.disc_count DESC ",
+            nativeQuery = true)
+    List<Discount> findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc();
+
+    @Query(value = "SELECT * from discount where discount.tag_id in (select tag_id from tag where tag.name=?1) ORDER BY discount.creationdate DESC",
+            nativeQuery = true)
+    List<Discount> findAllByTagOrderByCreationdateDesc(String tag);
+
+    @Query(value = "SELECT * from discount where discount.shop_id in (select shop_id from shop where shop.name=?1) ORDER BY discount.creationdate DESC",
+            nativeQuery = true)
+    List<Discount> findAllByShopOrderByCreationdateDesc(String shop);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM rating " +
             "GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id" +
-            " where d.tag_id in (select tag_id from tag where tag.name=?1) ORDER BY r.disc_count DESC" ,
+            " where d.tag_id in (select tag_id from tag where tag.name=?1) ORDER BY r.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenTag(String tag);
-
+    List<Discount> findAllByTagOrderByRatingDesc(String tag);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM rating " +
             "GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id" +
-            " where d.tag_id in (select tag_id from tag where tag.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY r.disc_count DESC" ,
+            " where d.tag_id in (select tag_id from tag where tag.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY r.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenTagDay(String tag);
+    List<Discount> findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String tag);
+
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM rating " +
             "GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id" +
-            " where d.tag_id in (select tag_id from tag where tag.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY r.disc_count DESC" ,
+            " where d.tag_id in (select tag_id from tag where tag.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY r.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenTagWeek(String tag);
+    List<Discount> findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String tag);
 
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
             " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.tag_id in (select tag_id from tag" +
-            " where tag.name=?1) ORDER BY c.disc_count DESC" ,
+            " where tag.name=?1) ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenTag(String tag);
+    List<Discount> findAllByTagOrderByCommentDesc(String tag);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
             " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.tag_id in (select tag_id from tag" +
-            " where tag.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY c.disc_count DESC" ,
+            " where tag.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenTagDay(String tag);
+    List<Discount> findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String tag);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
             " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.tag_id in (select tag_id from tag" +
-            " where tag.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY c.disc_count DESC" ,
+            " where tag.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenTagWeek(String tag);
+    List<Discount> findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String tag);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM rating " +
             "GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id" +
-            " where d.shop_id in (select shop_id from shop where shop.name=?1) ORDER BY r.disc_count DESC" ,
+            " where d.shop_id in (select shop_id from shop where shop.name=?1) ORDER BY r.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenShop(String shop);
+    List<Discount> findAllByShopOrderByRatingDesc(String shop);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM rating " +
             "GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id" +
-            " where d.shop_id in (select shop_id from shop where shop.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY r.disc_count DESC" ,
+            " where d.shop_id in (select shop_id from shop where shop.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY r.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenShopDay(String shop);
+    List<Discount> findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String shop);
+
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM rating " +
             "GROUP BY discount_id ) AS r ON d.discount_id = r.discount_id" +
-            " where d.shop_id in (select shop_id from shop where shop.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY r.disc_count DESC" ,
+            " where d.shop_id in (select shop_id from shop where shop.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY r.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenShopWeek(String shop);
-
+    List<Discount> findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String shop);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
             " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.shop_id in (select shop_id from shop" +
-            " where shop.name=?1) ORDER BY c.disc_count DESC" ,
+            " where shop.name=?1) ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenShop(String shop);
-
-
+    List<Discount> findAllByShopOrderByCommentDesc(String shop);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
             " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.shop_id in (select shop_id from shop" +
-            " where shop.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY c.disc_count DESC" ,
+            " where shop.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenShopDay(String shop);
-        @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
+    List<Discount> findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String shop);
+
+    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
             " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.shop_id in (select shop_id from shop" +
-            " where shop.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY c.disc_count DESC" ,
+            " where shop.name=?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY c.disc_count DESC",
             nativeQuery = true)
-        List<Discount> sortDiscountByCommentsWithGivenShopWeek(String shop);
-
-
-    @Query(value = "SELECT * from discount where discount.tag_id in (select tag_id from tag where tag.name=?1)" +
-            " ORDER BY discount.creationdate DESC" ,
-            nativeQuery = true)
-    List<Discount> sortDiscountByDateWithGivenTag(String tag);
-
-    @Query(value = "SELECT * from discount where discount.shop_id in (select shop_id from shop where shop.name=?1)" +
-            " ORDER BY discount.creationdate DESC" ,
-            nativeQuery = true)
-    List<Discount> sortDiscountByDateWithGivenShop(String shop);
-
+    List<Discount> findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String shop);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
             " AS disc_count FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
             " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
             " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
             " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
-            " from discount where discount.content LIKE ?1) ORDER BY d.creationdate DESC" ,
+            " from discount where discount.content LIKE ?1) ORDER BY d.creationdate DESC",
             nativeQuery = true)
-    List<Discount> discountBySearchInput(String search);
+    List<Discount> FindAllBySearchOrderByCreationdateDesc(String search);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
             " AS disc_count FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
             " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
             " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
             " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
-            " from discount where discount.content LIKE ?1) ORDER BY c.disc_count DESC" ,
+            " from discount where discount.content LIKE ?1) ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenSearchInput(String search);
-
+    List<Discount> FindAllBySearchOrderByCommentDesc(String search);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
             " AS disc_count FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
             " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
             " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
             " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
-            " from discount where discount.content LIKE ?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY c.disc_count DESC" ,
+            " from discount where discount.content LIKE ?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenSearchInputDay(String search);
+    List<Discount> FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String search);
+
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
             " AS disc_count FROM comment GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
             " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
             " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
             " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
-            " from discount where discount.content LIKE ?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY c.disc_count DESC" ,
+            " from discount where discount.content LIKE ?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenSearchInputWeek(String search);
+    List<Discount> FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String search);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
             " AS disc_count FROM rating GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
             " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
             " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
             " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
-            " from discount where discount.content LIKE ?1) ORDER BY c.disc_count DESC" ,
+            " from discount where discount.content LIKE ?1) ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenSearchInput(String search);
+    List<Discount> FindAllBySearchOrderByRatingDesc(String search);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
             " AS disc_count FROM rating GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
             " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
             " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
             " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
-            " from discount where discount.content LIKE ?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY c.disc_count DESC" ,
+            " from discount where discount.content LIKE ?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 1 DAY) AND NOW() ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenSearchInputDay(String search);
+    List<Discount> FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String search);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*)" +
             " AS disc_count FROM rating GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id" +
             " where d.shop_id in (select shop_id from shop where shop.name LIKE ?1) OR d.tag_id IN" +
             " (select tag_id from tag where tag.name LIKE ?1) OR d.discount_id IN (select discount_id" +
             " from discount where discount.title LIKE ?1) OR d.discount_id IN (select discount_id" +
-            " from discount where discount.content LIKE ?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY c.disc_count DESC" ,
+            " from discount where discount.content LIKE ?1) AND d.creationdate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenSearchInputWeek(String search);
+    List<Discount> FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String search);
 
-
-
-    @Query(value = "Select * from discount where user_id=?1 ORDER BY discount.creationdate DESC" ,
+    @Query(value = "Select * from discount where user_id=?1 ORDER BY discount.creationdate DESC",
             nativeQuery = true)
-    List<Discount> discountByUserId(Integer id);
-
-    // TODO: user arg instead of integer id
-    List<Discount> findDiscountsByUserOrderByCreationdateDesc(User user);
+    List<Discount> findAllByUseridOrderByCreationdateDesc(Integer id);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
-            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY d.creationdate DESC" ,
+            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByDateWithGivenUserId(Integer id);
-
-    @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM comment" +
-            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY c.disc_count DESC" ,
-            nativeQuery = true)
-    List<Discount> sortDiscountByCommentsWithGivenUserId(Integer id);
+    List<Discount> findAllByUseridOrderByCommentDesc(Integer id);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discount_id, COUNT(*) AS disc_count FROM rating" +
-            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY c.disc_count DESC" ,
+            " GROUP BY discount_id ) AS c ON d.discount_id = c.discount_id where d.user_id=?1 ORDER BY c.disc_count DESC",
             nativeQuery = true)
-    List<Discount> sortDiscountByRatingWithGivenUserId(Integer id);
+    List<Discount> findAllByUseridOrderByRatingDesc(Integer id);
 
-    List<Discount> findDiscountsByStatusEquals(Discount.Status status);
+    List<Discount> findAllByStatusEquals(Discount.Status status);
 
-    @Query(value = "SELECT * FROM discount where discount_id in (Select discount_id from rating where user_id in(Select user_id from user where login = ?1))" ,
+    @Query(value = "SELECT * FROM discount where discount_id in (Select discount_id from rating where user_id in(Select user_id from user where login = ?1))",
             nativeQuery = true)
-    List<Discount> DiscountsLikedByUser(String user);
+    List<Discount> findAllByUserAndLiked(String user);
 
-    Optional<Discount> findDiscountByTitleEquals(String title);
-
-
-
-
+    Optional<Discount> findFirstByTitleEquals(String title);
 
 }

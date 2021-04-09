@@ -1,5 +1,6 @@
 package pl.okazje.project.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -29,14 +30,15 @@ import java.util.Date;
 @Controller
 public class DiscountController {
 
-    DiscountRepository discountRepository;
-    ShopRepository shopRepository;
-    TagRepository tagRepository;
-    UserRepository userRepository;
-    CommentService commentService;
-    RatingRepository ratingRepository;
-    SendMail sendMail;
+    private final DiscountRepository discountRepository;
+    private final ShopRepository shopRepository;
+    private final TagRepository tagRepository;
+    private final UserRepository userRepository;
+    private final CommentService commentService;
+    private final RatingRepository ratingRepository;
+    private final SendMail sendMail;
 
+    @Autowired
     public DiscountController(DiscountRepository discountRepository, ShopRepository shopRepository, TagRepository tagRepository,
                               UserRepository userRepository, CommentService commentService, RatingRepository ratingRepository, SendMail sendMail) {
         this.discountRepository = discountRepository;
@@ -261,7 +263,7 @@ public class DiscountController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
-        Comment comment = commentService.findById(Long.parseLong(comment_id));
+        Comment comment = commentService.findById(Long.parseLong(comment_id)).get();
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
 
@@ -316,7 +318,7 @@ public class DiscountController {
     public String ratecomment(@ModelAttribute("commentid") String commentid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        Comment comment = commentService.findById((Long.parseLong(commentid)));
+        Comment comment = commentService.findById((Long.parseLong(commentid))).get();
         for (Rating r : comment.getRatings()) {
 
             if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {

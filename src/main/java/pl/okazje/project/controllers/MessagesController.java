@@ -10,6 +10,7 @@ import pl.okazje.project.entities.Conversation;
 import pl.okazje.project.entities.Message;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.*;
+import pl.okazje.project.services.ConversationService;
 import pl.okazje.project.services.SendMail;
 
 import javax.mail.MessagingException;
@@ -30,7 +31,7 @@ public class MessagesController {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ConversationRepository conversationRepository;
+    ConversationService conversationService;
     @Autowired
     MessageRepository messageRepository;
     @Autowired
@@ -55,7 +56,7 @@ public class MessagesController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
-        if (!conversationRepository.findById(Long.parseLong(id)).isPresent()) {
+        if (!conversationService.findById(Long.parseLong(id)).isPresent()) {
 
             ModelAndView modelAndView = new ModelAndView("error");
             return modelAndView;
@@ -63,9 +64,9 @@ public class MessagesController {
         }
 
 
-        if (conversationRepository.findById(Long.parseLong(id)).get().getUsers().contains(uzytkownik)) {
+        if (conversationService.findById(Long.parseLong(id)).get().getUsers().contains(uzytkownik)) {
 
-            Message newmessageobject = conversationRepository.findById(Long.parseLong(id)).get().getOtherUserNewMessage(uzytkownik);
+            Message newmessageobject = conversationService.findById(Long.parseLong(id)).get().getOtherUserNewMessage(uzytkownik);
             if (!newmessageobject.getContent().equals("")) {
                 newmessageobject.setStatus("odczytane");
                 messageRepository.save(newmessageobject);
@@ -76,7 +77,7 @@ public class MessagesController {
             modelAndView.addObject("list_of_tags", tagRepository.findAll());
             modelAndView.addObject("list_of_shops", shopRepository.findAll());
             modelAndView.addObject("list_of_conversations", uzytkownik.getConversationsSorted());
-            modelAndView.addObject("current_conversation", conversationRepository.findById(Long.parseLong(id)).get());
+            modelAndView.addObject("current_conversation", conversationService.findById(Long.parseLong(id)).get());
             modelAndView.addObject("user", uzytkownik);
             modelAndView.addObject("current_id", Integer.parseInt(id));
 
@@ -100,10 +101,10 @@ public class MessagesController {
         Message message = new Message();
         message.setStatus("nieodczytane");
         message.setContent(new_message);
-        message.setConversation(conversationRepository.findById(Long.parseLong(new_message_conv_id)).get());
+        message.setConversation(conversationService.findById(Long.parseLong(new_message_conv_id)).get());
         message.setCr_date(new Date());
         message.setUser(uzytkownik);
-        User otheruser = conversationRepository.findById(Long.parseLong(new_message_conv_id)).get().getOtherUser(uzytkownik);
+        User otheruser = conversationService.findById(Long.parseLong(new_message_conv_id)).get().getOtherUser(uzytkownik);
         ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(otheruser.getLogin()));
         if(!list.isEmpty()){
 
@@ -139,9 +140,9 @@ public class MessagesController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
-        User uzytkownik2 = conversationRepository.findById(Long.parseLong(id)).get().getOtherUser(uzytkownik1);
+        User uzytkownik2 = conversationService.findById(Long.parseLong(id)).get().getOtherUser(uzytkownik1);
 
-        ArrayList<Message> list = conversationRepository.findByUsers(uzytkownik1.getUser_id(), uzytkownik2.getUser_id()).getMessagesSorted();
+        ArrayList<Message> list = conversationService.findByUsers(uzytkownik1.getUser_id(), uzytkownik2.getUser_id()).get().getMessagesSorted();
         String array[][] = new String[list.size()][2];
 
         for (int i = 0; i < list.size(); i++) {
@@ -196,7 +197,7 @@ public class MessagesController {
         Message m = new Message();
         m.setUser(uzytkownik1);
         m.setCr_date(new Date());
-        m.setConversation(conversationRepository.findByUsers(uzytkownik1.getUser_id(),uzytkownik2.getUser_id()));
+        m.setConversation(conversationService.findByUsers(uzytkownik1.getUser_id(),uzytkownik2.getUser_id()).get());
         m.setContent(message);
         m.setStatus("nieodczytane");
         messageRepository.save(m);

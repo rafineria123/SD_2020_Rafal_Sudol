@@ -13,6 +13,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.ParsingBot;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.*;
+import pl.okazje.project.services.ConversationService;
 import pl.okazje.project.services.SendMail;
 
 import javax.mail.MessagingException;
@@ -37,7 +38,7 @@ public class SettingsController {
     @Autowired
     MessageRepository messageRepository;
     @Autowired
-    ConversationRepository conversationRepository;
+    ConversationService conversationService;
     @Autowired
     InformationRepository informationRepository;
     @Autowired
@@ -75,7 +76,7 @@ public class SettingsController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenUserId(uzytkownik.getUser_id()));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByUseridOrderByCreationdateDesc(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
         modelAndView.addObject("list_of_discounts", page.getPageList());
@@ -126,7 +127,7 @@ public class SettingsController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals(Discount.Status.OCZEKUJACE));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByStatusEquals(Discount.Status.OCZEKUJACE));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
         modelAndView.addObject("list_of_discounts", page.getPageList());
@@ -153,7 +154,7 @@ public class SettingsController {
     public ModelAndView pageSettingsAdminDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals(Discount.Status.OCZEKUJACE));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByStatusEquals(Discount.Status.OCZEKUJACE));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
         ModelAndView modelAndView = new ModelAndView("user_admin_profile_discounts");
@@ -180,7 +181,7 @@ public class SettingsController {
     public ModelAndView pageSettingsDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByUseridOrderByCreationdateDesc(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
         ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
@@ -214,7 +215,7 @@ public class SettingsController {
         if (sort.equals("date")) {
             modelAndView.addObject("picked_sort", 3);
             modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/date");
-            page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenUserId(uzytkownik.getUser_id()));
+            page = new PagedListHolder(discountRepository.findAllByUseridOrderByCreationdateDesc(uzytkownik.getUser_id()));
             page.setPageSize(2);
             for (int i = 1; i <= page.getPageCount(); i++) {
 
@@ -226,7 +227,7 @@ public class SettingsController {
         if (sort.equals("most-comments")) {
             modelAndView.addObject("picked_sort", 2);
             modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/most-comments");
-            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenUserId(uzytkownik.getUser_id()));
+            page = new PagedListHolder(discountRepository.findAllByUseridOrderByCommentDesc(uzytkownik.getUser_id()));
             page.setPageSize(2);
             for (int i = 1; i <= page.getPageCount(); i++) {
 
@@ -238,7 +239,7 @@ public class SettingsController {
         if (sort.equals("top-rated")) {
             modelAndView.addObject("picked_sort", 1);
             modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/top-rated");
-            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenUserId(uzytkownik.getUser_id()));
+            page = new PagedListHolder(discountRepository.findAllByUseridOrderByRatingDesc(uzytkownik.getUser_id()));
             page.setPageSize(2);
             for (int i = 1; i <= page.getPageCount(); i++) {
 
@@ -301,11 +302,10 @@ public class SettingsController {
         ArrayList<User> uzytkownicy = new ArrayList<>();
         uzytkownicy.add(uzytkownik);
         uzytkownicy.add(userRepository.findFirstByLogin(login));
-        Conversation conversation = conversationRepository.findByUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id());
+        Conversation conversation;
 
-        if (conversation != null) {
-
-
+        if (conversationService.findByUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id()).isPresent()) {
+            conversation = conversationService.findByUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id()).get();
             Message messageobject = new Message(message, new Date(), "nieodczytane", conversation, uzytkownik);
             messageRepository.save(messageobject);
             Message newmessageobject = conversation.getOtherUserNewMessage(uzytkownik);
@@ -345,7 +345,7 @@ public class SettingsController {
         list_of_users.add(uzytkownicy.get(0));
         list_of_users.add(uzytkownicy.get(1));
         ArrayList<Message> list_of_messages = new ArrayList<>();
-        conversationRepository.save(conversation);
+        conversationService.save(conversation);
         Conversation finalConversation = conversation;
         list_of_users.forEach(o -> o.getConversations().add(finalConversation));
         ArrayList<User> lista_uzytkownikow = new ArrayList<>(list_of_users);
@@ -470,7 +470,7 @@ public class SettingsController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.DiscountsLikedByUser(uzytkownik.getLogin()));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByUserAndLiked(uzytkownik.getLogin()));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id)-1);
         modelAndView.addObject("list_of_discounts", page.getPageList());

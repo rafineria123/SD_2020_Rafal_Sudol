@@ -2,9 +2,6 @@ package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.Discount;
-import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.DiscountRepository;
 import pl.okazje.project.repositories.ShopRepository;
 import pl.okazje.project.repositories.TagRepository;
@@ -26,7 +22,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -43,11 +38,11 @@ public class HomeController {
     @GetMapping("/")
     public ModelAndView homePage(HttpServletRequest request) throws MessagingException {
 
-        PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByDate());
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByOrderByCreationdateDesc());
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
 
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByDate());
+                ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByCreationdateDesc());
                 Iterator<Discount> i = list.iterator();
                 while (i.hasNext()) {
                     Discount d = i.next();
@@ -88,11 +83,11 @@ public class HomeController {
 
         ModelAndView modelAndView = new ModelAndView("home");
         if (sort.equals("date")) {
-            PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByDate());
+            PagedListHolder page = new PagedListHolder(discountRepository.findAllByOrderByCreationdateDesc());
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByDate());
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByCreationdateDesc());
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -122,11 +117,11 @@ public class HomeController {
 
         }
         if (sort.equals("most-comments")) {
-            PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByCommentsDay());
+            PagedListHolder page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc());
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsDay());
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc());
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -157,11 +152,11 @@ public class HomeController {
             modelAndView.addObject("next_and_previous", "/page/id/sort/most-comments");
         }
         if (sort.equals("top-rated")) {
-            PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByRatingDay());
+            PagedListHolder page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc());
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingDay());
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc());
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -208,11 +203,11 @@ public class HomeController {
         if (sort.equals("most-comments")) {
             modelAndView.addObject("picked_sort", 2);
             if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByComments());
+                page = new PagedListHolder(discountRepository.findAllByOrderByCommentDesc());
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByComments());
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByCommentDesc());
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -229,11 +224,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 3);
             }
             if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWeek());
+                page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc());
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWeek());
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc());
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -250,11 +245,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 2);
             }
             if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsDay());
+                page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc());
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsDay());
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc());
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -274,11 +269,11 @@ public class HomeController {
         if (sort.equals("top-rated")) {
             modelAndView.addObject("picked_sort", 1);
             if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRating());
+                page = new PagedListHolder(discountRepository.findAllByOrderByRatingDesc());
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRating());
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByRatingDesc());
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -295,11 +290,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 3);
             }
             if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWeek());
+                page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc());
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWeek());
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc());
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -316,11 +311,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 2);
             }
             if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingDay());
+                page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc());
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingDay());
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc());
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -357,11 +352,11 @@ public class HomeController {
     @GetMapping("/page/{id}")
     public ModelAndView homePage(@PathVariable("id") String id, HttpServletRequest request) {
 
-        PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByDate());
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByOrderByCreationdateDesc());
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
 
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByDate());
+                ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByCreationdateDesc());
                 Iterator<Discount> i = list.iterator();
                 while (i.hasNext()) {
                     Discount d = i.next();
@@ -401,11 +396,11 @@ public class HomeController {
 
     @GetMapping("/categories/{category}")
     public ModelAndView category(@PathVariable("category") String category, HttpServletRequest request) {
-        PagedListHolder page = new PagedListHolder(discountRepository.discountByTag(category));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByTagOrderByCreationdateDesc(category));
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
 
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.discountByTag(category));
+                ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagOrderByCreationdateDesc(category));
                 Iterator<Discount> i = list.iterator();
                 while (i.hasNext()) {
                     Discount d = i.next();
@@ -446,11 +441,11 @@ public class HomeController {
 
     @GetMapping("/categories/{category}/page/{id}")
     public ModelAndView categoryPage(@PathVariable("category") String category, @PathVariable("id") String id, HttpServletRequest request) {
-        PagedListHolder page = new PagedListHolder(discountRepository.discountByTag(category));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByTagOrderByCreationdateDesc(category));
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
 
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.discountByTag(category));
+                ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagOrderByCreationdateDesc(category));
                 Iterator<Discount> i = list.iterator();
                 while (i.hasNext()) {
                     Discount d = i.next();
@@ -498,11 +493,11 @@ public class HomeController {
         if (sort.equals("most-comments")) {
             modelAndView.addObject("picked_sort", 2);
             if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenTag(category));
+                page = new PagedListHolder(discountRepository.findAllByTagOrderByCommentDesc(category));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenTag(category));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagOrderByCommentDesc(category));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -520,11 +515,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 3);
             }
             if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenTagWeek(category));
+                page = new PagedListHolder(discountRepository.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(category));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenTagWeek(category));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(category));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -541,11 +536,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 2);
             }
             if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenTagDay(category));
+                page = new PagedListHolder(discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(category));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenTagDay(category));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(category));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -566,11 +561,11 @@ public class HomeController {
         if (sort.equals("top-rated")) {
             modelAndView.addObject("picked_sort", 1);
             if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenTag(category));
+                page = new PagedListHolder(discountRepository.findAllByTagOrderByRatingDesc(category));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenTag(category));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagOrderByRatingDesc(category));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -587,11 +582,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 3);
             }
             if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenTagWeek(category));
+                page = new PagedListHolder(discountRepository.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(category));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenTagWeek(category));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(category));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -608,11 +603,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 2);
             }
             if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenTagDay(category));
+                page = new PagedListHolder(discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(category));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenTagDay(category));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(category));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -658,11 +653,11 @@ public class HomeController {
         if (sort.equals("date")) {
             modelAndView.addObject("picked_sort", 3);
             modelAndView.addObject("next_and_previous", "/categories/" + category + "/page/id/sort/date");
-            page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenTag(category));
+            page = new PagedListHolder(discountRepository.findAllByTagOrderByCreationdateDesc(category));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByDateWithGivenTag(category));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagOrderByCreationdateDesc(category));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -689,11 +684,11 @@ public class HomeController {
             modelAndView.addObject("next_and_previous", "/categories/" + category + "/page/id/sort/most-comments");
             modelAndView.addObject("time_buttons_prefix", "/categories/" + category + "/page/1/sort/most-comments/time/");
             modelAndView.addObject("picked_time", 1);
-            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenTagDay(category));
+            page = new PagedListHolder(discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(category));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenTagDay(category));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(category));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -720,11 +715,11 @@ public class HomeController {
             modelAndView.addObject("next_and_previous", "/categories/" + category + "/page/id/sort/top-rated");
             modelAndView.addObject("time_buttons_prefix", "/categories/" + category + "/page/1/sort/top-rated/time/");
             modelAndView.addObject("picked_time", 1);
-            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenTagDay(category));
+            page = new PagedListHolder(discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(category));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenTagDay(category));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(category));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -764,11 +759,11 @@ public class HomeController {
 
     @GetMapping("/shops/{shop}")
     public ModelAndView shop(@PathVariable("shop") String shop, HttpServletRequest request) {
-        PagedListHolder page = new PagedListHolder(discountRepository.discountByShop(shop));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByShopOrderByCreationdateDesc(shop));
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
 
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.discountByShop(shop));
+                ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopOrderByCreationdateDesc(shop));
                 Iterator<Discount> i = list.iterator();
                 while (i.hasNext()) {
                     Discount d = i.next();
@@ -808,11 +803,11 @@ public class HomeController {
 
     @GetMapping("/shops/{shop}/page/{id}")
     public ModelAndView shopPage(@PathVariable("shop") String shop, @PathVariable("id") String id, HttpServletRequest request) {
-        PagedListHolder page = new PagedListHolder(discountRepository.discountByShop(shop));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByShopOrderByCreationdateDesc(shop));
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
 
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.discountByShop(shop));
+                ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopOrderByCreationdateDesc(shop));
                 Iterator<Discount> i = list.iterator();
                 while (i.hasNext()) {
                     Discount d = i.next();
@@ -858,11 +853,11 @@ public class HomeController {
         if (sort.equals("date")) {
             modelAndView.addObject("picked_sort", 3);
             modelAndView.addObject("next_and_previous", "/shops/" + shop + "/page/id/sort/date");
-            page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenShop(shop));
+            page = new PagedListHolder(discountRepository.findAllByShopOrderByCreationdateDesc(shop));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByDateWithGivenShop(shop));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopOrderByCreationdateDesc(shop));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -889,11 +884,11 @@ public class HomeController {
             modelAndView.addObject("next_and_previous", "/shops/" + shop + "/page/id/sort/most-comments");
             modelAndView.addObject("time_buttons_prefix", "/shops/" + shop + "/page/1/sort/most-comments/time/");
             modelAndView.addObject("picked_time", 1);
-            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenShopDay(shop));
+            page = new PagedListHolder(discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(shop));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenShopDay(shop));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(shop));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -920,11 +915,11 @@ public class HomeController {
             modelAndView.addObject("next_and_previous", "/shops/" + shop + "/page/id/sort/top-rated");
             modelAndView.addObject("time_buttons_prefix", "/shops/" + shop + "/page/1/sort/top-rated/time/");
             modelAndView.addObject("picked_time", 1);
-            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenShopDay(shop));
+            page = new PagedListHolder(discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(shop));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenShopDay(shop));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(shop));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -973,11 +968,11 @@ public class HomeController {
             modelAndView.addObject("picked_sort", 2);
 
             if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenShop(shop));
+                page = new PagedListHolder(discountRepository.findAllByShopOrderByCommentDesc(shop));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenShop(shop));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopOrderByCommentDesc(shop));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -994,11 +989,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 3);
             }
             if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenShopWeek(shop));
+                page = new PagedListHolder(discountRepository.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(shop));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenShopWeek(shop));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(shop));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1015,11 +1010,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 2);
             }
             if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenShopDay(shop));
+                page = new PagedListHolder(discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(shop));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenShopDay(shop));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(shop));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1041,11 +1036,11 @@ public class HomeController {
         if (sort.equals("top-rated")) {
             modelAndView.addObject("picked_sort", 1);
             if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenShop(shop));
+                page = new PagedListHolder(discountRepository.findAllByShopOrderByRatingDesc(shop));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenShop(shop));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopOrderByRatingDesc(shop));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1062,11 +1057,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 3);
             }
             if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenShopWeek(shop));
+                page = new PagedListHolder(discountRepository.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(shop));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenShopWeek(shop));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(shop));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1083,11 +1078,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 2);
             }
             if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenShopDay(shop));
+                page = new PagedListHolder(discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(shop));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenShopDay(shop));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(shop));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1137,11 +1132,11 @@ public class HomeController {
     public ModelAndView search(@PathVariable("search") String search, HttpServletRequest request) {
 
 
-        PagedListHolder page = new PagedListHolder(discountRepository.discountBySearchInput("%" + search + "%"));
+        PagedListHolder page = new PagedListHolder(discountRepository.FindAllBySearchOrderByCreationdateDesc("%" + search + "%"));
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
 
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.discountBySearchInput("%" + search + "%"));
+                ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchOrderByCreationdateDesc("%" + search + "%"));
                 Iterator<Discount> i = list.iterator();
                 while (i.hasNext()) {
                     Discount d = i.next();
@@ -1181,11 +1176,11 @@ public class HomeController {
 
     @GetMapping("/search/{search}/page/{id}")
     public ModelAndView searchPage(@PathVariable("search") String search, @PathVariable("id") String id, HttpServletRequest request) {
-        PagedListHolder page = new PagedListHolder(discountRepository.discountBySearchInput("%" + search + "%"));
+        PagedListHolder page = new PagedListHolder(discountRepository.FindAllBySearchOrderByCreationdateDesc("%" + search + "%"));
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
 
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.discountBySearchInput("%" + search + "%"));
+                ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchOrderByCreationdateDesc("%" + search + "%"));
                 Iterator<Discount> i = list.iterator();
                 while (i.hasNext()) {
                     Discount d = i.next();
@@ -1230,11 +1225,11 @@ public class HomeController {
         if (sort.equals("date")) {
             modelAndView.addObject("picked_sort", 3);
             modelAndView.addObject("next_and_previous", "/search/" + search + "/page/id/sort/date");
-            page = new PagedListHolder(discountRepository.discountBySearchInput("%" + search + "%"));
+            page = new PagedListHolder(discountRepository.FindAllBySearchOrderByCreationdateDesc("%" + search + "%"));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.discountBySearchInput("%" + search + "%"));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchOrderByCreationdateDesc("%" + search + "%"));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -1261,11 +1256,11 @@ public class HomeController {
             modelAndView.addObject("next_and_previous", "/search/" + search + "/page/id/sort/most-comments");
             modelAndView.addObject("time_buttons_prefix", "/search/" + search + "/page/1/sort/most-comments/time/");
             modelAndView.addObject("picked_time", 1);
-            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenSearchInputDay("%" + search + "%"));
+            page = new PagedListHolder(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc("%" + search + "%"));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenSearchInputDay("%" + search + "%"));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc("%" + search + "%"));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -1292,11 +1287,11 @@ public class HomeController {
             modelAndView.addObject("next_and_previous", "/search/" + search + "/page/id/sort/top-rated");
             modelAndView.addObject("time_buttons_prefix", "/search/" + search + "/page/1/sort/top-rated/time/");
             modelAndView.addObject("picked_time", 1);
-            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenSearchInputDay("%" + search + "%"));
+            page = new PagedListHolder(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc("%" + search + "%"));
             if(request.getSession().getAttribute("filter")!=null){
                 if(request.getSession().getAttribute("filter").equals("true")){
 
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenSearchInputDay("%" + search + "%"));
+                    ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc("%" + search + "%"));
                     Iterator<Discount> i = list.iterator();
                     while (i.hasNext()) {
                         Discount d = i.next();
@@ -1342,11 +1337,11 @@ public class HomeController {
         if (sort.equals("most-comments")) {
             modelAndView.addObject("picked_sort", 2);
             if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenSearchInput("%" + search + "%"));
+                page = new PagedListHolder(discountRepository.FindAllBySearchOrderByCommentDesc("%" + search + "%"));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenSearchInput("%" + search + "%"));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchOrderByCommentDesc("%" + search + "%"));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1363,11 +1358,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 3);
             }
             if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenSearchInputWeek("%" + search + "%"));
+                page = new PagedListHolder(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc("%" + search + "%"));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenSearchInputWeek("%" + search + "%"));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc("%" + search + "%"));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1384,11 +1379,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 2);
             }
             if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenSearchInputDay("%" + search + "%"));
+                page = new PagedListHolder(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc("%" + search + "%"));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByCommentsWithGivenSearchInputDay("%" + search + "%"));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc("%" + search + "%"));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1411,11 +1406,11 @@ public class HomeController {
         if (sort.equals("top-rated")) {
             modelAndView.addObject("picked_sort", 1);
             if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenSearchInput("%" + search + "%"));
+                page = new PagedListHolder(discountRepository.FindAllBySearchOrderByRatingDesc("%" + search + "%"));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenSearchInput("%" + search + "%"));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchOrderByRatingDesc("%" + search + "%"));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1432,11 +1427,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 3);
             }
             if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenSearchInputWeek("%" + search + "%"));
+                page = new PagedListHolder(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc("%" + search + "%"));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenSearchInputWeek("%" + search + "%"));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc("%" + search + "%"));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();
@@ -1453,11 +1448,11 @@ public class HomeController {
                 modelAndView.addObject("picked_time", 2);
             }
             if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenSearchInputDay("%" + search + "%"));
+                page = new PagedListHolder(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc("%" + search + "%"));
                 if(request.getSession().getAttribute("filter")!=null){
                     if(request.getSession().getAttribute("filter").equals("true")){
 
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.sortDiscountByRatingWithGivenSearchInputDay("%" + search + "%"));
+                        ArrayList<Discount> list = new ArrayList<>(discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc("%" + search + "%"));
                         Iterator<Discount> i = list.iterator();
                         while (i.hasNext()) {
                             Discount d = i.next();

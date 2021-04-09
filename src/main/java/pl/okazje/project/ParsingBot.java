@@ -186,7 +186,7 @@ public class ParsingBot {
 
 
                     String upToNCharacters1 = title.substring(0, Math.min(title.length(), 80));
-                    if(!discountRepository.findDiscountByTitleEquals(upToNCharacters1).isPresent()){
+                    if(!discountRepository.findFirstByTitleEquals(upToNCharacters1).isPresent()){
 
                         new_prom_counter++;
                         Discount discount = new Discount();
@@ -287,7 +287,7 @@ public class ParsingBot {
                     Double price = Double.parseDouble(pricetofix);
 
                     good_counter++;
-                    if (!discountRepository.findDiscountByTitleEquals(translate("en", "pl", title)).isPresent()){
+                    if (!discountRepository.findFirstByTitleEquals(translate("en", "pl", title)).isPresent()){
                         Discount discount = new Discount();
                     discount.setImage_url(linktoimg);
                     discount.setShop(shopRepository.findFirstByName("Amazon"));

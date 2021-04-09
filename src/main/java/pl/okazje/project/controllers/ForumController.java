@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.Discount;
 import pl.okazje.project.entities.Post;
-import pl.okazje.project.repositories.DiscountRepository;
 import pl.okazje.project.repositories.PostRepository;
 import pl.okazje.project.repositories.ShopRepository;
 import pl.okazje.project.repositories.TagRepository;
@@ -32,8 +31,6 @@ public class ForumController {
     ShopRepository shopRepository;
     @Autowired
     TagRepository tagRepository;
-    @Autowired
-    DiscountRepository discountRepository;
     @Autowired
     PostRepository postRepository;
 

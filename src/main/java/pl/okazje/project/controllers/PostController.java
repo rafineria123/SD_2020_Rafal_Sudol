@@ -18,13 +18,14 @@ import java.util.Date;
 @RequestMapping("/post")
 public class PostController {
 
-    TagRepository tagRepository;
-    ShopRepository shopRepository;
-    PostRepository postRepository;
-    UserRepository userRepository;
-    CommentService commentService;
-    RatingRepository ratingRepository;
+    private final TagRepository tagRepository;
+    private final ShopRepository shopRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final CommentService commentService;
+    private final RatingRepository ratingRepository;
 
+    @Autowired
     public PostController(TagRepository tagRepository, ShopRepository shopRepository, PostRepository postRepository,
                           UserRepository userRepository, CommentService commentService, RatingRepository ratingRepository) {
         this.tagRepository = tagRepository;
@@ -96,7 +97,7 @@ public class PostController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
-        Comment comment = commentService.findById(Long.parseLong(comment_id));
+        Comment comment = commentService.findById(Long.parseLong(comment_id)).get();
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
 
@@ -114,7 +115,7 @@ public class PostController {
     public String ratecomment(@ModelAttribute("commentid") String commentid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        Comment comment = commentService.findById((Long.parseLong(commentid)));
+        Comment comment = commentService.findById((Long.parseLong(commentid))).get();
         for (Rating r : comment.getRatings()) {
 
             if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {
