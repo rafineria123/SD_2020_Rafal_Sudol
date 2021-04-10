@@ -194,7 +194,7 @@ public class ParsingBot {
                         discount.setShop(shopRepository.findFirstByName("X-kom"));
                         discount.setTag(tagRepository.findFirstByName("Elektronika"));
                         discount.setUser(userRepository.findFirstByLogin("xkom"));
-                        discount.setStatus(Discount.Status.ZATWIERDZONE);
+                        discount.setStatus(Discount.Status.ACCEPTED);
                         Date dt = new Date();
                         Calendar c = Calendar.getInstance();
                         c.setTime(dt);
@@ -293,7 +293,7 @@ public class ParsingBot {
                     discount.setShop(shopRepository.findFirstByName("Amazon"));
                     discount.setTag(tagRepository.findFirstByName(category));
                     discount.setUser(userRepository.findFirstByLogin("amazon"));
-                    discount.setStatus(Discount.Status.ZATWIERDZONE);
+                    discount.setStatus(Discount.Status.ACCEPTED);
                     Date dt = new Date();
                     Calendar c = Calendar.getInstance();
                     c.setTime(dt);

@@ -4,18 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class Message {
+    public enum Status {
+        SEEN,
+        NEW
+    };
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer message_id;
+    @Column(length = 300)
     private String content = "";
     private Date cr_date;
-    private String status = "nieodczytane";
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.NEW;
 
     @ManyToOne
     @JoinColumn(name="conversation_id", nullable=false)
@@ -30,7 +34,7 @@ public class Message {
     public Message() {
     }
 
-    public Message(String content, Date cr_date, String status, Conversation conversation, User user) {
+    public Message(String content, Date cr_date, Status status, Conversation conversation, User user) {
 
         this.content = content;
         this.cr_date = cr_date;
@@ -64,11 +68,11 @@ public class Message {
         this.cr_date = cr_date;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

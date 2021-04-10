@@ -109,7 +109,7 @@ public class SettingsController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
 
-        modelAndView.addObject("list_of_posts", postRepository.sortPostsByDateWithGivenUser(uzytkownik.getLogin()));
+        modelAndView.addObject("list_of_posts", postRepository.FindAllByUserOrderByCreationdateDesc(uzytkownik.getLogin()));
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
         modelAndView.addObject("user", uzytkownik);
@@ -127,7 +127,7 @@ public class SettingsController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.findAllByStatusEquals(Discount.Status.OCZEKUJACE));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByStatusEquals(Discount.Status.AWAITING));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
         modelAndView.addObject("list_of_discounts", page.getPageList());
@@ -154,7 +154,7 @@ public class SettingsController {
     public ModelAndView pageSettingsAdminDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.findAllByStatusEquals(Discount.Status.OCZEKUJACE));
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByStatusEquals(Discount.Status.AWAITING));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
         ModelAndView modelAndView = new ModelAndView("user_admin_profile_discounts");
@@ -306,15 +306,15 @@ public class SettingsController {
 
         if (conversationService.findByUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id()).isPresent()) {
             conversation = conversationService.findByUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id()).get();
-            Message messageobject = new Message(message, new Date(), "nieodczytane", conversation, uzytkownik);
+            Message messageobject = new Message(message, new Date(), Message.Status.NEW, conversation, uzytkownik);
             messageRepository.save(messageobject);
             Message newmessageobject = conversation.getOtherUserNewMessage(uzytkownik);
             if (!newmessageobject.getContent().equals("")) {
-                newmessageobject.setStatus("odczytane");
+                newmessageobject.setStatus(Message.Status.SEEN);
                 messageRepository.save(newmessageobject);
             }
 
-            ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(uzytkownicy.get(1).getLogin()));
+            ArrayList<String> list =new ArrayList<>(userRepository.findAllExpiry_timeByUsername(uzytkownicy.get(1).getLogin()));
             if(!list.isEmpty()){
 
                 for (String s:list) {
@@ -350,9 +350,9 @@ public class SettingsController {
         list_of_users.forEach(o -> o.getConversations().add(finalConversation));
         ArrayList<User> lista_uzytkownikow = new ArrayList<>(list_of_users);
         lista_uzytkownikow.forEach(o -> userRepository.save(o));
-        Message m = new Message(message, new Date(), "nieodczytane", conversation, uzytkownik);
+        Message m = new Message(message, new Date(), Message.Status.NEW, conversation, uzytkownik);
         messageRepository.save(m);
-        ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(uzytkownicy.get(1).getLogin()));
+        ArrayList<String> list =new ArrayList<>(userRepository.findAllExpiry_timeByUsername(uzytkownicy.get(1).getLogin()));
         if(!list.isEmpty()){
 
             for (String s:list) {

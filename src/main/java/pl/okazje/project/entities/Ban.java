@@ -1,5 +1,7 @@
 package pl.okazje.project.entities;
 
+import pl.okazje.project.exceptions.DataTooLongException;
+
 import javax.persistence.*;
 
 
@@ -8,37 +10,30 @@ public class Ban {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ban_id;
+    private Long ban_id;
+    @Column(length = 300)
     private String reason = "Powód nie podany.";
-    private String duration = "to-do";
     @OneToOne(mappedBy = "ban")
     private User user;
 
     public Ban() {
     }
 
-    public Integer getBan_id() {
+    public Long getBan_id() {
         return ban_id;
     }
 
-    public void setBan_id(Integer ban_id) {
+    public void setBan_id(Long ban_id) {
         this.ban_id = ban_id;
     }
 
-    public String getReason() {
-        return reason;
-    }
+    public String getReason() { return reason; }
 
     public void setReason(String reason) {
+        if(reason.length()>300){
+            throw new DataTooLongException(reason.substring(0, Math.min(reason.length(), 50))+"...");
+        }
         this.reason = reason;
-    }
-
-    public String getDuration() {
-        return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
     }
 
     public User getUser() {

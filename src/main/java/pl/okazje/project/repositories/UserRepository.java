@@ -15,18 +15,19 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     User findFirstByLogin(String login);
 
-
-    User findFirstByUser_id(int id);
+    @Query(value = "Select * from User WHERE user_id=?1 LIMIT 1" ,
+            nativeQuery = true)
+    User findFirstByUser_idEquals(int id);
 
 
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM spring_session WHERE principal_name=?1" ,
             nativeQuery = true)
-    void banUser(String name);
+    void deleteSessionWhereUsernameEquals(String name);
 
     @Query(value = "Select EXPIRY_TIME FROM spring_session WHERE principal_name=?1" ,
             nativeQuery = true)
-    List<String> getUserSession(String name);
+    List<String> findAllExpiry_timeByUsername(String name);
 
 }

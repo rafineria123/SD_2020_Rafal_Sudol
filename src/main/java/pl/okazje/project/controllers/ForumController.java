@@ -1,18 +1,11 @@
 package pl.okazje.project.controllers;
 
-import antlr.ASTNULLType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.okazje.project.entities.Discount;
-import pl.okazje.project.entities.Post;
 import pl.okazje.project.repositories.PostRepository;
 import pl.okazje.project.repositories.ShopRepository;
 import pl.okazje.project.repositories.TagRepository;
@@ -44,7 +37,7 @@ public class ForumController {
         modelAndView.addObject("picked_sort", 3);
         modelAndView.addObject("sort_buttons_prefix", "/forum/page/1/sort/");
 
-        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatus("ZATWIERDZONE"));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusOrderByCreationdateDesc("ZATWIERDZONE"));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(0);
         modelAndView.addObject("list_of_posts", page.getPageList());
@@ -72,7 +65,7 @@ public class ForumController {
         modelAndView.addObject("picked_sort", 3);
         modelAndView.addObject("sort_buttons_prefix", "/forum/page/1/sort/");
 
-        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatus("ZATWIERDZONE"));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusOrderByCreationdateDesc("ZATWIERDZONE"));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
         modelAndView.addObject("list_of_posts", page.getPageList());
@@ -99,13 +92,13 @@ public class ForumController {
         if(sort.equals("most-comments")){
 
             modelAndView.addObject("picked_sort", 2);
-            page = new PagedListHolder(postRepository.sortPostsByComments());
+            page = new PagedListHolder(postRepository.findAllByOrderByPostDesc());
 
         }
         if(sort.equals("date")){
 
             modelAndView.addObject("picked_sort", 3);
-            page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatus("ZATWIERDZONE"));
+            page = new PagedListHolder(postRepository.findAllByStatusOrderByCreationdateDesc("ZATWIERDZONE"));
 
         }
 
@@ -140,7 +133,7 @@ public class ForumController {
     @GetMapping("/search/{search}")
     public ModelAndView search(@PathVariable("search") String search) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.postsBySearchInput("%" + search + "%"));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllBySearchOrderByCreationdateDesc("%" + search + "%"));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(0);
 
@@ -168,7 +161,7 @@ public class ForumController {
     @GetMapping("/search/{search}/page/{id}")
     public ModelAndView search(@PathVariable("search") String search,@PathVariable("id") String id) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.postsBySearchInput("%" + search + "%"));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllBySearchOrderByCreationdateDesc("%" + search + "%"));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
 
@@ -200,13 +193,13 @@ public class ForumController {
         if(sort.equals("most-comments")){
 
             modelAndView.addObject("picked_sort", 2);
-            page = new PagedListHolder(postRepository.sortPostsByCommentsWithGivenSearchInput("%"+search+"%"));
+            page = new PagedListHolder(postRepository.findAllBySearchOrderByCommentDesc("%"+search+"%"));
 
         }
         if(sort.equals("date")){
 
             modelAndView.addObject("picked_sort", 3);
-            page = new PagedListHolder(postRepository.postsBySearchInput("%"+search+"%"));
+            page = new PagedListHolder(postRepository.findAllBySearchOrderByCreationdateDesc("%"+search+"%"));
 
         }
 
@@ -238,13 +231,13 @@ public class ForumController {
         if(sort.equals("most-comments")){
 
             modelAndView.addObject("picked_sort", 2);
-            page = new PagedListHolder(postRepository.sortPostsByCommentsWithGivenTag(category));
+            page = new PagedListHolder(postRepository.findAllByTagOrderByCommentDesc(category));
 
         }
         if(sort.equals("date")){
 
             modelAndView.addObject("picked_sort", 3);
-            page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndTag("ZATWIERDZONE", category));
+            page = new PagedListHolder(postRepository.findAllByStatusAndTagOrderByCreationdateDesc("ZATWIERDZONE", category));
 
         }
 
@@ -273,7 +266,7 @@ public class ForumController {
     @GetMapping("/categories/{category}/page/{id}")
     public ModelAndView categories(@PathVariable("category") String category, @PathVariable("id") String id) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndTag("ZATWIERDZONE", category));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusAndTagOrderByCreationdateDesc("ZATWIERDZONE", category));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
 
@@ -302,7 +295,7 @@ public class ForumController {
     @GetMapping("/categories/{category}")
     public ModelAndView categories(@PathVariable("category") String category) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndTag("ZATWIERDZONE", category));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusAndTagOrderByCreationdateDesc("ZATWIERDZONE", category));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(0);
 
@@ -330,7 +323,7 @@ public class ForumController {
     @GetMapping("/shops/{shop}")
     public ModelAndView shops(@PathVariable("shop") String shop) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndShop("ZATWIERDZONE", shop));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusAndShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(0);
 
@@ -359,7 +352,7 @@ public class ForumController {
     @GetMapping("/shops/{shop}/page/{id}")
     public ModelAndView shops(@PathVariable("shop") String shop, @PathVariable("id") String id) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndShop("ZATWIERDZONE", shop));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusAndShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
 
@@ -392,13 +385,13 @@ public class ForumController {
         if(sort.equals("most-comments")){
 
             modelAndView.addObject("picked_sort", 2);
-            page = new PagedListHolder(postRepository.sortPostsByCommentsWithGivenShop(shop));
+            page = new PagedListHolder(postRepository.findAllByShopOrderByCommentDesc(shop));
 
         }
         if(sort.equals("date")){
 
             modelAndView.addObject("picked_sort", 3);
-            page = new PagedListHolder(postRepository.sortPostsByDateWithGivenStatusAndShop("ZATWIERDZONE", shop));
+            page = new PagedListHolder(postRepository.findAllByStatusAndShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
 
         }
 

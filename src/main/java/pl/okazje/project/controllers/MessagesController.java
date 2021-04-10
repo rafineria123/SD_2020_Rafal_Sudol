@@ -68,7 +68,7 @@ public class MessagesController {
 
             Message newmessageobject = conversationService.findById(Long.parseLong(id)).get().getOtherUserNewMessage(uzytkownik);
             if (!newmessageobject.getContent().equals("")) {
-                newmessageobject.setStatus("odczytane");
+                newmessageobject.setStatus(Message.Status.SEEN);
                 messageRepository.save(newmessageobject);
             }
 
@@ -99,13 +99,13 @@ public class MessagesController {
 
 
         Message message = new Message();
-        message.setStatus("nieodczytane");
+        message.setStatus(Message.Status.NEW);
         message.setContent(new_message);
         message.setConversation(conversationService.findById(Long.parseLong(new_message_conv_id)).get());
         message.setCr_date(new Date());
         message.setUser(uzytkownik);
         User otheruser = conversationService.findById(Long.parseLong(new_message_conv_id)).get().getOtherUser(uzytkownik);
-        ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(otheruser.getLogin()));
+        ArrayList<String> list =new ArrayList<>(userRepository.findAllExpiry_timeByUsername(otheruser.getLogin()));
         if(!list.isEmpty()){
 
             for (String s:list) {
@@ -172,8 +172,8 @@ public class MessagesController {
 
             array[i][0] = list.get(i).getOtherUser(uzytkownik1).getLogin();
             array[i][1] = list.get(i).getNewestMessage(uzytkownik1);
-            if (list.get(i).hasNewMessage(uzytkownik1)) array[i][2] = "nieodczytane";
-            if (!list.get(i).hasNewMessage(uzytkownik1)) array[i][2] = "odczytane";
+            if (list.get(i).hasNewMessage(uzytkownik1)) array[i][2] = "NEW";
+            if (!list.get(i).hasNewMessage(uzytkownik1)) array[i][2] = "SEEN";
             array[i][3] = list.get(i).getConversation_id().toString();
             array[i][4] = list.get(i).getOtherUser(uzytkownik1).getLogin();
             array[i][5] = list.get(i).getNewestMessage(uzytkownik1);
@@ -199,10 +199,10 @@ public class MessagesController {
         m.setCr_date(new Date());
         m.setConversation(conversationService.findByUsers(uzytkownik1.getUser_id(),uzytkownik2.getUser_id()).get());
         m.setContent(message);
-        m.setStatus("nieodczytane");
+        m.setStatus(Message.Status.NEW);
         messageRepository.save(m);
 
-        ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(uzytkownik2.getLogin()));
+        ArrayList<String> list =new ArrayList<>(userRepository.findAllExpiry_timeByUsername(uzytkownik2.getLogin()));
         if(!list.isEmpty()){
 
             for (String s:list) {

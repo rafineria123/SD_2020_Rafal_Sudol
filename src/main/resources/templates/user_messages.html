@@ -364,7 +364,7 @@
                 for (let i = 0; i < obj.length; i++) {
 
 
-                    if (obj[i][2]==="nieodczytane"){
+                    if (obj[i][2]==="NEW"){
                         if("[[${current_conversation.getConversation_id()}]]"===obj[i][3]){
                             let element1 = document.createElement("div");
                             element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
@@ -463,7 +463,7 @@
                 };
                 for (let i = 0; i < obj.length; i++) {
 
-                    if (obj[i][2]==="odczytane"){
+                    if (obj[i][2]==="SEEN"){
 
                         let element1 = document.createElement("div");
                         if("[[${current_conversation.getConversation_id()}]]"===obj[i][3]){

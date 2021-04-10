@@ -72,19 +72,18 @@ public class ProfileController {
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Ban ban = new Ban();
-            ban.setDuration("");
             ban.setReason(reason);
-            ban.setUser(userRepository.findFirstByUser_id(user_id));
+            ban.setUser(userRepository.findFirstByUser_idEquals(user_id));
             banService.save(ban);
-            User uzytkownik2 = userRepository.findFirstByUser_id(user_id);
+            User uzytkownik2 = userRepository.findFirstByUser_idEquals(user_id);
             uzytkownik2.setBan(ban);
             userRepository.save(uzytkownik2);
-            userRepository.banUser(uzytkownik2.getLogin());
+            userRepository.deleteSessionWhereUsernameEquals(uzytkownik2.getLogin());
             sendMail.sendingMail(uzytkownik2.getEmail(),"Ban - Twoje konto zostało zbanowane", "Witaj "+uzytkownik2.getLogin()+", \n Złamałeś regulamin strony co poskutkowalo blokadą konta.\n Powód blokady: "+ban.getReason()+"\n\nJeśli nie zgadzasz sie z ta blokadą, powiadom nas o tym jak najszybciej.");
 
         }
 
-        return "redirect:/profile/"+userRepository.findFirstByUser_id(user_id).getLogin();
+        return "redirect:/profile/"+userRepository.findFirstByUser_idEquals(user_id).getLogin();
 
     }
 

@@ -134,7 +134,7 @@
                 </div>
             </div>
             <div class="row" style="padding: 0" th:if="${discount.deletedOrNotReady()}">
-                <div style="padding: 15px;width: 100%" th:if="${discount.getStatus().equals('OCZEKUJACE')}">
+                <div style="padding: 15px;width: 100%" th:if="${discount.getStatus().equals('AWAITING')}">
                     <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
                         <div class="col-12" style="padding-left: 0;padding-right: 0">
                             <div class="bad_alert" style="background-color: rgba(244,96,41,0.74);">
@@ -145,7 +145,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="padding: 0" th:if="${discount.isOutDated()&&!discount.deleted()&&!discount.getStatus().equals('OCZEKUJACE')}">
+            <div class="row" style="padding: 0" th:if="${discount.isOutDated()&&!discount.deleted()&&!discount.getStatus().equals('AWAITING')}">
                 <div style="padding: 15px;width: 100%">
                     <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
                         <div class="col-12" style="padding-left: 0;padding-right: 0">
@@ -171,18 +171,13 @@
                 <div class="col-10">
                     <span class="over_items">Informacje o promocji</span>
                 </div>
-<!--                <div class="col-2 d-flex d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')" th:if="${!discount.getStatus().equals('Oczekuje')}">-->
-
-<!--                    <span class="over_items fas fa-ban" style="padding-bottom: 5px"></span>-->
-
-<!--                </div>-->
                 <div class="col-2 d-flex justify-content-end align-items-end" style="" >
 
                         <button type="button" onclick="share()" class="remove_button popup" style=""> <span class="popuptext" id="myPopup">
                             Dodano do schowka!</span><span class="over_items far fa-share-square" style="padding-bottom: 5px"></span> </button>
 
 
-                    <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('OCZEKUJACE')}" sec:authorize="hasAuthority('ADMIN')">
+                    <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('AWAITING')}" sec:authorize="hasAuthority('ADMIN')">
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
                         <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
                     </form>
@@ -287,7 +282,7 @@
                     <div class="row" style="padding-bottom: 10px;padding-right: 40px;padding-left:40px">
                         <div class="d-flex justify-content-end" style="width: 100%">
                             <span style="font-weight: 500;font-size: 17px;font-family: Calibri;color: rgba(145,143,146,0.91);">Wygasa:<span
-                                    style="font-weight: 900;font-size: 19px;font-family: Calibri;color: #1e7e34;"th:text="${discount.getExpire_date_formated()}">25.06.20</span></span>
+                                    style="font-weight: 900;font-size: 19px;font-family: Calibri;color: #1e7e34;"th:text="${discount.getExpire_date_formatted()}">25.06.20</span></span>
 
                         </div>
                     </div>

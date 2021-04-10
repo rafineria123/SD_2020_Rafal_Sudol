@@ -106,7 +106,7 @@ public class DiscountController {
             @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
             @ModelAttribute("expire_date") String expire_date, @ModelAttribute("type") String type, @ModelAttribute("discount") String rodzaj, @RequestParam("image_url")
                     MultipartFile file, HttpServletRequest request, RedirectAttributes redir
-    ) throws ParseException, IOException {
+    ) {
         Discount discount = new Discount();
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -175,7 +175,7 @@ public class DiscountController {
             discount.setTitle(title);
             Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(expire_date);
             discount.setExpire_date(date1);
-            discount.setStatus(Discount.Status.OCZEKUJACE);
+            discount.setStatus(Discount.Status.AWAITING);
             discount.setUser(uzytkownik);
             discount.setImage_url("images/" + file.getOriginalFilename());
             discountRepository.save(discount);
@@ -267,7 +267,7 @@ public class DiscountController {
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
 
-            comment.setStatus("Usuniete");
+            comment.setStatus(Comment.Status.DELETED);
             commentService.save(comment);
 
         }
@@ -285,7 +285,7 @@ public class DiscountController {
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
-            disc.setStatus(Discount.Status.ZATWIERDZONE);
+            disc.setStatus(Discount.Status.ACCEPTED);
             discountRepository.save(disc);
             sendMail.sendingMail(disc.getUser().getEmail(),"NORGIE - Okazja zatwierdzona","Twoja okazja została zweryfikowana i zatwierdzona," +
                     " juz niedługo pojawi się na stronie głównej.\n" +
@@ -305,7 +305,7 @@ public class DiscountController {
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
-            disc.setStatus(Discount.Status.USUNIETE);
+            disc.setStatus(Discount.Status.DELETED);
             discountRepository.save(disc);
 
         }

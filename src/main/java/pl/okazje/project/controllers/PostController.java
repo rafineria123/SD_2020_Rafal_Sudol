@@ -101,7 +101,7 @@ public class PostController {
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
 
-            comment.setStatus("Usuniete");
+            comment.setStatus(Comment.Status.DELETED);
             commentService.save(comment);
 
         }

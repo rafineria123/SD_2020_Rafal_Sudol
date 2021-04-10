@@ -10,7 +10,6 @@ public class Conversation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long conversation_id;
 
-
     @OneToMany(mappedBy="conversation")
     private Set<Message> messages;
 
@@ -29,7 +28,7 @@ public class Conversation {
     }
 
     public Set<Message> getMessages() {
-        if (messages==null) return new HashSet<Message>();
+        if (messages==null) return new HashSet<>();
         return messages;
     }
 
@@ -51,9 +50,9 @@ public class Conversation {
 
         ArrayList<Message> list = new ArrayList<>(getMessages());
         if(list.isEmpty()) return false;
-        list.removeIf(o -> (o.getUser().getUser_id()==uzytkownik.getUser_id()));
+        list.removeIf(o -> (o.getUser().getUser_id().equals(uzytkownik.getUser_id())));
         Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
-        if(!list.isEmpty()&&list.get(0).getStatus().equals("nieodczytane")) return true;
+        if(!list.isEmpty()&&list.get(0).getStatus().equals(Message.Status.NEW)) return true;
         return false;
 
     }
