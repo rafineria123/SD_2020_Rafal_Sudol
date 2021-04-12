@@ -1,14 +1,10 @@
 package pl.okazje.project.events;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import pl.okazje.project.entities.Token;
 import pl.okazje.project.entities.User;
-import pl.okazje.project.repositories.TokenRepository;
-import pl.okazje.project.services.SendMail;
+import pl.okazje.project.services.EmailService;
 import pl.okazje.project.services.UserService;
 
 import javax.mail.MessagingException;
@@ -24,7 +20,7 @@ public class RegistrationListener implements
 
 
     @Autowired
-    private SendMail mailSender;
+    private EmailService mailSender;
 
     @Override
     public void onApplicationEvent(OnRegistrationCompleteEvent event) {
@@ -44,7 +40,7 @@ public class RegistrationListener implements
         String subject = "Norgie - Aktywuj swoje konto";
         String confirmationUrl = "/registrationConfirm?token=" + token;
 
-        mailSender.sendingMail(recipientAddress,subject,"Aby aktywowac swoje konto kliknij w poniższy link,\n http://54.227.52.123" + confirmationUrl);
+        mailSender.sendEmail(recipientAddress,subject,"Aby aktywowac swoje konto kliknij w poniższy link,\n http://54.227.52.123" + confirmationUrl);
 
     }
 }

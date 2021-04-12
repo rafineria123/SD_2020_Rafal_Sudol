@@ -2,6 +2,7 @@ package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +14,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.events.OnRegistrationCompleteEvent;
 import pl.okazje.project.repositories.*;
-import pl.okazje.project.services.SendMail;
+import pl.okazje.project.services.EmailService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -32,7 +33,7 @@ public class LoginAndRegisterController {
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
-    SendMail sendMail;
+    EmailService emailService;
     @Autowired
     ApplicationEventPublisher eventPublisher;
     @Autowired
@@ -72,6 +73,7 @@ public class LoginAndRegisterController {
 
 
     @GetMapping("/register")
+    @PreAuthorize("!hasAnyAuthority('USER', 'ADMIN')")
     public ModelAndView register() {
         ModelAndView modelAndView = new ModelAndView("register");
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -82,6 +84,7 @@ public class LoginAndRegisterController {
 
 
     @PostMapping("/register")
+    @PreAuthorize("!hasAnyAuthority('USER', 'ADMIN')")
     public RedirectView register(@ModelAttribute("login") String login, @ModelAttribute("password") String password, @ModelAttribute("repeated_password") String repeated_password,
                                  RedirectAttributes redir, @ModelAttribute("email") String email, @ModelAttribute("reg") String reg, HttpServletRequest request) {
 
@@ -142,6 +145,7 @@ public class LoginAndRegisterController {
     }
 
     @GetMapping("/registrationConfirm")
+    @PreAuthorize("!hasAnyAuthority('USER', 'ADMIN')")
     public RedirectView registrationConfirm(@RequestParam("token") String token, RedirectAttributes redir){
 
 

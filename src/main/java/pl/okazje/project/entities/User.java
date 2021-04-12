@@ -3,6 +3,7 @@ package pl.okazje.project.entities;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
 import java.text.Format;
@@ -17,10 +18,11 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
-    @Column(unique = true)
+    @Column(unique = true,length = 25)
     private String login;
     @Column(length = 700)
     private String password;
+    @Column(length = 50)
     private String email = "";
     private String status;
     private String ROLE = "USER";
@@ -116,6 +118,7 @@ public class User implements UserDetails {
     }
 
     public void setLogin(String login) {
+        if(login.length()>25) throw new DataTooLongException(login);
         this.login = login;
     }
 
@@ -161,6 +164,7 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
+        if(password.length()>700) throw new DataTooLongException(password);
         this.password = password;
     }
 
@@ -169,6 +173,7 @@ public class User implements UserDetails {
     }
 
     public void setEmail(String email) {
+        if(email.length()>50) throw new DataTooLongException(email);
         this.email = email;
     }
 

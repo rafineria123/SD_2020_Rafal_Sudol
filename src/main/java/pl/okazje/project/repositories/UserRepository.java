@@ -8,12 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.okazje.project.entities.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
 
-    User findFirstByLogin(String login);
+    Optional<User> findFirstByLogin(String login);
 
     @Query(value = "Select * from User WHERE user_id=?1 LIMIT 1" ,
             nativeQuery = true)
@@ -28,6 +29,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query(value = "Select EXPIRY_TIME FROM spring_session WHERE principal_name=?1" ,
             nativeQuery = true)
-    List<String> findAllExpiry_timeByUsername(String name);
+    List<String> findExpiry_timeByUsername(String name);
 
 }

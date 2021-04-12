@@ -2,6 +2,7 @@ package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +15,7 @@ import pl.okazje.project.ParsingBot;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.ConversationService;
-import pl.okazje.project.services.SendMail;
+import pl.okazje.project.services.EmailService;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Controller
+@PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
 public class SettingsController {
 
     @Autowired
@@ -44,7 +46,7 @@ public class SettingsController {
     @Autowired
     PostRepository postRepository;
     @Autowired
-    SendMail sendMail;
+    EmailService emailService;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
@@ -54,7 +56,7 @@ public class SettingsController {
     public ModelAndView settings() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         if (uzytkownik.getInformation() == null) {
             uzytkownik.setInformation(new Information());
         }
@@ -75,7 +77,7 @@ public class SettingsController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         PagedListHolder page = new PagedListHolder(discountRepository.findAllByUseridOrderByCreationdateDesc(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
@@ -107,7 +109,7 @@ public class SettingsController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
 
         modelAndView.addObject("list_of_posts", postRepository.FindAllByUserOrderByCreationdateDesc(uzytkownik.getLogin()));
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -126,7 +128,7 @@ public class SettingsController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         PagedListHolder page = new PagedListHolder(discountRepository.findAllByStatusEquals(Discount.Status.AWAITING));
         page.setPageSize(2); // number of items per page
         page.setPage(0);
@@ -153,7 +155,7 @@ public class SettingsController {
     @GetMapping("/settings/admin/discounts/page/{id}")
     public ModelAndView pageSettingsAdminDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         PagedListHolder page = new PagedListHolder(discountRepository.findAllByStatusEquals(Discount.Status.AWAITING));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
@@ -180,7 +182,7 @@ public class SettingsController {
     @GetMapping("/settings/discounts/page/{id}")
     public ModelAndView pageSettingsDiscounts(@PathVariable("id") String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         PagedListHolder page = new PagedListHolder(discountRepository.findAllByUseridOrderByCreationdateDesc(uzytkownik.getUser_id()));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
@@ -210,7 +212,7 @@ public class SettingsController {
         List<String> listOfAdresses = new ArrayList<>();
         ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         PagedListHolder page = null;
         if (sort.equals("date")) {
             modelAndView.addObject("picked_sort", 3);
@@ -267,7 +269,7 @@ public class SettingsController {
     public ModelAndView profileMessages() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
 
 
         ModelAndView modelAndView = new ModelAndView("user_profile_messages");
@@ -290,7 +292,7 @@ public class SettingsController {
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
 
         if (login.equals(uzytkownik.getLogin())) {
 
@@ -301,12 +303,17 @@ public class SettingsController {
 
         ArrayList<User> uzytkownicy = new ArrayList<>();
         uzytkownicy.add(uzytkownik);
-        uzytkownicy.add(userRepository.findFirstByLogin(login));
+        uzytkownicy.add(userRepository.findFirstByLogin(login).get());
         Conversation conversation;
 
         if (conversationService.findByUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id()).isPresent()) {
             conversation = conversationService.findByUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id()).get();
-            Message messageobject = new Message(message, new Date(), Message.Status.NEW, conversation, uzytkownik);
+            Message messageobject = new Message();
+            messageobject.setContent(message);
+            messageobject.setCr_date(new Date());
+            messageobject.setStatus(Message.Status.NEW);
+            messageobject.setConversation(conversation);
+            messageobject.setUser(uzytkownik);
             messageRepository.save(messageobject);
             Message newmessageobject = conversation.getOtherUserNewMessage(uzytkownik);
             if (!newmessageobject.getContent().equals("")) {
@@ -314,12 +321,12 @@ public class SettingsController {
                 messageRepository.save(newmessageobject);
             }
 
-            ArrayList<String> list =new ArrayList<>(userRepository.findAllExpiry_timeByUsername(uzytkownicy.get(1).getLogin()));
+            ArrayList<String> list =new ArrayList<>(userRepository.findExpiry_timeByUsername(uzytkownicy.get(1).getLogin()));
             if(!list.isEmpty()){
 
                 for (String s:list) {
                     if(Long.parseLong(s)-System.currentTimeMillis()<0){
-                        sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
+                        emailService.sendEmail(uzytkownicy.get(1).getEmail(),
                                 "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
                                         +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+newmessageobject.getContent());
                     }
@@ -328,7 +335,7 @@ public class SettingsController {
 
             }else {
 
-                sendMail.sendingMail(uzytkownicy.get(1).getEmail(),"NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
+                emailService.sendEmail(uzytkownicy.get(1).getEmail(),"NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
                         +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+newmessageobject.getContent());
 
             }
@@ -350,14 +357,19 @@ public class SettingsController {
         list_of_users.forEach(o -> o.getConversations().add(finalConversation));
         ArrayList<User> lista_uzytkownikow = new ArrayList<>(list_of_users);
         lista_uzytkownikow.forEach(o -> userRepository.save(o));
-        Message m = new Message(message, new Date(), Message.Status.NEW, conversation, uzytkownik);
+        Message m = new Message();
+        m.setContent(message);
+        m.setCr_date(new Date());
+        m.setStatus(Message.Status.NEW);
+        m.setConversation(conversation);
+        m.setUser(uzytkownik);
         messageRepository.save(m);
-        ArrayList<String> list =new ArrayList<>(userRepository.findAllExpiry_timeByUsername(uzytkownicy.get(1).getLogin()));
+        ArrayList<String> list =new ArrayList<>(userRepository.findExpiry_timeByUsername(uzytkownicy.get(1).getLogin()));
         if(!list.isEmpty()){
 
             for (String s:list) {
                 if(Long.parseLong(s)-System.currentTimeMillis()<0){
-                    sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
+                    emailService.sendEmail(uzytkownicy.get(1).getEmail(),
                             "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
                                     +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+m.getContent());
                 }
@@ -366,7 +378,7 @@ public class SettingsController {
 
         }else {
 
-            sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
+            emailService.sendEmail(uzytkownicy.get(1).getEmail(),
                     "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
                             +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+m.getContent());
 
@@ -383,7 +395,7 @@ public class SettingsController {
     public RedirectView changeUserDetails(@ModelAttribute("name") String name, @ModelAttribute("surname") String surname, @ModelAttribute("email") String email, RedirectAttributes redir) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
 
         uzytkownik.setEmail(email);
         Information info = new Information();
@@ -412,7 +424,7 @@ public class SettingsController {
     public RedirectView changeDescription(@ModelAttribute("description") String description, RedirectAttributes redir) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
 
         Information info = new Information();
         if (uzytkownik.getInformation() == null) {
@@ -445,7 +457,7 @@ public class SettingsController {
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
 
         if (!passwordEncoder.matches(currentpassword, uzytkownik.getPassword())) {
 
@@ -457,7 +469,7 @@ public class SettingsController {
         uzytkownik.setPassword(passwordEncoder.encode(newpassword));
         userRepository.save(uzytkownik);
         redir.addFlashAttribute("status", "Twoje hasło zostało zmienione.");
-        sendMail.sendingMail(uzytkownik.getEmail(),"Norgie - Hasło zostało zmienione", "Witaj "+uzytkownik.getLogin()+", \n hasło do twojego konta zostało zmienione.\n\nJeśli nie zostało ono zaktualizowane przez Ciebie, powiadom nas o tym jak najszybciej.");
+        emailService.sendEmail(uzytkownik.getEmail(),"Norgie - Hasło zostało zmienione", "Witaj "+uzytkownik.getLogin()+", \n hasło do twojego konta zostało zmienione.\n\nJeśli nie zostało ono zaktualizowane przez Ciebie, powiadom nas o tym jak najszybciej.");
         return redirectView;
 
     }
@@ -469,7 +481,7 @@ public class SettingsController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         PagedListHolder page = new PagedListHolder(discountRepository.findAllByUserAndLiked(uzytkownik.getLogin()));
         page.setPageSize(2); // number of items per page
         page.setPage(Integer.parseInt(id)-1);
@@ -493,11 +505,12 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/admin/functions")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ModelAndView functions() {
 
         ModelAndView modelAndView = new ModelAndView("user_admin_profile_functions");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
         modelAndView.addObject("list_of_shops", shopRepository.findAll());
@@ -507,6 +520,7 @@ public class SettingsController {
     }
 
     @PostMapping("/settings/admin/xkom")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody void xkom(){
 
         parsingBot.fetchXkom();
@@ -515,6 +529,7 @@ public class SettingsController {
     }
 
     @PostMapping("/settings/admin/amazon")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody void amazon(){
 
         parsingBot.fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
@@ -528,6 +543,7 @@ public class SettingsController {
     //[3] - blednie przeskanowane promocje
     //[4] - ilosc dodanych nowych promocji
     @GetMapping("/settings/admin/status")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody String[] statusXkom(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String array[] = new String[5];

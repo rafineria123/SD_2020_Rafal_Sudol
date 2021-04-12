@@ -11,6 +11,7 @@ import pl.okazje.project.repositories.TokenRepository;
 import pl.okazje.project.repositories.UserRepository;
 
 import java.text.MessageFormat;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -24,10 +25,10 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        final User optionalUser = userRepository.findFirstByLogin(s);
+        final Optional<User> optionalUser = userRepository.findFirstByLogin(s);
 
-        if (optionalUser!=null) {
-            return optionalUser;
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
         } else {
             throw new UsernameNotFoundException(MessageFormat.format("User with login {0} cannot be found.", s));
 
@@ -52,6 +53,10 @@ public class UserService implements UserDetailsService {
         tokenRepository.save(myToken);
         user.setToken(myToken);
         userRepository.save(user);
+    }
+
+    public Optional<User> findFirstByLogin(String login){
+        return userRepository.findFirstByLogin(login);
     }
 
 

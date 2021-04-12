@@ -9,15 +9,13 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Service
-public class SendMail {
+public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendingMail(String to, String subject, String body) throws MessagingException {
-
+    public void sendEmail(String to, String subject, String body){
         Thread t = new Thread(() -> {
             try {
-
                 MimeMessage message=javaMailSender.createMimeMessage();
                 MimeMessageHelper helper;
                 helper=new MimeMessageHelper(message,true);
@@ -25,15 +23,9 @@ public class SendMail {
                 helper.setSubject(subject);
                 helper.setText(body);
                 javaMailSender.send(message);
-
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
-
         });
         t.start();
-
-
-
-
     }}

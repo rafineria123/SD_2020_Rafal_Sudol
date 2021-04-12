@@ -1,6 +1,7 @@
 package pl.okazje.project.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -34,16 +35,6 @@ public class Message {
     public Message() {
     }
 
-    public Message(String content, Date cr_date, Status status, Conversation conversation, User user) {
-
-        this.content = content;
-        this.cr_date = cr_date;
-        this.status = status;
-        this.conversation = conversation;
-        this.user = user;
-
-    }
-
     public Integer getMessage_id() {
         return message_id;
     }
@@ -57,6 +48,7 @@ public class Message {
     }
 
     public void setContent(String content) {
+        if(content.length()>300) throw new DataTooLongException(content);
         this.content = content;
     }
 

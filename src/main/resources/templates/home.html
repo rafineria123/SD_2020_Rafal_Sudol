@@ -235,7 +235,7 @@
 
     <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
-        <div class="col-lg-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.deletedOrNotReady()}"
+        <div class="col-lg-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.isDeleted()&&!discount.isAwaiting()}"
              th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
              style="padding-bottom: 30px;"
              th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">

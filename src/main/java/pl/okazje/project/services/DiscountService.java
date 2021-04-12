@@ -2,160 +2,300 @@ package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.Discount;
+import pl.okazje.project.entities.Shop;
+import pl.okazje.project.entities.Tag;
+import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.DiscountRepository;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
 public class DiscountService {
 
 
-    private DiscountRepository discountRepository;
+    private final DiscountRepository discountRepository;
+    private final AuthenticationService authenticationService;
+    private final ShopService shopService;
+    private final TagService tagService;
+    private final EmailService emailService;
 
     @Autowired
-    public DiscountService(DiscountRepository discountRepository) {
+    public DiscountService(EmailService emailService,DiscountRepository discountRepository, AuthenticationService authenticationService, ShopService shopService, TagService tagService) {
         this.discountRepository = discountRepository;
+        this.authenticationService = authenticationService;
+        this.shopService = shopService;
+        this.tagService = tagService;
+        this.emailService = emailService;
     }
 
-
-    List<Discount> findAllByOrderByCreationdateDesc(){
+    public List<Discount> findAllByOrderByCreationdateDesc(){
         return this.discountRepository.findAllByOrderByCreationdateDesc();
     }
 
-    List<Discount> findAllByOrderByRatingDesc(){
+    public List<Discount> findAllByOrderByRatingDesc(){
         return this.discountRepository.findAllByOrderByRatingDesc();
     }
 
-    List<Discount> findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc(){
+    public List<Discount> findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc(){
         return this.discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc();
     }
 
 
-    List<Discount> findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc(){
+    public List<Discount> findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc(){
         return this.discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc();
     }
 
-    List<Discount> findAllByOrderByCommentDesc(){
+    public List<Discount> findAllByOrderByCommentDesc(){
         return this.discountRepository.findAllByOrderByCommentDesc();
     }
 
-    List<Discount> findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc(){
+    public List<Discount> findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc(){
         return this.discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc();
     }
 
-    List<Discount> findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc(){
+    public List<Discount> findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc(){
         return this.discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc();
     }
 
-    List<Discount> findAllByTagOrderByCreationdateDesc(String tag){
+    public List<Discount> findAllByTagOrderByCreationdateDesc(String tag){
         return this.discountRepository.findAllByTagOrderByCreationdateDesc(tag);
     }
 
-    List<Discount> findAllByShopOrderByCreationdateDesc(String shop){
+    public List<Discount> findAllByShopOrderByCreationdateDesc(String shop){
         return this.discountRepository.findAllByShopOrderByCreationdateDesc(shop);
     }
 
-    List<Discount> findAllByTagOrderByRatingDesc(String tag){
+    public List<Discount> findAllByTagOrderByRatingDesc(String tag){
         return this.discountRepository.findAllByTagOrderByRatingDesc(tag);
     }
 
 
-    List<Discount> findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String tag){
+    public List<Discount> findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String tag){
         return this.discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(tag);
     }
 
-    List<Discount> findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String tag){
+    public List<Discount> findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String tag){
         return this.discountRepository.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(tag);
     }
 
-    List<Discount> findAllByTagOrderByCommentDesc(String tag){
+    public List<Discount> findAllByTagOrderByCommentDesc(String tag){
         return this.discountRepository.findAllByTagOrderByCommentDesc(tag);
     }
 
-    List<Discount> findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String tag){
+    public List<Discount> findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String tag){
         return this.discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(tag);
     }
 
-    List<Discount> findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String tag){
+    public List<Discount> findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String tag){
         return this.discountRepository.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(tag);
     }
 
-    List<Discount> findAllByShopOrderByRatingDesc(String shop){
+    public List<Discount> findAllByShopOrderByRatingDesc(String shop){
         return this.discountRepository.findAllByShopOrderByRatingDesc(shop);
     }
 
-    List<Discount> findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String shop){
+    public List<Discount> findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String shop){
         return this.discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(shop);
     }
 
-    List<Discount> findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String shop){
+    public List<Discount> findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String shop){
         return this.discountRepository.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(shop);
     }
 
-    List<Discount> findAllByShopOrderByCommentDesc(String shop){
+    public List<Discount> findAllByShopOrderByCommentDesc(String shop){
         return this.discountRepository.findAllByShopOrderByCommentDesc(shop);
     }
 
-    List<Discount> findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String shop){
+    public List<Discount> findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String shop){
         return this.discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(shop);
     }
 
-    List<Discount> findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String shop){
+    public List<Discount> findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String shop){
         return this.discountRepository.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(shop);
     }
 
-    List<Discount> FindAllBySearchOrderByCreationdateDesc(String search){
+    public List<Discount> FindAllBySearchOrderByCreationdateDesc(String search){
         return this.discountRepository.FindAllBySearchOrderByCreationdateDesc(search);
     }
 
-    List<Discount> FindAllBySearchOrderByCommentDesc(String search){
+    public List<Discount> FindAllBySearchOrderByCommentDesc(String search){
         return this.discountRepository.FindAllBySearchOrderByCommentDesc(search);
     }
 
-    List<Discount> FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String search){
+    public List<Discount> FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String search){
         return this.discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(search);
     }
 
-    List<Discount> FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String search){
+    public List<Discount> FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String search){
         return this.discountRepository.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(search);
     }
 
-    List<Discount> FindAllBySearchOrderByRatingDesc(String search){
+    public List<Discount> FindAllBySearchOrderByRatingDesc(String search){
         return this.discountRepository.FindAllBySearchOrderByRatingDesc(search);
     }
 
-    List<Discount> FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String search){
+    public List<Discount> FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String search){
         return this.discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(search);
     }
 
-    List<Discount> FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String search){
+    public List<Discount> FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String search){
         return this.discountRepository.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(search);
     }
 
-    List<Discount> findAllByUseridOrderByCreationdateDesc(Integer id){
+    public List<Discount> findAllByUseridOrderByCreationdateDesc(Integer id){
         return this.discountRepository.findAllByUseridOrderByCreationdateDesc(id);
     }
 
-    List<Discount> findAllByUseridOrderByCommentDesc(Integer id){
+    public List<Discount> findAllByUseridOrderByCommentDesc(Integer id){
         return this.discountRepository.findAllByUseridOrderByCommentDesc(id);
     }
 
-    List<Discount> findAllByUseridOrderByRatingDesc(Integer id){
+    public List<Discount> findAllByUseridOrderByRatingDesc(Integer id){
         return this.discountRepository.findAllByUseridOrderByRatingDesc(id);
     }
 
-    List<Discount> findAllByStatusEquals(Discount.Status status){
+    public List<Discount> findAllByStatusEquals(Discount.Status status){
         return this.discountRepository.findAllByStatusEquals(status);
     }
 
-    List<Discount> findAllByUserAndLiked(String user){
+    public List<Discount> findAllByUserAndLiked(String user){
         return this.discountRepository.findAllByUserAndLiked(user);
     }
 
-    Optional<Discount> findFirstByTitleEquals(String title){
+    public Optional<Discount> findFirstByTitleEquals(String title){
         return this.discountRepository.findFirstByTitleEquals(title);
+    }
+
+    public Optional<Discount> findById(Long id){
+        Optional<Discount> discount = discountRepository.findById(id);
+        if (discount.isPresent()) {
+            Optional<User> user = authenticationService.getCurrentUser();
+            if(discount.get().isDeleted()||discount.get().isAwaiting()){
+                if(user.isPresent()){
+                    if(user.get().getROLE().equals("ADMIN") || user.get().hasDiscount(id)){
+                        return discount;
+                    }
+                }
+                return Optional.empty();
+            }
+            return discount;
+        }
+        return Optional.empty();
+    }
+
+    public boolean addDiscount(String url, String tag, String shop, String title, String old_price, String current_price,
+                               String shipment_price, String content, String expire_date, String typeBase, String typeSuffix, MultipartFile file){
+
+        if(content.isEmpty()||title.isEmpty()||url.isEmpty()||tag.isEmpty()||shop.isEmpty()||expire_date.isEmpty()||typeBase.isEmpty()||file.isEmpty()){
+            return false;
+        }
+        if(typeBase.equals("OBNIZKA")){
+            if(current_price.isEmpty()||old_price.isEmpty()||shipment_price.isEmpty()){
+                return false;
+            }
+        }
+        if(typeBase.equals("KOD")||typeBase.equals("KUPON")){
+            if(old_price.isEmpty()||typeSuffix.isEmpty()){
+                return false;
+            }
+        }
+
+        Path currentPath = Paths.get("");
+        Path absolutePath = currentPath.toAbsolutePath();
+        File transferFile = new File(absolutePath+"/src/main/resources/static/images/" + file.getOriginalFilename());
+        try {
+            file.transferTo(transferFile);
+        } catch (IOException e) {
+            return false;
+        }
+
+        Discount discount = new Discount();
+        try {
+            if (typeBase.equals("OBNIZKA")) {
+                discount.setCurrent_price(Double.parseDouble(current_price));
+                discount.setOld_price(Double.parseDouble(old_price));
+                discount.setShipment_price(Double.parseDouble(shipment_price));
+                discount.setType(Discount.Type.OBNIZKA);
+            }
+
+            if (typeBase.equals("KOD")) {
+                discount.setOld_price(Double.parseDouble(old_price));
+                if (typeSuffix.equals("%")) {
+                    discount.setType(Discount.Type.KODPROCENT);
+                }
+                if (typeSuffix.equals("PLN")) {
+                    discount.setType(Discount.Type.KODNORMALNY);
+                }
+            }
+
+            if (typeBase.equals("KUPON")) {
+                discount.setOld_price(Double.parseDouble(old_price));
+                if (typeSuffix.equals("%")) {
+                    discount.setType(Discount.Type.KUPONPROCENT);
+                }
+                if (typeSuffix.equals("PLN")) {
+                    discount.setType(Discount.Type.KUPONNORMALNY);
+                }
+            }
+            Optional<Tag> optionalTag = tagService.findById(Long.parseLong(tag));
+            Optional<Shop> optionalShop = shopService.findById(Long.parseLong(shop));
+            if(optionalShop.isPresent()&&optionalTag.isPresent()){
+                discount.setTag(optionalTag.get());
+                discount.setShop(optionalShop.get());
+            }else {
+                return false;
+            }
+        }catch (NumberFormatException e){
+            return false;
+        }
+        discount.setContent(content);
+        discount.setCreationdate(new Date());
+        discount.setDiscount_link(url);
+        discount.setTitle(title);
+        try {
+            discount.setExpire_date(new SimpleDateFormat("yyyy-MM-dd").parse(expire_date));
+        } catch (ParseException e) {
+            return false;
+        }
+        discount.setStatus(Discount.Status.AWAITING);
+        Optional<User> tempUser = authenticationService.getCurrentUser();
+        if(!tempUser.isPresent()){
+            return false;
+        }
+        discount.setUser(tempUser.get());
+        discount.setImage_url("images/" + file.getOriginalFilename());
+        discountRepository.save(discount);
+        return true;
+    }
+
+    public void acceptDiscount(Long id){
+        Discount disc = this.findById(id).get();
+        disc.setStatus(Discount.Status.ACCEPTED);
+        discountRepository.save(disc);
+        emailService.sendEmail(disc.getUser().getEmail(), "NORGIE - Okazja zatwierdzona", "Twoja okazja została zweryfikowana i zatwierdzona," +
+                " juz niedługo pojawi się na stronie głównej.\n" +
+                "Tytuł okazji: " + disc.getTitle());
+    }
+
+    public void deleteDiscount(Long id){
+        Discount disc = this.findById(id).get();
+        disc.setStatus(Discount.Status.DELETED);
+        discountRepository.save(disc);
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,9 +19,8 @@ import pl.okazje.project.services.UserService;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebConfig extends WebSecurityConfigurerAdapter {
-
-
 
     private UserService userService;
 
@@ -49,14 +49,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
         })
         .and().logout().permitAll().and().logout().logoutSuccessUrl("/login?logout").permitAll()
 
-        // pages access
-        .and().authorizeRequests().antMatchers(
-                "/settings/*","/settings","/messages","/add/discount","/ratecomment","/addrate","/removerate","removecomment","/addcomment",
-        "sendMessage","/conversation/*","/user_conversations/*","/sendNewMessage","/post/addcomment","/post/removecomment","/post/ratecomment",
-        "changeUserDetails","changeDescription","changePassword","/post/add","/messages/*")
-        .hasAnyAuthority("USER","ADMIN").and().authorizeRequests().antMatchers(
-        "/acceptdiscount","/removediscount","/post/remove","/banuser","/settings/admin/*")
-        .hasAnyAuthority("ADMIN")
 
         // session
         .and().sessionManagement().maximumSessions(3).expiredUrl("/login?session=true").and().invalidSessionUrl("/login?session=true");

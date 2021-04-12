@@ -1,5 +1,7 @@
 package pl.okazje.project.entities;
 
+import pl.okazje.project.exceptions.DataTooLongException;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,8 +19,6 @@ import java.util.Set;
 public class Post {
 
     public enum Status{ USUNIETE, OCZEKUJACE, ZATWIERDZONE}
-
-    private static Date data = new Date();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,14 +67,6 @@ public class Post {
         this.shop = shop;
     }
 
-    public static Date getData() {
-        return data;
-    }
-
-    public static void setData(Date data) {
-        Post.data = data;
-    }
-
     public Long getPost_id() {
         return post_id;
     }
@@ -88,6 +80,7 @@ public class Post {
     }
 
     public void setTitle(String title) {
+        if(title.length()>500) throw new DataTooLongException(title);
         this.title = title;
     }
 
@@ -96,6 +89,7 @@ public class Post {
     }
 
     public void setContent(String content) {
+        if(content.length()>1500) throw new DataTooLongException(content);
         this.content = content;
     }
 

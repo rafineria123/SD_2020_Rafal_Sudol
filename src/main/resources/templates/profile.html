@@ -238,7 +238,7 @@
                     </div>
                 </div>
             </div>
-                <div style="width: 100%;padding-left: 15px;padding-right: 15px;padding-bottom: 10px" th:each="discount:${user.getDiscounts()}"  th:if="${!comments_page&&!discount.deletedOrNotReady()}">
+                <div style="width: 100%;padding-left: 15px;padding-right: 15px;padding-bottom: 10px" th:each="discount:${user.getDiscounts()}"  th:if="${!comments_page&&!discount.isDeleted()&&!discount.isAwaiting()}">
                     <div class="row" style="padding-top:10px"></div>
 
                     <a href="" th:href="@{|/discount/${discount.getDiscount_id()}|}" style="width: 100%">

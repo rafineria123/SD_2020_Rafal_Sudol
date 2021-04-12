@@ -1,6 +1,7 @@
 package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,7 @@ import pl.okazje.project.entities.Ban;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.BanService;
-import pl.okazje.project.services.SendMail;
+import pl.okazje.project.services.EmailService;
 
 import javax.mail.MessagingException;
 
@@ -25,24 +26,24 @@ public class ProfileController {
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final BanService banService;
-    private final SendMail sendMail;
+    private final EmailService emailService;
 
     @Autowired
     public ProfileController(DiscountRepository discountRepository, ShopRepository shopRepository, TagRepository tagRepository,
-                             UserRepository userRepository, BanService banService, SendMail sendMail) {
+                             UserRepository userRepository, BanService banService, EmailService emailService) {
         this.discountRepository = discountRepository;
         this.shopRepository = shopRepository;
         this.tagRepository = tagRepository;
         this.userRepository = userRepository;
         this.banService = banService;
-        this.sendMail = sendMail;
+        this.emailService = emailService;
     }
 
     @GetMapping("/profile/{name}")
     public ModelAndView profile(@PathVariable("name") String name) {
 
         ModelAndView modelAndView = new ModelAndView("profile");
-        User uzytkownik = userRepository.findFirstByLogin(name);
+        User uzytkownik = userRepository.findFirstByLogin(name).get();
         modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("comments_page", false);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -55,7 +56,7 @@ public class ProfileController {
     public ModelAndView profile_comments(@PathVariable("name") String name) {
 
         ModelAndView modelAndView = new ModelAndView("profile");
-        User uzytkownik = userRepository.findFirstByLogin(name);
+        User uzytkownik = userRepository.findFirstByLogin(name).get();
         modelAndView.addObject("user", uzytkownik);
         modelAndView.addObject("comments_page", true);
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -65,10 +66,11 @@ public class ProfileController {
     }
 
     @PostMapping("/banuser")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public String banuser(@ModelAttribute("user_id") int user_id, @ModelAttribute("reason") String reason) throws MessagingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName()).get();
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Ban ban = new Ban();
@@ -79,7 +81,7 @@ public class ProfileController {
             uzytkownik2.setBan(ban);
             userRepository.save(uzytkownik2);
             userRepository.deleteSessionWhereUsernameEquals(uzytkownik2.getLogin());
-            sendMail.sendingMail(uzytkownik2.getEmail(),"Ban - Twoje konto zostało zbanowane", "Witaj "+uzytkownik2.getLogin()+", \n Złamałeś regulamin strony co poskutkowalo blokadą konta.\n Powód blokady: "+ban.getReason()+"\n\nJeśli nie zgadzasz sie z ta blokadą, powiadom nas o tym jak najszybciej.");
+            emailService.sendEmail(uzytkownik2.getEmail(),"Ban - Twoje konto zostało zbanowane", "Witaj "+uzytkownik2.getLogin()+", \n Złamałeś regulamin strony co poskutkowalo blokadą konta.\n Powód blokady: "+ban.getReason()+"\n\nJeśli nie zgadzasz sie z ta blokadą, powiadom nas o tym jak najszybciej.");
 
         }
 

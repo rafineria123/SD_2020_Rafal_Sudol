@@ -121,7 +121,7 @@
 <div class="container-fluid">
     <div class="row d-flex justify-content-center" style="width: 100%;margin: 0">
         <div class="col-8">
-            <div class="row" style="padding: 0;" th:if="${discount.deleted()}">
+            <div class="row" style="padding: 0;" th:if="${discount.isDeleted()}">
                 <div style="padding: 15px;width: 100%">
                     <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
                         <div class="col-12" style="padding-left: 0;padding-right: 0">
@@ -133,7 +133,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="padding: 0" th:if="${discount.deletedOrNotReady()}">
+            <div class="row" style="padding: 0" th:if="${discount.isDeleted()||discount.isAwaiting()}">
                 <div style="padding: 15px;width: 100%" th:if="${discount.getStatus().equals('AWAITING')}">
                     <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
                         <div class="col-12" style="padding-left: 0;padding-right: 0">
@@ -145,7 +145,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="padding: 0" th:if="${discount.isOutDated()&&!discount.deleted()&&!discount.getStatus().equals('AWAITING')}">
+            <div class="row" style="padding: 0" th:if="${discount.isOutDated()&&!discount.isDeleted()&&!discount.getStatus().equals('AWAITING')}">
                 <div style="padding: 15px;width: 100%">
                     <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
                         <div class="col-12" style="padding-left: 0;padding-right: 0">

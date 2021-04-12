@@ -1,6 +1,7 @@
 package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -47,7 +48,7 @@ public class PostController {
             if (authentication.getAuthorities().stream()
                     .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
 
-                User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
+                User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName()).get();
                 if (uzytkownik1.hasPost(Long.parseLong(id)) || uzytkownik1.getROLE().equals("ADMIN")) {
 
                     modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -79,9 +80,10 @@ public class PostController {
 
 
     @PostMapping("/addcomment")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public String addcomment(@ModelAttribute("discountidaddcomment") String discountaddcomment, @ModelAttribute("comment") String comment) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         Comment comment1 = new Comment();
         comment1.setPost(postRepository.findById(Long.parseLong(discountaddcomment)).get());
         comment1.setUser(uzytkownik);
@@ -93,10 +95,11 @@ public class PostController {
     }
 
     @PostMapping("/removecomment")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public String removecomment(@ModelAttribute("comment_id") String comment_id){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName()).get();
         Comment comment = commentService.findById(Long.parseLong(comment_id)).get();
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
@@ -112,9 +115,10 @@ public class PostController {
     }
 
     @PostMapping("/ratecomment")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public String ratecomment(@ModelAttribute("commentid") String commentid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         Comment comment = commentService.findById((Long.parseLong(commentid))).get();
         for (Rating r : comment.getRatings()) {
 
@@ -135,6 +139,7 @@ public class PostController {
     }
 
     @GetMapping("/add")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ModelAndView addPost() {
         ModelAndView modelAndView = new ModelAndView("add_post");
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -144,10 +149,11 @@ public class PostController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ModelAndView addPost(@ModelAttribute("content") String content,@ModelAttribute("title") String title,@ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop, RedirectAttributes redir){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
         ModelAndView modelAndView;
 
         Post post = new Post();
@@ -183,10 +189,11 @@ public class PostController {
     }
 
     @PostMapping("/remove")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public String removePost(@ModelAttribute("post_id") String post_id){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName()).get();
         if(uzytkownik1.getROLE().equals("ADMIN")){
 
             Post post = postRepository.findById(Long.parseLong(post_id)).get();

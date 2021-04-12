@@ -1,6 +1,7 @@
 package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,327 +15,123 @@ import pl.okazje.project.entities.Discount;
 import pl.okazje.project.entities.Rating;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.*;
-import pl.okazje.project.services.CommentService;
-import pl.okazje.project.services.SendMail;
+import pl.okazje.project.services.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Optional;
 
 @Controller
 public class DiscountController {
 
-    private final DiscountRepository discountRepository;
-    private final ShopRepository shopRepository;
-    private final TagRepository tagRepository;
-    private final UserRepository userRepository;
     private final CommentService commentService;
-    private final RatingRepository ratingRepository;
-    private final SendMail sendMail;
+    private final DiscountService discountService;
+    private final TagService tagService;
+    private final ShopService shopService;
+    private final RatingService ratingService;
 
     @Autowired
-    public DiscountController(DiscountRepository discountRepository, ShopRepository shopRepository, TagRepository tagRepository,
-                              UserRepository userRepository, CommentService commentService, RatingRepository ratingRepository, SendMail sendMail) {
-        this.discountRepository = discountRepository;
-        this.shopRepository = shopRepository;
-        this.tagRepository = tagRepository;
-        this.userRepository = userRepository;
+    public DiscountController(CommentService commentService, DiscountService discountService, TagService tagService, ShopService shopService, RatingService ratingService) {
         this.commentService = commentService;
-        this.ratingRepository = ratingRepository;
-        this.sendMail = sendMail;
+        this.discountService = discountService;
+        this.tagService = tagService;
+        this.shopService = shopService;
+        this.ratingService = ratingService;
     }
 
-
-
     @GetMapping("/discount/{id}")
-    public ModelAndView discount(@PathVariable("id") Long id) {
-        if (discountRepository.findById(id).get().deletedOrNotReady()) {
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication.getAuthorities().stream()
-                    .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
-
-                User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
-                if (uzytkownik1.hasDiscount(id) || uzytkownik1.getROLE().equals("ADMIN")) {
-
-                    ModelAndView modelAndView = new ModelAndView("discount");
-                    modelAndView.addObject("list_of_tags", tagRepository.findAll());
-                    modelAndView.addObject("list_of_shops", shopRepository.findAll());
-                    modelAndView.addObject("discount", discountRepository.findById(id).get());
-                    return modelAndView;
-
-                }
-                ModelAndView modelAndView = new ModelAndView("error");
-                return modelAndView;
-
-
-            } else {
-                ModelAndView modelAndView = new ModelAndView("error");
-                return modelAndView;
-            }
-
-
+    public ModelAndView getDiscount(@PathVariable("id") Long id) {
+        ModelAndView modelAndView;
+        Optional<Discount> discount = discountService.findById(id);
+        if (discount.isPresent()) {
+            modelAndView = new ModelAndView("discount");
+            modelAndView.addObject("list_of_tags", tagService.findAll());
+            modelAndView.addObject("list_of_shops", shopService.findAll());
+            modelAndView.addObject("discount", discount.get());
+            return modelAndView;
         }
-
-        ModelAndView modelAndView = new ModelAndView("discount");
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("discount", discountRepository.findById(id).get());
-
+        modelAndView = new ModelAndView("error");
         return modelAndView;
     }
 
 
     @GetMapping("/add/discount")
-    public ModelAndView add_discount_get() {
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ModelAndView addDiscount() {
         ModelAndView modelAndView = new ModelAndView("add_discount");
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("error", false);
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
         return modelAndView;
     }
+
     @PostMapping(path = "/add/discount", consumes = {"multipart/form-data"})
-    public ModelAndView add_discount(
-            @ModelAttribute("url") String url, @ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop,
-            @ModelAttribute("title") String title, @ModelAttribute("old_price") String old_price, @ModelAttribute("current_price") String current_price,
-            @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
-            @ModelAttribute("expire_date") String expire_date, @ModelAttribute("type") String type, @ModelAttribute("discount") String rodzaj, @RequestParam("image_url")
-                    MultipartFile file, HttpServletRequest request, RedirectAttributes redir
-    ) {
-        Discount discount = new Discount();
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-            if(content.isEmpty()||title.isEmpty()||url.isEmpty()){
-                throw new IllegalArgumentException();
-            }
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ModelAndView addDiscount(@ModelAttribute("url") String url, @ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop,
+                                     @ModelAttribute("title") String title, @ModelAttribute("old_price") String old_price, @ModelAttribute("current_price") String current_price,
+                                     @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
+                                     @ModelAttribute("expire_date") String expire_date, @ModelAttribute("type") String typeBase, @ModelAttribute("discount") String typeSuffix, @RequestParam("image_url")
+    MultipartFile file, HttpServletRequest request, RedirectAttributes redir) {
 
-
-            Path currentPath = Paths.get("");
-            Path absolutePath = currentPath.toAbsolutePath();
-
-            File transferFile = new File(absolutePath+"/src/main/resources/static/images/" + file.getOriginalFilename());
-            file.transferTo(transferFile);
-
-            if(type.equals("OBNIZKA")){
-
-                discount.setCurrent_price(Double.parseDouble(current_price));
-                discount.setOld_price(Double.parseDouble(old_price));
-                discount.setShipment_price(Double.parseDouble(shipment_price));
-                discount.setType(Discount.Type.OBNIZKA);
-
-            }
-
-            if(type.equals("KOD")){
-
-                discount.setOld_price(Double.parseDouble(old_price));
-                if(rodzaj.equals("%")){
-
-                    discount.setType(Discount.Type.KODPROCENT);
-
-                }
-                if(rodzaj.equals("PLN")){
-
-                    discount.setType(Discount.Type.KODNORMALNY);
-
-                }
-
-
-            }
-
-            if(type.equals("KUPON")){
-
-                discount.setOld_price(Double.parseDouble(old_price));
-                if(rodzaj.equals("%")){
-
-                    discount.setType(Discount.Type.KUPONPROCENT);
-
-                }
-                if(rodzaj.equals("PLN")){
-
-                    discount.setType(Discount.Type.KUPONNORMALNY);
-
-                }
-
-
-            }
-
-
-            discount.setContent(content);
-            discount.setCreationdate(new Date());
-            discount.setDiscount_link(url);
-
-            discount.setTag(tagRepository.findById(Long.parseLong(tag)).get());
-            discount.setShop(shopRepository.findById(Long.parseLong(shop)).get());
-            discount.setTitle(title);
-            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(expire_date);
-            discount.setExpire_date(date1);
-            discount.setStatus(Discount.Status.AWAITING);
-            discount.setUser(uzytkownik);
-            discount.setImage_url("images/" + file.getOriginalFilename());
-            discountRepository.save(discount);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            ModelAndView modelAndView = new ModelAndView("add_discount");
-            modelAndView.addObject("list_of_tags", tagRepository.findAll());
-            modelAndView.addObject("list_of_shops", shopRepository.findAll());
-            modelAndView.addObject("error", true);
+        ModelAndView modelAndView;
+        if (discountService.addDiscount(url, tag, shop, title, old_price, current_price, shipment_price, content, expire_date, typeBase, typeSuffix, file)) {
+            RedirectView redirectView = new RedirectView("/settings/discounts");
+            redir.addFlashAttribute("good_status", "Twoja okazja została dodana i oczekuje na weryfikacje.");
+            modelAndView = new ModelAndView(redirectView);
             return modelAndView;
         }
-
-        RedirectView redirectView = new RedirectView("/settings/discounts");
-        redir.addFlashAttribute("good_status", "Twoja okazja została dodana i oczekuje na weryfikacje.");
-        ModelAndView modelAndView =  new ModelAndView(redirectView);
-
+        RedirectView redirectView = new RedirectView("/add/discount");
+        redir.addFlashAttribute("error", true);
+        modelAndView = new ModelAndView(redirectView);
         return modelAndView;
     }
 
     @PostMapping("/addrate")
-    public String addrate(@ModelAttribute("discountidadd") String discountid, @ModelAttribute("redirect") String redirect) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-
-        Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
-        for (Rating r : discount.getRatings()) {
-
-            if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {
-                return "redirect:/discount/"+discountid;
-
-            }
-
-        }
-
-
-        Rating newrating = new Rating();
-        newrating.setUser(uzytkownik);
-        newrating.setDiscount(discount);
-        ratingRepository.save(newrating);
-
-        return "redirect:/discount/" + discountid;
-
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public String addRatingToDiscount(@ModelAttribute("discountidadd") String discountId) {
+        ratingService.addRatingToDiscount(Long.parseLong(discountId));
+        return "redirect:/discount/" + discountId;
     }
 
     @PostMapping("/removerate")
-    public String removerate(@ModelAttribute("discountidremove") String discountid, @ModelAttribute("redirect_remove") String redirect) {
-
-        Discount discount = discountRepository.findById(Long.parseLong(discountid)).get();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        for (Rating r : discount.getRatings()) {
-
-            if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {
-                ratingRepository.delete(r);
-                return "redirect:/discount/"+discountid;
-
-            }
-
-        }
-
-        return "redirect:/discount/"+discountid;
-
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public String removeRatingFromDiscount(@ModelAttribute("discountidremove") String discountId) {
+        ratingService.removeRatingFromDiscount(Long.parseLong(discountId));
+        return "redirect:/discount/" + discountId;
     }
 
     @PostMapping("/addcomment")
-    public String addcomment(@ModelAttribute("discountidaddcomment") String discountaddcomment, @ModelAttribute("comment") String comment) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        Comment comment1 = new Comment();
-        comment1.setDiscount(discountRepository.findById(Long.parseLong(discountaddcomment)).get());
-        comment1.setUser(uzytkownik);
-        comment1.setContent(comment);
-        comment1.setCr_date(new Date());
-        commentService.save(comment1);
-
-        return "redirect:/discount/" + Long.parseLong(discountaddcomment);
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public String addComment(@ModelAttribute("discountidaddcomment") String discountId, @ModelAttribute("comment") String comment) {
+        commentService.addCommentToDiscount(Long.parseLong(discountId), comment);
+        return "redirect:/discount/" + discountId;
     }
 
     @PostMapping("/removecomment")
-    public String removecomment(@ModelAttribute("comment_id") String comment_id){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
-        Comment comment = commentService.findById(Long.parseLong(comment_id)).get();
-        if(uzytkownik1.getROLE().equals("ADMIN")){
-
-
-            comment.setStatus(Comment.Status.DELETED);
-            commentService.save(comment);
-
-        }
-
-
-        return "redirect:/discount/"+comment.getDiscount().getDiscount_id();
-
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String removeComment(@ModelAttribute("comment_id") String comment_id,HttpServletRequest request) {
+        commentService.removeComment(Long.parseLong(comment_id));
+        return "redirect:" + request.getHeader("Referer");
     }
 
     @PostMapping("/acceptdiscount")
-    public String acceptdiscount(@ModelAttribute("discount_id") String discount_id) throws MessagingException {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
-        if(uzytkownik1.getROLE().equals("ADMIN")){
-
-            Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
-            disc.setStatus(Discount.Status.ACCEPTED);
-            discountRepository.save(disc);
-            sendMail.sendingMail(disc.getUser().getEmail(),"NORGIE - Okazja zatwierdzona","Twoja okazja została zweryfikowana i zatwierdzona," +
-                    " juz niedługo pojawi się na stronie głównej.\n" +
-                    "Tytuł okazji: "+disc.getTitle());
-
-        }
-
-        return "redirect:/discount/"+discount_id;
-
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String acceptDiscount(@ModelAttribute("discount_id") String discount_id){
+        discountService.acceptDiscount(Long.parseLong(discount_id));
+        return "redirect:/discount/" + discount_id;
     }
 
     @PostMapping("/removediscount")
-    public String removediscount(@ModelAttribute("discount_id") String discount_id){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
-        if(uzytkownik1.getROLE().equals("ADMIN")){
-
-            Discount disc = discountRepository.findById(Long.parseLong(discount_id)).get();
-            disc.setStatus(Discount.Status.DELETED);
-            discountRepository.save(disc);
-
-        }
-
-        return "redirect:/discount/"+discount_id;
-
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String deleteDiscount(@ModelAttribute("discount_id") String discount_id) {
+        discountService.deleteDiscount(Long.parseLong(discount_id));
+        return "redirect:/discount/" + discount_id;
     }
 
     @PostMapping("/ratecomment")
-    public String ratecomment(@ModelAttribute("commentid") String commentid) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
-        Comment comment = commentService.findById((Long.parseLong(commentid))).get();
-        for (Rating r : comment.getRatings()) {
-
-            if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {
-                return "redirect:/discount/" + comment.getDiscount().getDiscount_id().toString();
-
-            }
-
-        }
-
-        Rating newrating = new Rating();
-        newrating.setUser(uzytkownik);
-        newrating.setComment(comment);
-        ratingRepository.save(newrating);
-
-        return "redirect:/discount/" + comment.getDiscount().getDiscount_id().toString();
-
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public String addRatingToComment(@ModelAttribute("commentid") String commentid,HttpServletRequest request) {
+        ratingService.addRatingToComment(Long.parseLong(commentid));
+        return "redirect:" + request.getHeader("Referer");
     }
 
 }

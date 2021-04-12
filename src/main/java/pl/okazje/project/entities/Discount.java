@@ -108,7 +108,7 @@ public class Discount {
         return s;
     }
 
-    public boolean deleted() {
+    public boolean isDeleted() {
         if (this.status == null) {
             return false;
         } else if (this.status.equals(Status.DELETED)) {
@@ -118,10 +118,10 @@ public class Discount {
         }
     }
 
-    public boolean deletedOrNotReady() {
+    public boolean isAwaiting() {
         if (this.status == null) {
             return false;
-        } else if (this.status.equals(Status.DELETED) || this.status.equals(Status.AWAITING)) {
+        } else if (this.status.equals(Status.AWAITING)) {
             return true;
         } else {
             return false;

@@ -1,6 +1,7 @@
 package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,7 @@ import pl.okazje.project.entities.Message;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.ConversationService;
-import pl.okazje.project.services.SendMail;
+import pl.okazje.project.services.EmailService;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +36,10 @@ public class MessagesController {
     @Autowired
     MessageRepository messageRepository;
     @Autowired
-    SendMail sendMail;
+    EmailService emailService;
 
     @GetMapping("/messages")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ModelAndView messages() {
 
         ModelAndView modelAndView = new ModelAndView("user_messages");
@@ -51,10 +53,11 @@ public class MessagesController {
 
 
     @GetMapping("/messages/{id}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ModelAndView pageMessages(@PathVariable("id") String id) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
 
         if (!conversationService.findById(Long.parseLong(id)).isPresent()) {
 
@@ -92,10 +95,11 @@ public class MessagesController {
     }
 
     @PostMapping("sendMessage")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public String sendMessage(@ModelAttribute("new_message_conv_id") String new_message_conv_id, @ModelAttribute("new_message") String new_message) throws MessagingException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
 
 
         Message message = new Message();
@@ -105,12 +109,12 @@ public class MessagesController {
         message.setCr_date(new Date());
         message.setUser(uzytkownik);
         User otheruser = conversationService.findById(Long.parseLong(new_message_conv_id)).get().getOtherUser(uzytkownik);
-        ArrayList<String> list =new ArrayList<>(userRepository.findAllExpiry_timeByUsername(otheruser.getLogin()));
+        ArrayList<String> list =new ArrayList<>(userRepository.findExpiry_timeByUsername(otheruser.getLogin()));
         if(!list.isEmpty()){
 
             for (String s:list) {
                 if(Long.parseLong(s)-System.currentTimeMillis()<0){
-                    sendMail.sendingMail(otheruser.getEmail(),
+                    emailService.sendEmail(otheruser.getEmail(),
                             "NORGIE - Otrzymales nową wiadomość","Witaj "+otheruser.getLogin()+",\n Otrzymałeś nową wiadomość od "
                                     +uzytkownik.getLogin()+"\n Treść wiadomości: "+message.getContent());
                 }
@@ -119,7 +123,7 @@ public class MessagesController {
 
         }else {
 
-            sendMail.sendingMail(otheruser.getEmail(),
+            emailService.sendEmail(otheruser.getEmail(),
                     "NORGIE - Otrzymales nową wiadomość","Witaj "+otheruser.getLogin()+",\n Otrzymałeś nową wiadomość od "
                             +uzytkownik.getLogin()+"\n Treść wiadomości: "+message.getContent());
 
@@ -135,11 +139,12 @@ public class MessagesController {
 
 
     @GetMapping("/conversation/{id}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
     String[][] conversation(HttpServletRequest request, HttpServletResponse response, @PathVariable String id) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName()).get();
         User uzytkownik2 = conversationService.findById(Long.parseLong(id)).get().getOtherUser(uzytkownik1);
 
         ArrayList<Message> list = conversationService.findByUsers(uzytkownik1.getUser_id(), uzytkownik2.getUser_id()).get().getMessagesSorted();
@@ -159,11 +164,12 @@ public class MessagesController {
     }
 
     @GetMapping("/user_conversations/{id}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
     String[][] userConversations(HttpServletRequest request, HttpServletResponse response, @PathVariable String id) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName()).get();
 
         ArrayList<Conversation> list = uzytkownik1.getConversationsSorted();
         String array[][] = new String[list.size()][6];
@@ -186,12 +192,13 @@ public class MessagesController {
     }
 
     @PostMapping("/sendNewMessage")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
     String sendNewMessage(HttpServletRequest request, HttpServletResponse response, @RequestParam("message") String message, @RequestParam("user") String user2) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName());
-        User uzytkownik2 = userRepository.findFirstByLogin(user2);
+        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName()).get();
+        User uzytkownik2 = userRepository.findFirstByLogin(user2).get();
 
 
         Message m = new Message();
@@ -202,12 +209,12 @@ public class MessagesController {
         m.setStatus(Message.Status.NEW);
         messageRepository.save(m);
 
-        ArrayList<String> list =new ArrayList<>(userRepository.findAllExpiry_timeByUsername(uzytkownik2.getLogin()));
+        ArrayList<String> list =new ArrayList<>(userRepository.findExpiry_timeByUsername(uzytkownik2.getLogin()));
         if(!list.isEmpty()){
 
             for (String s:list) {
                 if(Long.parseLong(s)-System.currentTimeMillis()<0){
-                    sendMail.sendingMail(uzytkownik2.getEmail(),
+                    emailService.sendEmail(uzytkownik2.getEmail(),
                             "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownik2.getLogin()+",\n Otrzymałeś nową wiadomość od "
                                     +uzytkownik1.getLogin()+"\n Treść wiadomości: "+m.getContent());
                 }
@@ -216,7 +223,7 @@ public class MessagesController {
 
         }else {
 
-            sendMail.sendingMail(uzytkownik2.getEmail(),
+            emailService.sendEmail(uzytkownik2.getEmail(),
                     "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownik2.getLogin()+",\n Otrzymałeś nową wiadomość od "
                             +uzytkownik1.getLogin()+"\n Treść wiadomości: "+m.getContent());
 
