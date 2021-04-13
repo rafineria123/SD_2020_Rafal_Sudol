@@ -22,7 +22,7 @@ import pl.okazje.project.services.UserService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public WebConfig(UserService userService) {
@@ -34,7 +34,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
         // resources access
         http.csrf().disable()
         .authorizeRequests().antMatchers("/register", "/resources/**", "/css/**", "/js/**","/js/mixitup/dist/**","/js/mixitup/**", "/images/**").permitAll()
-
         // login&login exceptions
         .and().formLogin().loginPage("/login")
         .usernameParameter("login").passwordParameter("password").permitAll()
@@ -48,30 +47,20 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
             }
         })
         .and().logout().permitAll().and().logout().logoutSuccessUrl("/login?logout").permitAll()
-
-
         // session
         .and().sessionManagement().maximumSessions(3).expiredUrl("/login?session=true").and().invalidSessionUrl("/login?session=true");
-
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
-    {
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
                 .passwordEncoder(passwordEncoder());
-
     }
-
 
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -82,9 +71,5 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     public UserService getUserService() {
         return new UserService();
     }
-
-
-
-
 
 }

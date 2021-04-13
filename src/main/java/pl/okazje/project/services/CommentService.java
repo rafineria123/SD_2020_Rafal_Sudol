@@ -18,12 +18,14 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final DiscountService discountService;
     private final AuthenticationService authenticationService;
+    private final PostService postService;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, DiscountService discountService, AuthenticationService authenticationService) {
+    public CommentService(CommentRepository commentRepository, DiscountService discountService, AuthenticationService authenticationService, PostService postService) {
         this.commentRepository = commentRepository;
         this.discountService = discountService;
         this.authenticationService = authenticationService;
+        this.postService = postService;
     }
 
     public void save(Comment comment){
@@ -43,7 +45,18 @@ public class CommentService {
         this.save(comment1);
     }
 
+    public void addCommentToPost(Long id, String content){
+        Comment comment1 = new Comment();
+        comment1.setPost(postService.findById(id).get());
+        comment1.setUser(authenticationService.getCurrentUser().get());
+        comment1.setContent(content);
+        comment1.setCr_date(new Date());
+        this.save(comment1);
+    }
+
     public void removeComment(Long id){
-        commentRepository.delete(this.findById(id).get());
+        Comment tempComment = this.findById(id).get();
+        tempComment.setStatus(Comment.Status.DELETED);
+        this.save(tempComment);
     }
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 @Entity
 public class Post {
 
-    public enum Status{ USUNIETE, OCZEKUJACE, ZATWIERDZONE}
+    public enum Status{DELETED, AWAITING, ACCEPTED}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -148,6 +148,20 @@ public class Post {
         Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
         return  list;
 
+    }
+
+    public boolean isDeleted(){
+        if(this.status == null||!this.status.equals(Status.DELETED)){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isAwaiting(){
+        if(this.status == null||!this.status.equals(Status.AWAITING)){
+            return false;
+        }
+        return true;
     }
 
 

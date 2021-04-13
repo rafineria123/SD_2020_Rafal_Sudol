@@ -2,22 +2,15 @@ package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.okazje.project.entities.Comment;
 import pl.okazje.project.entities.Discount;
-import pl.okazje.project.entities.Rating;
-import pl.okazje.project.entities.User;
-import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.*;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
@@ -53,7 +46,6 @@ public class DiscountController {
         modelAndView = new ModelAndView("error");
         return modelAndView;
     }
-
 
     @GetMapping("/add/discount")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")

@@ -60,4 +60,6 @@ public interface PostRepository extends CrudRepository<Post, Long> {
             nativeQuery = true)
     List<Post> FindAllByUserOrderByCreationdateDesc(String user);
 
+    Post findFirstByTitleOrderByCreationdateDesc(String title);
+
 }
