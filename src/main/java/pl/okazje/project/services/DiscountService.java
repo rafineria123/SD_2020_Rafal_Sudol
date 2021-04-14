@@ -1,15 +1,10 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.Discount;
 import pl.okazje.project.entities.Shop;
 import pl.okazje.project.entities.Tag;
@@ -33,18 +28,34 @@ public class DiscountService {
     private final ShopService shopService;
     private final TagService tagService;
     private final EmailService emailService;
+    private final SessionService sessionService;
 
     @Autowired
-    public DiscountService(EmailService emailService,DiscountRepository discountRepository, AuthenticationService authenticationService, ShopService shopService, TagService tagService) {
+    public DiscountService(EmailService emailService, DiscountRepository discountRepository, AuthenticationService authenticationService, ShopService shopService, TagService tagService, SessionService sessionService) {
         this.discountRepository = discountRepository;
         this.authenticationService = authenticationService;
         this.shopService = shopService;
         this.tagService = tagService;
         this.emailService = emailService;
+        this.sessionService = sessionService;
     }
 
     public List<Discount> findAllByOrderByCreationdateDesc(){
-        return this.discountRepository.findAllByOrderByCreationdateDesc();
+        List<Discount> discounts = this.discountRepository.findAllByOrderByCreationdateDesc();
+        Optional<User> optionalUser =  authenticationService.getCurrentUser();
+        if(optionalUser.isPresent()){
+            Optional<Session> optionalSession = sessionService.findCurrentSessionForUser(optionalUser.get());
+            if(optionalSession.isPresent()&&optionalSession.get().getAttribute("filter")!=null&&optionalSession.get().getAttribute("filter").equals("true")){
+                Iterator<Discount> i = discounts.iterator();
+                while (i.hasNext()) {
+                    Discount d = i.next();
+                    if(d.isOutDated()){
+                        i.remove();
+                    }
+                }
+            }
+        }
+        return discounts;
     }
 
     public List<Discount> findAllByOrderByRatingDesc(){

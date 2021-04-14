@@ -14,8 +14,8 @@ import pl.okazje.project.repositories.DiscountRepository;
 import pl.okazje.project.repositories.ShopRepository;
 import pl.okazje.project.repositories.TagRepository;
 import pl.okazje.project.repositories.UserRepository;
+import pl.okazje.project.services.*;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,46 +35,41 @@ public class HomeController {
     @Autowired
     UserRepository userRepository;
 
+    private final SessionService sessionService;
+    private final AuthenticationService authenticationService;
+    private final DiscountService discountService;
+    private final TagService tagService;
+    private final ShopService shopService;
+
+    @Autowired
+    public HomeController(SessionService sessionService, AuthenticationService authenticationService, DiscountService discountService, TagService tagService, ShopService shopService) {
+        this.sessionService = sessionService;
+        this.authenticationService = authenticationService;
+        this.discountService = discountService;
+        this.tagService = tagService;
+        this.shopService = shopService;
+    }
+
     @GetMapping("/")
-    public ModelAndView homePage(HttpServletRequest request) throws MessagingException {
-
-        PagedListHolder page = new PagedListHolder(discountRepository.findAllByOrderByCreationdateDesc());
-        if(request.getSession().getAttribute("filter")!=null){
-            if(request.getSession().getAttribute("filter").equals("true")){
-
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByCreationdateDesc());
-                Iterator<Discount> i = list.iterator();
-                while (i.hasNext()) {
-                    Discount d = i.next();
-                    if(d.isOutDated()){
-                        i.remove();
-                    }
-                }
-
-                page = new PagedListHolder(list);
-
-
-            }
-        }
+    public ModelAndView getAllDiscounts(HttpServletRequest request){
+        // TODO: GUEST CANNOT FILTER
+        PagedListHolder page = new PagedListHolder(discountService.findAllByOrderByCreationdateDesc());
         page.setPageSize(LoginAndRegisterController.page_size_for_home);
         page.setPage(0);
-
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
         modelAndView.addObject("quantity_of_pages", page.getPageCount());
         modelAndView.addObject("number_of_page", 1);
         modelAndView.addObject("next_and_previous", "/page/id");
         modelAndView.addObject("picked_sort", 3);
         modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
-        List<String> listOfAdresses = new ArrayList<>();
+        List<String> listOfAddresses = new ArrayList<>();
         for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/page/" + i);
-
+            listOfAddresses.add("/page/" + i);
         }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        modelAndView.addObject("list_of_adresses", listOfAddresses);
         return modelAndView;
     }
 
@@ -350,7 +345,7 @@ public class HomeController {
     }
 
     @GetMapping("/page/{id}")
-    public ModelAndView homePage(@PathVariable("id") String id, HttpServletRequest request) {
+    public ModelAndView getAllDiscounts(@PathVariable("id") String id, HttpServletRequest request) {
 
         PagedListHolder page = new PagedListHolder(discountRepository.findAllByOrderByCreationdateDesc());
         if(request.getSession().getAttribute("filter")!=null){
@@ -1130,8 +1125,6 @@ public class HomeController {
 
     @GetMapping("/search/{search}")
     public ModelAndView search(@PathVariable("search") String search, HttpServletRequest request) {
-
-
         PagedListHolder page = new PagedListHolder(discountRepository.FindAllBySearchOrderByCreationdateDesc("%" + search + "%"));
         if(request.getSession().getAttribute("filter")!=null){
             if(request.getSession().getAttribute("filter").equals("true")){
