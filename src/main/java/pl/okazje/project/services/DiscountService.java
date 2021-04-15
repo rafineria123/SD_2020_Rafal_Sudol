@@ -1,8 +1,6 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.okazje.project.entities.Discount;
@@ -11,6 +9,7 @@ import pl.okazje.project.entities.Tag;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.DiscountRepository;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -40,24 +39,63 @@ public class DiscountService {
         this.sessionService = sessionService;
     }
 
-    public List<Discount> findAllByOrderByCreationdateDesc(){
-        List<Discount> discounts = this.discountRepository.findAllByOrderByCreationdateDesc();
-        Optional<User> optionalUser =  authenticationService.getCurrentUser();
-        if(optionalUser.isPresent()){
-            Optional<Session> optionalSession = sessionService.findCurrentSessionForUser(optionalUser.get());
-            if(optionalSession.isPresent()&&optionalSession.get().getAttribute("filter")!=null&&optionalSession.get().getAttribute("filter").equals("true")){
-                Iterator<Discount> i = discounts.iterator();
-                while (i.hasNext()) {
-                    Discount d = i.next();
-                    if(d.isOutDated()){
-                        i.remove();
+
+    public List<Discount> findAllIncludeSortingAndFiltering(){
+        List<Discount> discounts = Collections.emptyList();
+        HttpSession session = sessionService.getCurrentSession();
+        if(session.getAttribute("sort")!=null&&!session.getAttribute("sort").equals("date")){
+            switch((String)session.getAttribute("sort")){
+                case "rating":
+                    switch ((String)session.getAttribute("date")){
+                        case "day":
+                            discounts = this.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc();
+                            break;
+                        case "week":
+                            discounts = this.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc();
+                            break;
+                        default:
+                            discounts = this.findAllByOrderByRatingDesc();
+                            break;
                     }
+                    break;
+                case "comments":
+                    switch ((String)session.getAttribute("date")){
+                        case "day":
+                            discounts = this.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc();
+                            break;
+                        case "week":
+                            discounts = this.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc();
+                            break;
+                        default:
+                            discounts = this.findAllByOrderByCommentDesc();
+                            break;
+                    }
+                    break;
+            }
+        }else {
+            discounts = this.findAllByOrderByCreationdateDesc();
+        }
+
+        discounts = this.filter(discounts);
+        return discounts;
+    }
+
+    public List<Discount> filter(List<Discount> discounts){
+        if(sessionService.getCurrentSession().getAttribute("filter")!=null&&sessionService.getCurrentSession().getAttribute("filter").equals("true")){
+            Iterator<Discount> i = discounts.iterator();
+            while (i.hasNext()) {
+                Discount d = i.next();
+                if(d.isOutDated()){
+                    i.remove();
                 }
             }
         }
         return discounts;
     }
 
+    public List<Discount> findAllByOrderByCreationdateDesc(){
+        return discountRepository.findAllByOrderByCreationdateDesc();
+    }
     public List<Discount> findAllByOrderByRatingDesc(){
         return this.discountRepository.findAllByOrderByRatingDesc();
     }

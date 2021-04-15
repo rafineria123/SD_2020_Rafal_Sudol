@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.Discount;
+import pl.okazje.project.entities.Shop;
+import pl.okazje.project.entities.Tag;
 import pl.okazje.project.repositories.DiscountRepository;
 import pl.okazje.project.repositories.ShopRepository;
 import pl.okazje.project.repositories.TagRepository;
@@ -50,12 +52,35 @@ public class HomeController {
         this.shopService = shopService;
     }
 
+    public ModelAndView getBaseModelAndView(String viewName, PagedListHolder discountPages, List<Tag> tags, List<Shop> shops, String addressPrefix, String addressSuffix,int sortNumber){
+        ModelAndView modelAndView = new ModelAndView(viewName);
+        List<String> listOfAddresses = new ArrayList<>();
+        for (int i = 1; i <= discountPages.getPageCount(); i++) {
+            listOfAddresses.add("/page/" + i+"/"+addressSuffix);
+        }
+
+        modelAndView.addObject("list_of_discounts", discountPages.getPageList());
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
+        modelAndView.addObject("quantity_of_pages", discountPages.getPageCount());
+        modelAndView.addObject("number_of_page", discountPages.getPage()+1);
+        modelAndView.addObject("next_and_previous", addressPrefix+"/id/"+addressSuffix);
+        modelAndView.addObject("picked_sort", 3);
+        modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
+        modelAndView.addObject("list_of_adresses", listOfAddresses);
+
+        return modelAndView;
+    }
+
     @GetMapping("/")
-    public ModelAndView getAllDiscounts(HttpServletRequest request){
-        // TODO: GUEST CANNOT FILTER
-        PagedListHolder page = new PagedListHolder(discountService.findAllByOrderByCreationdateDesc());
+    public ModelAndView getDiscountHomepage(HttpServletRequest request){
+        PagedListHolder page = new PagedListHolder(discountService.findAllIncludeSortingAndFiltering());
         page.setPageSize(LoginAndRegisterController.page_size_for_home);
         page.setPage(0);
+        List<String> listOfAddresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+            listOfAddresses.add("/page/" + i);
+        }
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("list_of_discounts", page.getPageList());
         modelAndView.addObject("list_of_tags", tagService.findAll());
@@ -65,310 +90,16 @@ public class HomeController {
         modelAndView.addObject("next_and_previous", "/page/id");
         modelAndView.addObject("picked_sort", 3);
         modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
-        List<String> listOfAddresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-            listOfAddresses.add("/page/" + i);
-        }
         modelAndView.addObject("list_of_adresses", listOfAddresses);
         return modelAndView;
     }
 
-    @GetMapping("/page/{id}/sort/{sort}")
-    public ModelAndView homePageSort(@PathVariable("id") String id, @PathVariable("sort") String sort, HttpServletRequest request) {
-
-        ModelAndView modelAndView = new ModelAndView("home");
-        if (sort.equals("date")) {
-            PagedListHolder page = new PagedListHolder(discountRepository.findAllByOrderByCreationdateDesc());
-            if(request.getSession().getAttribute("filter")!=null){
-                if(request.getSession().getAttribute("filter").equals("true")){
-
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByCreationdateDesc());
-                    Iterator<Discount> i = list.iterator();
-                    while (i.hasNext()) {
-                        Discount d = i.next();
-                        if(d.isOutDated()){
-                            i.remove();
-                        }
-                    }
-
-                    page = new PagedListHolder(list);
-
-
-                }
-            }
-            page.setPageSize(LoginAndRegisterController.page_size_for_home);
-            page.setPage(0);
-            modelAndView.addObject("list_of_discounts", page.getPageList());
-            modelAndView.addObject("quantity_of_pages", page.getPageCount());
-            List<String> listOfAdresses = new ArrayList<>();
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/page/" + i + "/sort/" + sort);
-
-            }
-            modelAndView.addObject("list_of_adresses", listOfAdresses);
-            modelAndView.addObject("next_and_previous", "/page/id/sort/date");
-            modelAndView.addObject("picked_sort", 3);
-
-        }
-        if (sort.equals("most-comments")) {
-            PagedListHolder page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc());
-            if(request.getSession().getAttribute("filter")!=null){
-                if(request.getSession().getAttribute("filter").equals("true")){
-
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc());
-                    Iterator<Discount> i = list.iterator();
-                    while (i.hasNext()) {
-                        Discount d = i.next();
-                        if(d.isOutDated()){
-                            i.remove();
-                        }
-                    }
-
-                    page = new PagedListHolder(list);
-
-
-                }
-            }
-            page.setPageSize(LoginAndRegisterController.page_size_for_home); // number of items per page
-            page.setPage(Integer.parseInt(id) - 1);      // set to first page
-            modelAndView.addObject("list_of_discounts", page.getPageList());
-            modelAndView.addObject("quantity_of_pages", page.getPageCount());
-            modelAndView.addObject("picked_sort", 2);
-            modelAndView.addObject("time_buttons_prefix", "/page/1/sort/most-comments/time/");
-            modelAndView.addObject("picked_time", 1);
-            List<String> listOfAdresses = new ArrayList<>();
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/page/" + i + "/sort/" + sort);
-
-            }
-            modelAndView.addObject("list_of_adresses", listOfAdresses);
-            modelAndView.addObject("next_and_previous", "/page/id/sort/most-comments");
-        }
-        if (sort.equals("top-rated")) {
-            PagedListHolder page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc());
-            if(request.getSession().getAttribute("filter")!=null){
-                if(request.getSession().getAttribute("filter").equals("true")){
-
-                    ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc());
-                    Iterator<Discount> i = list.iterator();
-                    while (i.hasNext()) {
-                        Discount d = i.next();
-                        if(d.isOutDated()){
-                            i.remove();
-                        }
-                    }
-
-                    page = new PagedListHolder(list);
-
-
-                }
-            }
-            page.setPageSize(LoginAndRegisterController.page_size_for_home); // number of items per page
-            page.setPage(Integer.parseInt(id) - 1);      // set to first page
-            modelAndView.addObject("list_of_discounts", page.getPageList());
-            modelAndView.addObject("quantity_of_pages", page.getPageCount());
-            modelAndView.addObject("time_buttons_prefix", "/page/1/sort/top-rated/time/");
-            modelAndView.addObject("picked_time", 1);
-            modelAndView.addObject("picked_sort", 1);
-            List<String> listOfAdresses = new ArrayList<>();
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/page/" + i + "/sort/" + sort);
-
-            }
-            modelAndView.addObject("list_of_adresses", listOfAdresses);
-            modelAndView.addObject("next_and_previous", "/page/id/sort/top-rated");
-        }
-
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
-        return modelAndView;
-    }
-
-    @GetMapping("/page/{id}/sort/{sort}/time/{time}")
-    public ModelAndView homePageSortTime(@PathVariable("id") String id, @PathVariable("sort") String sort, @PathVariable String time, HttpServletRequest request) {
-
-        PagedListHolder page = new PagedListHolder();
-        List<String> listOfAdresses = new ArrayList<>();
-        ModelAndView modelAndView = new ModelAndView("home");
-        if (sort.equals("most-comments")) {
-            modelAndView.addObject("picked_sort", 2);
-            if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.findAllByOrderByCommentDesc());
-                if(request.getSession().getAttribute("filter")!=null){
-                    if(request.getSession().getAttribute("filter").equals("true")){
-
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByCommentDesc());
-                        Iterator<Discount> i = list.iterator();
-                        while (i.hasNext()) {
-                            Discount d = i.next();
-                            if(d.isOutDated()){
-                                i.remove();
-                            }
-                        }
-
-                        page = new PagedListHolder(list);
-
-
-                    }
-                }
-                modelAndView.addObject("picked_time", 3);
-            }
-            if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc());
-                if(request.getSession().getAttribute("filter")!=null){
-                    if(request.getSession().getAttribute("filter").equals("true")){
-
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc());
-                        Iterator<Discount> i = list.iterator();
-                        while (i.hasNext()) {
-                            Discount d = i.next();
-                            if(d.isOutDated()){
-                                i.remove();
-                            }
-                        }
-
-                        page = new PagedListHolder(list);
-
-
-                    }
-                }
-                modelAndView.addObject("picked_time", 2);
-            }
-            if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc());
-                if(request.getSession().getAttribute("filter")!=null){
-                    if(request.getSession().getAttribute("filter").equals("true")){
-
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc());
-                        Iterator<Discount> i = list.iterator();
-                        while (i.hasNext()) {
-                            Discount d = i.next();
-                            if(d.isOutDated()){
-                                i.remove();
-                            }
-                        }
-
-                        page = new PagedListHolder(list);
-
-
-                    }
-                }
-                modelAndView.addObject("picked_time", 1);
-            }
-        }
-        if (sort.equals("top-rated")) {
-            modelAndView.addObject("picked_sort", 1);
-            if (time.equals("all")) {
-                page = new PagedListHolder(discountRepository.findAllByOrderByRatingDesc());
-                if(request.getSession().getAttribute("filter")!=null){
-                    if(request.getSession().getAttribute("filter").equals("true")){
-
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByRatingDesc());
-                        Iterator<Discount> i = list.iterator();
-                        while (i.hasNext()) {
-                            Discount d = i.next();
-                            if(d.isOutDated()){
-                                i.remove();
-                            }
-                        }
-
-                        page = new PagedListHolder(list);
-
-
-                    }
-                }
-                modelAndView.addObject("picked_time", 3);
-            }
-            if (time.equals("week")) {
-                page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc());
-                if(request.getSession().getAttribute("filter")!=null){
-                    if(request.getSession().getAttribute("filter").equals("true")){
-
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc());
-                        Iterator<Discount> i = list.iterator();
-                        while (i.hasNext()) {
-                            Discount d = i.next();
-                            if(d.isOutDated()){
-                                i.remove();
-                            }
-                        }
-
-                        page = new PagedListHolder(list);
-
-
-                    }
-                }
-                modelAndView.addObject("picked_time", 2);
-            }
-            if (time.equals("day")) {
-                page = new PagedListHolder(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc());
-                if(request.getSession().getAttribute("filter")!=null){
-                    if(request.getSession().getAttribute("filter").equals("true")){
-
-                        ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc());
-                        Iterator<Discount> i = list.iterator();
-                        while (i.hasNext()) {
-                            Discount d = i.next();
-                            if(d.isOutDated()){
-                                i.remove();
-                            }
-                        }
-
-                        page = new PagedListHolder(list);
-
-
-                    }
-                }
-                modelAndView.addObject("picked_time", 1);
-            }
-        }
-        page.setPageSize(LoginAndRegisterController.page_size_for_home); // number of items per page
-        page.setPage(Integer.parseInt(id) - 1);      // set to first page
-        for (int i = 1; i <= page.getPageCount(); i++) {
-            listOfAdresses.add("/page/" + i + "/sort/" + sort + "/time/" + time);
-        }
-        modelAndView.addObject("next_and_previous", "/page/id/sort/" + sort + "/time/" + time);
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        modelAndView.addObject("time_buttons_prefix", "/page/1/sort/" + sort + "/time/");
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("sort_buttons_prefix", "/page/1/sort/");
-        return modelAndView;
-    }
-
     @GetMapping("/page/{id}")
-    public ModelAndView getAllDiscounts(@PathVariable("id") String id, HttpServletRequest request) {
+    public ModelAndView getDiscountPage(@PathVariable("id") String id) {
 
-        PagedListHolder page = new PagedListHolder(discountRepository.findAllByOrderByCreationdateDesc());
-        if(request.getSession().getAttribute("filter")!=null){
-            if(request.getSession().getAttribute("filter").equals("true")){
-
-                ArrayList<Discount> list = new ArrayList<>(discountRepository.findAllByOrderByCreationdateDesc());
-                Iterator<Discount> i = list.iterator();
-                while (i.hasNext()) {
-                    Discount d = i.next();
-                    if(d.isOutDated()){
-                        i.remove();
-                    }
-                }
-
-                page = new PagedListHolder(list);
-
-
-            }
-        }
+        PagedListHolder page = new PagedListHolder(discountService.findAllIncludeSortingAndFiltering());
         page.setPageSize(LoginAndRegisterController.page_size_for_home);
         page.setPage(Integer.parseInt(id)-1);
-
-
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("list_of_discounts", page.getPageList());
         modelAndView.addObject("list_of_tags", tagRepository.findAll());
@@ -1484,16 +1215,12 @@ public class HomeController {
 
     @PostMapping("/filter")
     public String filter(HttpServletRequest request){
-        if(request.getSession().getAttribute("filter")==null){
-            request.getSession().setAttribute("filter", "true");
-        }else{
-            if(request.getSession().getAttribute("filter").equals("true")){
-                request.getSession().setAttribute("filter", "false");
-            }else{
-                request.getSession().setAttribute("filter","true");
-            }
-        }
-
+        sessionService.toggleCurrentSessionFilter();
+        return "redirect:"+request.getHeader("referer");
+    }
+    @PostMapping("/sort")
+    public String sort(@ModelAttribute("sort") String sort, @ModelAttribute("date") String date, HttpServletRequest request){
+        sessionService.setCurrentSessionSortAndDateAttributes(sort, date);
         return "redirect:"+request.getHeader("referer");
     }
 }
