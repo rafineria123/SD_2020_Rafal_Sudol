@@ -24,23 +24,16 @@ public class RegistrationListener implements
 
     @Override
     public void onApplicationEvent(OnRegistrationCompleteEvent event) {
-        try {
             this.confirmRegistration(event);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
     }
 
-    private void confirmRegistration(OnRegistrationCompleteEvent event) throws MessagingException {
+    private void confirmRegistration(OnRegistrationCompleteEvent event) {
         User user = event.getUser();
         String token = UUID.randomUUID().toString();
         userService.createVerificationToken(user,token);
-
         String recipientAddress = user.getEmail();
         String subject = "Norgie - Aktywuj swoje konto";
         String confirmationUrl = "/registrationConfirm?token=" + token;
-
         mailSender.sendEmail(recipientAddress,subject,"Aby aktywowac swoje konto kliknij w poniższy link,\n http://54.227.52.123" + confirmationUrl);
-
     }
 }

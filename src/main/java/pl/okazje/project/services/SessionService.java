@@ -53,6 +53,13 @@ public class SessionService {
 
     }
 
+    public void setCurrentSessionForumSortAttribute(String sort){
+        HttpSession session = this.getCurrentSession();
+        if(sort != null && !sort.isEmpty()) {
+            session.setAttribute("forumSort", sort);
+        }
+    }
+
     public void toggleCurrentSessionFilter(){
         HttpSession session = this.getCurrentSession();
         if(session.getAttribute("filter")==null){

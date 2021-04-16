@@ -87,27 +87,30 @@ public class PostService {
         return true;
     }
 
-    public List<Post> findAllIncludeSortingAndFiltering(Map byArgument){
+    public List<Post> findAllIncludeSorting(Map byArgument){
         List<Post> posts;
         HttpSession session = sessionService.getCurrentSession();
         if(session.getAttribute("forumSort")!=null&&session.getAttribute("forumSort").equals("comments")){
             if(byArgument.containsKey("tag")){
                 posts = this.findAllByTagOrderByCommentDesc((String)byArgument.get("tag"));
-            }
-            if(byArgument.containsKey("shop")){
+            }else if(byArgument.containsKey("shop")){
                 posts = this.findAllByShopOrderByCommentDesc((String)byArgument.get("shop"));
-            }
-            if(byArgument.containsKey("search")){
+            }else if(byArgument.containsKey("search")){
                 posts = this.findAllBySearchOrderByCommentDesc("%"+byArgument.get("search")+"%");
-            }
-            posts = this.findAllByOrderByCommentDesc();
+            }else {
+                posts = this.findAllByOrderByCommentDesc();
+               }
         }else {
             if(byArgument.containsKey("search")){
                 posts = this.findAllBySearchOrderByCreationdateDesc("%"+byArgument.get("search")+"%");
-            }else
+            }else if(byArgument.containsKey("tag")){
+                posts = this.findAllByTagOrderByCreationdateDesc((String)byArgument.get("tag"));
+            }else if(byArgument.containsKey("shop")){
+                posts = this.findAllByShopOrderByCreationdateDesc((String)byArgument.get("shop"));
+            }else {
                 posts = this.findAllByOrderByCreationdateDesc();
+            }
         }
-
         return posts;
     }
 
@@ -116,12 +119,12 @@ public class PostService {
     }
 
 
-    public List<Post> findAllByTagOrderByCreationdateDesc(String status, String tag){
+    public List<Post> findAllByTagOrderByCreationdateDesc(String tag){
         return postRepository.findAllByTagOrderByCreationdateDesc(tag);
     }
 
 
-    public List<Post> findAllByShopOrderByCreationdateDesc(String status, String shop){
+    public List<Post> findAllByShopOrderByCreationdateDesc(String shop){
         return postRepository.findAllByShopOrderByCreationdateDesc(shop);
     }
 

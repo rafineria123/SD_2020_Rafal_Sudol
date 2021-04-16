@@ -21,10 +21,7 @@ import pl.okazje.project.services.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class HomeController {
@@ -45,83 +42,56 @@ public class HomeController {
         this.shopService = shopService;
     }
 
-    public ModelAndView getBaseModelAndView(PagedListHolder discountPages,int currentPage, String addressPrefix){
-        discountPages.setPageSize(ITEMS_PER_PAGE);
-        discountPages.setPage(currentPage);
-
-        List<String> listOfAddresses = new ArrayList<>();
-        for (int i = 1; i <= discountPages.getPageCount(); i++) {
-            listOfAddresses.add(addressPrefix+"/page/" + i);
-        }
-
-        ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("list_of_discounts", discountPages.getPageList());
-        modelAndView.addObject("list_of_tags", tagService.findAll());
-        modelAndView.addObject("list_of_shops", shopService.findAll());
-        modelAndView.addObject("quantity_of_pages", discountPages.getPageCount());
-        modelAndView.addObject("number_of_page", discountPages.getPage()+1);
-        modelAndView.addObject("next_and_previous", addressPrefix+"/page/id");
-        modelAndView.addObject("list_of_adresses", listOfAddresses);
-        return modelAndView;
-    }
-
     @GetMapping("/")
-    public ModelAndView getDiscountHomepage(HttpServletRequest request){
-        return getBaseModelAndView(new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(new HashMap())),0,"");
+    public ModelAndView getDiscountsHomepage(HttpServletRequest request){
+        return getBaseModelAndView(new HashMap(),0,"");
     }
 
     @GetMapping("/page/{id}")
-    public ModelAndView getDiscountPage(@PathVariable("id") String id) {
-        return getBaseModelAndView(new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(new HashMap())),Integer.parseInt(id)-1,"");
+    public ModelAndView getDiscountsPage(@PathVariable("id") String id) {
+        return getBaseModelAndView(new HashMap(),Integer.parseInt(id)-1,"");
     }
 
     @GetMapping("/categories/{category}")
-    public ModelAndView getDiscountByTagHomepage(@PathVariable("category") String category, HttpServletRequest request) {
+    public ModelAndView getDiscountsByTagHomepage(@PathVariable("category") String category, HttpServletRequest request) {
         HashMap<String,String> map = new HashMap<>();
         map.put("tag", category);
-        return getBaseModelAndView(new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(map)),0,"/categories/"+category);
+        return getBaseModelAndView(map,0,"/categories/"+category);
     }
 
     @GetMapping("/categories/{category}/page/{id}")
-    public ModelAndView categoryPage(@PathVariable("category") String category, @PathVariable("id") String id, HttpServletRequest request) {
+    public ModelAndView getDiscountsByTagPage(@PathVariable("category") String category, @PathVariable("id") String id, HttpServletRequest request) {
         HashMap<String,String> map = new HashMap<>();
         map.put("tag", category);
-        return getBaseModelAndView(new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(map)),Integer.parseInt(id)-1,"/categories/"+category);
+        return getBaseModelAndView(map,Integer.parseInt(id)-1,"/categories/"+category);
     }
 
     @GetMapping("/shops/{shop}")
-    public ModelAndView shop(@PathVariable("shop") String shop, HttpServletRequest request) {
+    public ModelAndView getDiscountsByShopHomepage(@PathVariable("shop") String shop, HttpServletRequest request) {
         HashMap<String,String> map = new HashMap<>();
         map.put("shop", shop);
-        return getBaseModelAndView(new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(map)),0,"/shops/"+shop);
+        return getBaseModelAndView(map,0,"/shops/"+shop);
     }
 
     @GetMapping("/shops/{shop}/page/{id}")
-    public ModelAndView shopPage(@PathVariable("shop") String shop, @PathVariable("id") String id, HttpServletRequest request) {
+    public ModelAndView getDiscountsByShopPage(@PathVariable("shop") String shop, @PathVariable("id") String id, HttpServletRequest request) {
         HashMap<String,String> map = new HashMap<>();
         map.put("shop", shop);
-        return getBaseModelAndView(new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(map)),Integer.parseInt(id)-1,"/shops/"+shop);
-    }
-
-    @PostMapping("/search")
-    public ModelAndView searchForm(@ModelAttribute("searchform") String searchform) throws UnsupportedEncodingException {
-        String encodedId = URLEncoder.encode(searchform, "UTF-8").replace("+", "%20");
-        ModelAndView m = new ModelAndView(new RedirectView("/search/" + encodedId, true, true, false));
-        return m;
+        return getBaseModelAndView(map,Integer.parseInt(id)-1,"/shops/"+shop);
     }
 
     @GetMapping("/search/{search}")
-    public ModelAndView search(@PathVariable("search") String search, HttpServletRequest request) {
+    public ModelAndView getDiscountsBySearchHomepage(@PathVariable("search") String search, HttpServletRequest request) {
         HashMap<String,String> map = new HashMap<>();
         map.put("search", search);
-        return getBaseModelAndView(new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(map)),0,"/search/"+search);
+        return getBaseModelAndView(map,0,"/search/"+search);
     }
 
     @GetMapping("/search/{search}/page/{id}")
-    public ModelAndView searchPage(@PathVariable("search") String search, @PathVariable("id") String id, HttpServletRequest request) {
+    public ModelAndView getDiscountsBySearchPage(@PathVariable("search") String search, @PathVariable("id") String id, HttpServletRequest request) {
         HashMap<String,String> map = new HashMap<>();
         map.put("search", search);
-        return getBaseModelAndView(new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(map)),Integer.parseInt(id)-1,"/search/"+search);
+        return getBaseModelAndView(map,Integer.parseInt(id)-1,"/search/"+search);
     }
 
     @PostMapping("/filter")
@@ -129,9 +99,47 @@ public class HomeController {
         sessionService.toggleCurrentSessionFilter();
         return "redirect:"+request.getHeader("referer");
     }
+
     @PostMapping("/sort")
     public String sort(@ModelAttribute("sort") String sort, @ModelAttribute("date") String date, HttpServletRequest request){
         sessionService.setCurrentSessionSortAndDateAttributes(sort, date);
         return "redirect:"+request.getHeader("referer");
+    }
+
+    @PostMapping("/search")
+    public ModelAndView search(@ModelAttribute("searchform") String searchform) throws UnsupportedEncodingException {
+        String encodedId = URLEncoder.encode(searchform, "UTF-8").replace("+", "%20");
+        ModelAndView m = new ModelAndView(new RedirectView("/search/" + encodedId, true, true, false));
+        return m;
+    }
+
+    public ModelAndView getBaseModelAndView(Map map, int currentPage, String addressPrefix){
+        PagedListHolder discountsPages = new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(map));
+        discountsPages.setPageSize(ITEMS_PER_PAGE);
+        discountsPages.setPage(currentPage);
+        String[] arrayOfAddresses = new String[discountsPages.getPageCount()];
+        for (int i = 0; i < arrayOfAddresses.length; i++) {
+            arrayOfAddresses[i]=addressPrefix+"/page/" + (i + 1);
+        }
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("list_of_discounts", discountsPages.getPageList());
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
+        modelAndView.addObject("quantity_of_pages", discountsPages.getPageCount());
+        modelAndView.addObject("number_of_page", discountsPages.getPage()+1);
+        modelAndView.addObject("next_and_previous", addressPrefix+"/page/id");
+        modelAndView.addObject("array_of_addresses", arrayOfAddresses);
+        if(map.containsKey("search")){
+            modelAndView.addObject("additional_results_info", map.get("search"));
+        }
+        if(map.containsKey("tag")){
+            modelAndView.addObject("additional_results_info", map.get("tag"));
+            modelAndView.addObject("additional_results_info_more", " kategorii");
+        }
+        if(map.containsKey("shop")){
+            modelAndView.addObject("additional_results_info", map.get("shop"));
+            modelAndView.addObject("additional_results_info_more", " sklepu");
+        }
+        return modelAndView;
     }
 }

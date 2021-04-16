@@ -144,22 +144,24 @@
 
 <div class="container d-flex flex-column justify-content-center align-items-center" style="padding-top: 25px;padding-bottom: 20px">
     <div class="d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;width: 95%;margin-bottom: 10px;">
-        <a th:href="|${sort_buttons_prefix +'most-comments'}|" style="padding-left: 10px">
-            <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
+        <form th:action="@{/forum/sort}" method="post" style="padding-left: 10px">
+            <input type="hidden" id="sort" name="sort" value="comments">
+            <button type="submit" th:if="${#session.getAttribute('forumSort')==null||!#session.getAttribute('forumSort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
                     class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
             </button>
-            <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
+            <button type="submit" th:if="${#session.getAttribute('forumSort')!=null&&#session.getAttribute('forumSort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
                     class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
             </button>
-        </a>
-        <a th:href="|${sort_buttons_prefix +'date'}|">
-            <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
-                    class="btn sort_button sort_button_activated">Najnowsze posty
+        </form>
+        <form th:action="@{/forum/sort}" method="post">
+            <input type="hidden" id="sort" name="sort" value="date">
+            <button type="submit" th:if="${#session.getAttribute('forumSort')!=null&&!#session.getAttribute('forumSort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
+                    class="btn sort_button">Najnowsze promocje
             </button>
-            <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
-                    class="btn sort_button">Najnowsze posty
+            <button type="submit" th:if="${#session.getAttribute('forumSort')==null||#session.getAttribute('forumSort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
+                    class="btn sort_button sort_button_activated">Najnowsze promocje
             </button>
-        </a>
+        </form>
     </div>
 
     <div class="d-flex" style="padding-bottom: 15px;width: 95%" th:each="post : ${list_of_posts}">
@@ -220,10 +222,10 @@
 
             <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
                 <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
-                    <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
+                    <a class="page-link" th:href="@{|${array_of_addresses[i - 1]}|}" th:text="${i}">1</a>
                 </li>
                 <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
-                    <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
+                    <a class="page-link" th:href="@{${array_of_addresses[i - 1]}}" th:text="${i}">1</a>
                 </li>
             </div>
 

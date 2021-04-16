@@ -527,10 +527,10 @@
 
             <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
                 <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
-                    <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
+                    <a class="page-link" th:href="@{|${array_of_addresses[i - 1]}|}" th:text="${i}">1</a>
                 </li>
                 <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
-                    <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
+                    <a class="page-link" th:href="@{${array_of_addresses[i - 1]}}" th:text="${i}">1</a>
                 </li>
             </div>
 

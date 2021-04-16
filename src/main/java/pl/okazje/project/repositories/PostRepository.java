@@ -16,12 +16,12 @@ public interface PostRepository extends CrudRepository<Post, Long> {
             nativeQuery = true)
     List<Post> findAllByOrderByCreationdateDesc();
 
-    @Query(value = "SELECT * from post where tag_id in (select tag_id from tag where tag.name=?2)" +
+    @Query(value = "SELECT * from post where tag_id in (select tag_id from tag where tag.name=?1)" +
             " ORDER BY creationdate DESC" ,
             nativeQuery = true)
     List<Post> findAllByTagOrderByCreationdateDesc(String tag);
 
-    @Query(value = "SELECT * from post where shop_id in (select shop_id from shop where shop.name=?2)" +
+    @Query(value = "SELECT * from post where shop_id in (select shop_id from shop where shop.name=?1)" +
             " ORDER BY creationdate DESC" ,
             nativeQuery = true)
     List<Post> findAllByShopOrderByCreationdateDesc(String shop);
