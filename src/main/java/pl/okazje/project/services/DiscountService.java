@@ -40,7 +40,7 @@ public class DiscountService {
     }
 
 
-    public List<Discount> findAllIncludeSortingAndFiltering(){
+    public List<Discount> findAllIncludeSortingAndFiltering(Map byArgument){
         List<Discount> discounts = Collections.emptyList();
         HttpSession session = sessionService.getCurrentSession();
         if(session.getAttribute("sort")!=null&&!session.getAttribute("sort").equals("date")){
@@ -48,12 +48,48 @@ public class DiscountService {
                 case "rating":
                     switch ((String)session.getAttribute("date")){
                         case "day":
+                            if(byArgument.containsKey("tag")){
+                                discounts = this.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc((String)byArgument.get("tag"));
+                                break;
+                            }
+                            if(byArgument.containsKey("shop")){
+                                discounts = this.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc((String)byArgument.get("shop"));
+                                break;
+                            }
+                            if(byArgument.containsKey("search")){
+                                discounts = this.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc("%"+byArgument.get("search")+"%");
+                                break;
+                            }
                             discounts = this.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc();
                             break;
                         case "week":
+                            if(byArgument.containsKey("tag")){
+                                discounts = this.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc((String)byArgument.get("tag"));
+                                break;
+                            }
+                            if(byArgument.containsKey("shop")){
+                                discounts = this.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc((String)byArgument.get("shop"));
+                                break;
+                            }
+                            if(byArgument.containsKey("search")){
+                                discounts = this.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc("%"+byArgument.get("search")+"%");
+                                break;
+                            }
                             discounts = this.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc();
                             break;
                         default:
+                            if(byArgument.containsKey("tag")){
+                                discounts = this.findAllByTagOrderByRatingDesc((String)byArgument.get("tag"));
+                                break;
+                            }
+                            if(byArgument.containsKey("shop")){
+                                discounts = this.findAllByShopOrderByRatingDesc((String)byArgument.get("shop"));
+                                break;
+                            }
+                            if(byArgument.containsKey("search")){
+                                discounts = this.FindAllBySearchOrderByRatingDesc("%"+byArgument.get("search")+"%");
+                                break;
+                            }
                             discounts = this.findAllByOrderByRatingDesc();
                             break;
                     }
@@ -61,19 +97,63 @@ public class DiscountService {
                 case "comments":
                     switch ((String)session.getAttribute("date")){
                         case "day":
+                            if(byArgument.containsKey("tag")){
+                                discounts = this.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc((String)byArgument.get("tag"));
+                                break;
+                            }
+                            if(byArgument.containsKey("shop")){
+                                discounts = this.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc((String)byArgument.get("shop"));
+                                break;
+                            }
+                            if(byArgument.containsKey("search")){
+                                discounts = this.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc("%"+byArgument.get("search")+"%");
+                                break;
+                            }
                             discounts = this.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc();
                             break;
                         case "week":
+                            if(byArgument.containsKey("tag")){
+                                discounts = this.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc((String)byArgument.get("tag"));
+                                break;
+                            }
+                            if(byArgument.containsKey("shop")){
+                                discounts = this.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc((String)byArgument.get("shop"));
+                                break;
+                            }
+                            if(byArgument.containsKey("search")){
+                                discounts = this.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc("%"+byArgument.get("search")+"%");
+                                break;
+                            }
                             discounts = this.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc();
                             break;
                         default:
+                            if(byArgument.containsKey("tag")){
+                                discounts = this.findAllByTagOrderByCommentDesc((String)byArgument.get("tag"));
+                                break;
+                            }
+                            if(byArgument.containsKey("shop")){
+                                discounts = this.findAllByShopOrderByCommentDesc((String)byArgument.get("shop"));
+                                break;
+                            }
+                            if(byArgument.containsKey("search")){
+                                discounts = this.FindAllBySearchOrderByCommentDesc("%"+byArgument.get("search")+"%");
+                                break;
+                            }
                             discounts = this.findAllByOrderByCommentDesc();
                             break;
                     }
                     break;
             }
         }else {
-            discounts = this.findAllByOrderByCreationdateDesc();
+            if(byArgument.containsKey("tag")){
+                discounts = this.findAllByTagOrderByCreationdateDesc((String)byArgument.get("tag"));
+            }else if(byArgument.containsKey("shop")){
+                discounts = this.findAllByShopOrderByCreationdateDesc((String)byArgument.get("shop"));
+            }else if(byArgument.containsKey("search")){
+                discounts = this.FindAllBySearchOrderByCreationdateDesc("%"+byArgument.get("search")+"%");
+            }else  {
+                discounts = this.findAllByOrderByCreationdateDesc();
+            }
         }
 
         discounts = this.filter(discounts);

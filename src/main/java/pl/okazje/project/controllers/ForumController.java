@@ -37,7 +37,7 @@ public class ForumController {
         modelAndView.addObject("picked_sort", 3);
         modelAndView.addObject("sort_buttons_prefix", "/forum/page/1/sort/");
 
-        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusOrderByCreationdateDesc("ZATWIERDZONE"));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByOrderByCreationdateDesc("ACCEPTED"));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(0);
         modelAndView.addObject("list_of_posts", page.getPageList());
@@ -65,7 +65,7 @@ public class ForumController {
         modelAndView.addObject("picked_sort", 3);
         modelAndView.addObject("sort_buttons_prefix", "/forum/page/1/sort/");
 
-        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusOrderByCreationdateDesc("ZATWIERDZONE"));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByOrderByCreationdateDesc("ZATWIERDZONE"));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
         modelAndView.addObject("list_of_posts", page.getPageList());
@@ -92,13 +92,13 @@ public class ForumController {
         if(sort.equals("most-comments")){
 
             modelAndView.addObject("picked_sort", 2);
-            page = new PagedListHolder(postRepository.findAllByOrderByPostDesc());
+            page = new PagedListHolder(postRepository.findAllByOrderByCommentDesc());
 
         }
         if(sort.equals("date")){
 
             modelAndView.addObject("picked_sort", 3);
-            page = new PagedListHolder(postRepository.findAllByStatusOrderByCreationdateDesc("ZATWIERDZONE"));
+            page = new PagedListHolder(postRepository.findAllByOrderByCreationdateDesc("ZATWIERDZONE"));
 
         }
 
@@ -237,7 +237,7 @@ public class ForumController {
         if(sort.equals("date")){
 
             modelAndView.addObject("picked_sort", 3);
-            page = new PagedListHolder(postRepository.findAllByStatusAndTagOrderByCreationdateDesc("ZATWIERDZONE", category));
+            page = new PagedListHolder(postRepository.findAllByTagOrderByCreationdateDesc("ZATWIERDZONE", category));
 
         }
 
@@ -266,7 +266,7 @@ public class ForumController {
     @GetMapping("/categories/{category}/page/{id}")
     public ModelAndView categories(@PathVariable("category") String category, @PathVariable("id") String id) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusAndTagOrderByCreationdateDesc("ZATWIERDZONE", category));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByTagOrderByCreationdateDesc("ZATWIERDZONE", category));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
 
@@ -295,7 +295,7 @@ public class ForumController {
     @GetMapping("/categories/{category}")
     public ModelAndView categories(@PathVariable("category") String category) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusAndTagOrderByCreationdateDesc("ZATWIERDZONE", category));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByTagOrderByCreationdateDesc("ZATWIERDZONE", category));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(0);
 
@@ -323,7 +323,7 @@ public class ForumController {
     @GetMapping("/shops/{shop}")
     public ModelAndView shops(@PathVariable("shop") String shop) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusAndShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(0);
 
@@ -352,7 +352,7 @@ public class ForumController {
     @GetMapping("/shops/{shop}/page/{id}")
     public ModelAndView shops(@PathVariable("shop") String shop, @PathVariable("id") String id) {
 
-        PagedListHolder page = new PagedListHolder(postRepository.findAllByStatusAndShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
+        PagedListHolder page = new PagedListHolder(postRepository.findAllByShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
         page.setPageSize(page_size_for_home); // number of items per page
         page.setPage(Integer.parseInt(id) - 1);
 
@@ -391,7 +391,7 @@ public class ForumController {
         if(sort.equals("date")){
 
             modelAndView.addObject("picked_sort", 3);
-            page = new PagedListHolder(postRepository.findAllByStatusAndShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
+            page = new PagedListHolder(postRepository.findAllByShopOrderByCreationdateDesc("ZATWIERDZONE", shop));
 
         }
 

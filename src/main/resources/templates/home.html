@@ -154,29 +154,29 @@
                 <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;">
                     <form th:action="@{/sort}" method="post">
                         <input type="hidden" id="sort" name="sort" value="rating">
-                        <button th:if="${!#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
+                        <button th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
                                 class="btn sort_button" style="margin-right: 10px">Najlepiej oceniane
                         </button>
-                        <button th:if="${#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
+                        <button th:if="${#session.getAttribute('sort')!=null&&#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
                                 class="btn sort_button sort_button_activated" style="margin-right: 10px">Najlepiej oceniane
                         </button>
 
                     </form>
                     <form th:action="@{/sort}" method="post">
                         <input type="hidden" id="sort" name="sort" value="comments">
-                        <button type="submit" th:if="${!#session.getAttribute('sort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
+                        <button type="submit" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
                                 class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
                         </button>
-                        <button type="submit" th:if="${#session.getAttribute('sort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
+                        <button type="submit" th:if="${#session.getAttribute('sort')!=null&&#session.getAttribute('sort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
                                 class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
                         </button>
                     </form>
                     <form th:action="@{/sort}" method="post">
                         <input type="hidden" id="sort" name="sort" value="date">
-                        <button type="submit" th:if="${!#session.getAttribute('sort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('sort')!=null&&!#session.getAttribute('sort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button">Najnowsze promocje
                         </button>
-                        <button type="submit" th:if="${#session.getAttribute('sort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('sort')==null||#session.getAttribute('sort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button_activated">Najnowsze promocje
                         </button>
                     </form>
@@ -201,33 +201,33 @@
         <div class="container-fluid sort_div" style="width: 100%">
             <div class="row">
 
-                <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;" th:if="${!#session.getAttribute('sort').equals('date')}">
-                    <form th:action="@{/sort}" method="post" th:if="${!#session.getAttribute('sort').equals('date')}">
+                <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;" th:if="${#session.getAttribute('sort')!=null&&!#session.getAttribute('sort').equals('date')}">
+                    <form th:action="@{/sort}" method="post" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('date')}">
                         <input type="hidden" id="date" name="date" value="day">
-                        <button type="submit" th:if="${!#session.getAttribute('date').equals('day')}"  data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')==null||!#session.getAttribute('date').equals('day')}"  data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button" style="">Ostatnie 24h
                         </button>
-                        <button type="submit" th:if="${#session.getAttribute('date').equals('day')}" data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')!=null&&#session.getAttribute('date').equals('day')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button_activated" style="">Ostatnie 24h
                         </button>
                     </form>
-                    <form th:action="@{/sort}" method="post" th:if="${!#session.getAttribute('sort').equals('date')}">
+                    <form th:action="@{/sort}" method="post" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('date')}">
                         <input type="hidden" id="date" name="date" value="week">
-                        <button type="submit" th:if="${!#session.getAttribute('date').equals('week')}"  data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')==null||!#session.getAttribute('date').equals('week')}"  data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button" style="margin-left: 10px">Ostatni tydzien
                         </button>
-                        <button type="submit" th:if="${#session.getAttribute('date').equals('week')}"  data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')!=null&&#session.getAttribute('date').equals('week')}"  data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button_activated" style="margin-left: 10px">Ostatni tydzien
                         </button>
 
                     </form>
 
-                    <form th:action="@{/sort}" method="post" th:if="${!#session.getAttribute('sort').equals('date')}">
+                    <form th:action="@{/sort}" method="post" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('date')}">
                         <input type="hidden" id="date" name="date" value="all">
-                        <button type="submit" th:if="${!#session.getAttribute('date').equals('all')}" data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')==null||!#session.getAttribute('date').equals('all')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button" style="margin-left: 10px">Wszystkie
                         </button>
-                        <button type="submit" th:if="${#session.getAttribute('date').equals('all')}" data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')!=null&&#session.getAttribute('date').equals('all')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button_activated" style="margin-left: 10px">Wszystkie
                         </button>
 

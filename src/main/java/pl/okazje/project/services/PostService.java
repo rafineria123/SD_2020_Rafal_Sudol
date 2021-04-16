@@ -2,19 +2,11 @@ package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.multipart.MultipartFile;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.PostRepository;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -22,13 +14,15 @@ public class PostService {
     private final AuthenticationService authenticationService;
     private final TagService tagService;
     private final ShopService shopService;
+    private final SessionService sessionService;
 
     @Autowired
-    public PostService(PostRepository postRepository, AuthenticationService authenticationService, TagService tagService, ShopService shopService) {
+    public PostService(PostRepository postRepository, AuthenticationService authenticationService, TagService tagService, ShopService shopService, SessionService sessionService) {
         this.postRepository = postRepository;
         this.authenticationService = authenticationService;
         this.tagService = tagService;
         this.shopService = shopService;
+        this.sessionService = sessionService;
     }
 
     public void save(Post post){
@@ -91,5 +85,77 @@ public class PostService {
         post.setUser(tempUser.get());
         this.save(post);
         return true;
+    }
+
+    public List<Post> findAllIncludeSortingAndFiltering(Map byArgument){
+        List<Post> posts;
+        HttpSession session = sessionService.getCurrentSession();
+        if(session.getAttribute("forumSort")!=null&&session.getAttribute("forumSort").equals("comments")){
+            if(byArgument.containsKey("tag")){
+                posts = this.findAllByTagOrderByCommentDesc((String)byArgument.get("tag"));
+            }
+            if(byArgument.containsKey("shop")){
+                posts = this.findAllByShopOrderByCommentDesc((String)byArgument.get("shop"));
+            }
+            if(byArgument.containsKey("search")){
+                posts = this.findAllBySearchOrderByCommentDesc("%"+byArgument.get("search")+"%");
+            }
+            posts = this.findAllByOrderByCommentDesc();
+        }else {
+            if(byArgument.containsKey("search")){
+                posts = this.findAllBySearchOrderByCreationdateDesc("%"+byArgument.get("search")+"%");
+            }else
+                posts = this.findAllByOrderByCreationdateDesc();
+        }
+
+        return posts;
+    }
+
+    public List<Post> findAllByOrderByCreationdateDesc(){
+        return postRepository.findAllByOrderByCreationdateDesc();
+    }
+
+
+    public List<Post> findAllByTagOrderByCreationdateDesc(String status, String tag){
+        return postRepository.findAllByTagOrderByCreationdateDesc(tag);
+    }
+
+
+    public List<Post> findAllByShopOrderByCreationdateDesc(String status, String shop){
+        return postRepository.findAllByShopOrderByCreationdateDesc(shop);
+    }
+
+
+    public List<Post> findAllByOrderByCommentDesc(){
+        return postRepository.findAllByOrderByCommentDesc();
+    }
+
+
+    public List<Post> findAllByTagOrderByCommentDesc(String tag){
+        return postRepository.findAllByTagOrderByCommentDesc(tag);
+    }
+
+
+    public List<Post> findAllByShopOrderByCommentDesc(String shop){
+        return postRepository.findAllByShopOrderByCommentDesc(shop);
+    }
+
+
+    public List<Post> findAllBySearchOrderByCreationdateDesc(String search){
+        return postRepository.findAllBySearchOrderByCreationdateDesc(search);
+    }
+
+
+    public List<Post> findAllBySearchOrderByCommentDesc(String search){
+        return postRepository.findAllBySearchOrderByCommentDesc(search);
+    }
+
+
+    public List<Post> FindAllByUserOrderByCreationdateDesc(String user){
+        return postRepository.FindAllByUserOrderByCreationdateDesc(user);
+    }
+
+    public Post findFirstByTitleOrderByCreationdateDesc(String title){
+        return postRepository.findFirstByTitleOrderByCreationdateDesc(title);
     }
 }

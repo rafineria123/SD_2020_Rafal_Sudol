@@ -44,6 +44,10 @@ public class SessionService {
         }
         if(date!=null && !date.isEmpty()){
             session.setAttribute("date", date);
+        }else {
+            if(session.getAttribute("date")==null||session.getAttribute("date").toString().isEmpty()){
+                session.setAttribute("date", "all");
+            }
         }
 
 
