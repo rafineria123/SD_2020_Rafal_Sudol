@@ -59,5 +59,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findFirstByLogin(login);
     }
 
+    public void save(User user){
+        this.userRepository.save(user);
+    }
+
+
+
 
 }

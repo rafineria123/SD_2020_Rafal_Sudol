@@ -3,8 +3,6 @@ package pl.okazje.project.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
-import pl.okazje.project.events.OnRegistrationCompleteEvent;
 import pl.okazje.project.repositories.*;
+import pl.okazje.project.services.AuthenticationService;
 import pl.okazje.project.services.EmailService;
+import pl.okazje.project.services.RegisterService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -40,141 +39,66 @@ public class LoginAndRegisterController {
     TokenRepository tokenRepository;
 
 
+    private final AuthenticationService authenticationService;
+    private final RegisterService registerService;
 
-
-    public final static int page_size_for_home = 8;
-
-    public final static int page_size_for_cat_and_shops = 8;
-
-
+    @Autowired
+    public LoginAndRegisterController(AuthenticationService authenticationService, RegisterService registerService) {
+        this.authenticationService = authenticationService;
+        this.registerService = registerService;
+    }
 
     @GetMapping("/login")
-    public ModelAndView login() {
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
-
-
-            ModelAndView modelAndView = new ModelAndView(new RedirectView("", true, true, false));
-            return modelAndView;
-
-
-        }
-
-        ModelAndView modelAndView = new ModelAndView("login");
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        return modelAndView;
+    public ModelAndView getLoginHomepage() {
+        return getBaseModelAndView("login");
     }
-
-
-
 
     @GetMapping("/register")
-    @PreAuthorize("!hasAnyAuthority('USER', 'ADMIN')")
-    public ModelAndView register() {
-        ModelAndView modelAndView = new ModelAndView("register");
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        return modelAndView;
+    public ModelAndView getRegisterHomepage() {
+        return getBaseModelAndView("register");
     }
-
 
 
     @PostMapping("/register")
     @PreAuthorize("!hasAnyAuthority('USER', 'ADMIN')")
     public RedirectView register(@ModelAttribute("login") String login, @ModelAttribute("password") String password, @ModelAttribute("repeated_password") String repeated_password,
-                                 RedirectAttributes redir, @ModelAttribute("email") String email, @ModelAttribute("reg") String reg, HttpServletRequest request) {
-
-        RedirectView redirectView = new RedirectView("/register", true);
-
-        if (login.length() < 5) {
-
-            redir.addFlashAttribute("bad_status", "Wprowadzony login jest za krótki.");
-            return redirectView;
-
+                                 RedirectAttributes redir, @ModelAttribute("email") String email, @ModelAttribute("reg") String statute, HttpServletRequest request) {
+        Map map = registerService.registerUser(login, password, repeated_password, email, statute);
+        RedirectView redirectView;
+        if (map.containsKey("bad_status")) {
+            redirectView = new RedirectView("/register", true);
+            redir.addFlashAttribute("bad_status", map.get("bad_status"));
+        } else {
+            redirectView = new RedirectView("/login", true);
+            redir.addFlashAttribute("good_status", map.get("good_status"));
         }
-
-        if (password.length() < 5) {
-
-            redir.addFlashAttribute("bad_status", "Wprowadzone hasło jest za krótkie.");
-            return redirectView;
-
-        }
-
-        if (userRepository.findFirstByLogin(login) != null) {
-
-            redir.addFlashAttribute("bad_status", "Ten login jest juz zajęty.");
-            return redirectView;
-
-        }
-
-
-        if (!password.equals(repeated_password)) {
-            redir.addFlashAttribute("bad_status", "Hasła muszą się powtarzać w obydwu polach.");
-            return redirectView;
-        }
-
-
-        if (!reg.equals("on")) {
-
-            redir.addFlashAttribute("bad_status", "Musisz zaakceptować regulamin.");
-            return redirectView;
-
-        }
-
-
-        User user1 = new User();
-        user1.setCr_date(new Date());
-        user1.setLogin(login);
-        user1.setPassword(passwordEncoder.encode(password));
-        user1.setEmail(email);
-        userRepository.save(user1);
-        String appUrl = request.getContextPath();
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user1,
-                request.getLocale(), appUrl));
-
-
-        redir.addFlashAttribute("good_status", "Na twój mail została wysłana wiadomość. Może to potrwać kilka minut. Zatwierdz swoje konto klikając w link aktywacyjny.");
-        redirectView = new RedirectView("/login", true);
-
         return redirectView;
-
     }
 
     @GetMapping("/registrationConfirm")
     @PreAuthorize("!hasAnyAuthority('USER', 'ADMIN')")
-    public RedirectView registrationConfirm(@RequestParam("token") String token, RedirectAttributes redir){
-
-
-
-        Token verificationToken = tokenRepository.findFirstByToken(token);
-        if (verificationToken == null) {
-
-            RedirectView redirectView = new RedirectView("/login",true);
-            redir.addFlashAttribute("bad_status", "Taki token nie istnieje.");
-            return redirectView;
-
+    public RedirectView registrationConfirm(@RequestParam("token") String token, RedirectAttributes redir) {
+        Map map = registerService.confirmRegistration(token);
+        RedirectView redirectView;
+        if (map.containsKey("bad_status")) {
+            redirectView = new RedirectView("/login", true);
+            redir.addFlashAttribute("bad_status", map.get("bad_status"));
+        }else {
+            redirectView = new RedirectView("/login", true);
+            redir.addFlashAttribute("good_status", map.get("good_status"));
         }
-
-
-        User user = verificationToken.getUser();
-        Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-
-            RedirectView redirectView = new RedirectView("/login",true);
-            redir.addFlashAttribute("bad_status", "Twój token wygasł.");
-            return redirectView;
-
-        }
-
-        user.setEnabled(true);
-        userRepository.save(user);
-        RedirectView redirectView = new RedirectView("/login",true);
-        redir.addFlashAttribute("good_status", "Możesz się teraz zalogować.");
         return redirectView;
+    }
 
+    public ModelAndView getBaseModelAndView(String viewName) {
+        ModelAndView modelAndView;
+        if (authenticationService.getCurrentUser().isPresent()) {
+            modelAndView = new ModelAndView(new RedirectView("", true, true, false));
+            return modelAndView;
+        }
+        modelAndView = new ModelAndView(viewName);
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
     }
 }

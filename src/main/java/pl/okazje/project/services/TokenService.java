@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.Token;
 import pl.okazje.project.repositories.TokenRepository;
 
+import java.util.Optional;
+
 @Service
 public class TokenService {
 
@@ -13,10 +15,8 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
     }
 
-    public Token findByToken(String token){
-
-        return tokenRepository.findFirstByToken(token);
-
+    public Optional<Token> findByToken(String token){
+        return Optional.of(tokenRepository.findFirstByToken(token));
     }
 
 }
