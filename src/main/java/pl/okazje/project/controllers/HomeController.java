@@ -9,13 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.okazje.project.entities.Discount;
-import pl.okazje.project.entities.Shop;
-import pl.okazje.project.entities.Tag;
-import pl.okazje.project.repositories.DiscountRepository;
-import pl.okazje.project.repositories.ShopRepository;
-import pl.okazje.project.repositories.TagRepository;
-import pl.okazje.project.repositories.UserRepository;
 import pl.okazje.project.services.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,13 +26,17 @@ public class HomeController {
     private final TagService tagService;
     private final ShopService shopService;
     private final int ITEMS_PER_PAGE = 8;
+    private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     @Autowired
-    public HomeController(SessionService sessionService, DiscountService discountService, TagService tagService, ShopService shopService) {
+    public HomeController(SessionService sessionService, DiscountService discountService, TagService tagService, ShopService shopService, AuthenticationService authenticationService, UserService userService) {
         this.sessionService = sessionService;
         this.discountService = discountService;
         this.tagService = tagService;
         this.shopService = shopService;
+        this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -113,7 +110,7 @@ public class HomeController {
         return m;
     }
 
-    public ModelAndView getBaseModelAndView(Map map, int currentPage, String addressPrefix){
+    private ModelAndView getBaseModelAndView(Map map, int currentPage, String addressPrefix){
         PagedListHolder discountsPages = new PagedListHolder(discountService.findAllIncludeSortingAndFiltering(map));
         discountsPages.setPageSize(ITEMS_PER_PAGE);
         discountsPages.setPage(currentPage);

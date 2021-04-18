@@ -90,7 +90,7 @@ public class LoginAndRegisterController {
         return redirectView;
     }
 
-    public ModelAndView getBaseModelAndView(String viewName) {
+    private ModelAndView getBaseModelAndView(String viewName) {
         ModelAndView modelAndView;
         if (authenticationService.getCurrentUser().isPresent()) {
             modelAndView = new ModelAndView(new RedirectView("", true, true, false));

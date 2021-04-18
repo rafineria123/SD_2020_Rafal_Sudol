@@ -315,7 +315,7 @@ public class SettingsController {
             messageobject.setConversation(conversation);
             messageobject.setUser(uzytkownik);
             messageRepository.save(messageobject);
-            Message newmessageobject = conversation.getOtherUserNewMessage(uzytkownik);
+            Message newmessageobject = conversation.getOtherUserNewMessage(uzytkownik).get();
             if (!newmessageobject.getContent().equals("")) {
                 newmessageobject.setStatus(Message.Status.SEEN);
                 messageRepository.save(newmessageobject);

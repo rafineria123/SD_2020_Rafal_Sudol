@@ -105,7 +105,7 @@ public class ForumController {
         return m;
     }
 
-    public ModelAndView getBaseModelAndView(Map map, int currentPage, String addressPrefix){
+    private ModelAndView getBaseModelAndView(Map map, int currentPage, String addressPrefix){
         PagedListHolder postsPages = new PagedListHolder(postService.findAllIncludeSorting(map));
         postsPages.setPageSize(ITEMS_PER_PAGE);
         postsPages.setPage(currentPage);

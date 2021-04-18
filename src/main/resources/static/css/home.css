@@ -18,6 +18,18 @@
 
 }
 
+.msg_badge{
+    position: absolute;
+    font-weight: 900;
+    padding: 1px 9px;
+    font-family: sans-serif;
+    border-radius: 50%;
+    background: white;
+    color: #f80d57;
+    margin-top: -18px;
+    margin-left: -3px;
+}
+
 .sort_div{
 
     background-color: #f4f4f5;

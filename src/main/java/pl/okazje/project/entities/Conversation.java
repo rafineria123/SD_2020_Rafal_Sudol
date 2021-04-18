@@ -57,18 +57,15 @@ public class Conversation {
 
     }
 
-    public Message getOtherUserNewMessage(User uzytkownik){
-
-        ArrayList<Message> list = new ArrayList<>(getMessages());
-        if(list.isEmpty()) return new Message();
-        list.removeIf(o -> (o.getUser().getUser_id()==uzytkownik.getUser_id()));
-        if (list.isEmpty()){
-
-            return new Message();
+    public Optional<Message> getOtherUserNewMessage(User currentUser){
+        LinkedList<Message> tempMessages = new LinkedList<>(this.messages);
+        if(tempMessages.isEmpty()) return Optional.empty();
+        tempMessages.removeIf(o -> (o.getUser().getUser_id()==currentUser.getUser_id()));
+        if (tempMessages.isEmpty()){
+            return Optional.empty();
         }
-        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
-        return list.get(0);
-
+        Collections.sort(tempMessages, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
+        return Optional.of(tempMessages.getFirst());
     }
 
     public ArrayList<Message> getMessagesSorted(){
@@ -109,5 +106,9 @@ public class Conversation {
         }
         return list.get(0).getContent();
 
+    }
+
+    public boolean isUserInConversation(User user){
+        return this.getUsers().contains(user);
     }
 }
