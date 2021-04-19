@@ -2,11 +2,9 @@ package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.services.*;
@@ -25,18 +23,19 @@ public class HomeController {
     private final DiscountService discountService;
     private final TagService tagService;
     private final ShopService shopService;
+    private final ConversationService conversationService;
     private final int ITEMS_PER_PAGE = 8;
-    private final AuthenticationService authenticationService;
-    private final UserService userService;
+
+
 
     @Autowired
-    public HomeController(SessionService sessionService, DiscountService discountService, TagService tagService, ShopService shopService, AuthenticationService authenticationService, UserService userService) {
+    public HomeController(SessionService sessionService, DiscountService discountService, TagService tagService, ShopService shopService, ConversationService conversationService) {
         this.sessionService = sessionService;
         this.discountService = discountService;
         this.tagService = tagService;
         this.shopService = shopService;
-        this.authenticationService = authenticationService;
-        this.userService = userService;
+
+        this.conversationService = conversationService;
     }
 
     @GetMapping("/")
@@ -108,6 +107,13 @@ public class HomeController {
         String encodedId = URLEncoder.encode(searchform, "UTF-8").replace("+", "%20");
         ModelAndView m = new ModelAndView(new RedirectView("/search/" + encodedId, true, true, false));
         return m;
+    }
+
+    @GetMapping("/check")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public @ResponseBody
+    int checkNewMessages(){
+        return conversationService.countConversationsWithNewMessagesForCurrentUser();
     }
 
     private ModelAndView getBaseModelAndView(Map map, int currentPage, String addressPrefix){

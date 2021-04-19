@@ -194,6 +194,9 @@ public class User implements UserDetails {
     }
 
     public Information getInformation() {
+        if(information==null){
+            return new Information();
+        }
         return information;
     }
 

@@ -13,80 +13,57 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.okazje.project.entities.Ban;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.*;
-import pl.okazje.project.services.BanService;
-import pl.okazje.project.services.EmailService;
+import pl.okazje.project.services.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ProfileController {
 
-    private final DiscountRepository discountRepository;
-    private final ShopRepository shopRepository;
-    private final TagRepository tagRepository;
+
     private final UserRepository userRepository;
     private final BanService banService;
     private final EmailService emailService;
+    private final UserService userService;
+    private final ShopService shopService;
+    private final TagService tagService;
 
     @Autowired
-    public ProfileController(DiscountRepository discountRepository, ShopRepository shopRepository, TagRepository tagRepository,
-                             UserRepository userRepository, BanService banService, EmailService emailService) {
-        this.discountRepository = discountRepository;
-        this.shopRepository = shopRepository;
-        this.tagRepository = tagRepository;
+    public ProfileController(UserRepository userRepository, BanService banService, EmailService emailService, UserService userService, ShopService shopService, TagService tagService) {
+
         this.userRepository = userRepository;
         this.banService = banService;
         this.emailService = emailService;
+        this.userService = userService;
+        this.shopService = shopService;
+        this.tagService = tagService;
     }
 
     @GetMapping("/profile/{name}")
     public ModelAndView profile(@PathVariable("name") String name) {
-
-        ModelAndView modelAndView = new ModelAndView("profile");
-        User uzytkownik = userRepository.findFirstByLogin(name).get();
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("comments_page", false);
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        return modelAndView;
-
+        return getBaseModelAndView(false, name);
     }
 
     @GetMapping("/profile/{name}/comments")
     public ModelAndView profile_comments(@PathVariable("name") String name) {
-
-        ModelAndView modelAndView = new ModelAndView("profile");
-        User uzytkownik = userRepository.findFirstByLogin(name).get();
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("comments_page", true);
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        return modelAndView;
-
+        return getBaseModelAndView(true, name);
     }
 
     @PostMapping("/banuser")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public String banuser(@ModelAttribute("user_id") int user_id, @ModelAttribute("reason") String reason) throws MessagingException {
+    public String banUser(@ModelAttribute("user_id") int user_id, @ModelAttribute("reason") String reason, HttpServletRequest request){
+        userService.banUser(user_id,reason);
+        return "redirect:" + request.getHeader("Referer");
+    }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findFirstByLogin(authentication.getName()).get();
-        if(uzytkownik1.getROLE().equals("ADMIN")){
-
-            Ban ban = new Ban();
-            ban.setReason(reason);
-            ban.setUser(userRepository.findFirstByUser_idEquals(user_id));
-            banService.save(ban);
-            User uzytkownik2 = userRepository.findFirstByUser_idEquals(user_id);
-            uzytkownik2.setBan(ban);
-            userRepository.save(uzytkownik2);
-            userRepository.deleteSessionWhereUsernameEquals(uzytkownik2.getLogin());
-            emailService.sendEmail(uzytkownik2.getEmail(),"Ban - Twoje konto zostało zbanowane", "Witaj "+uzytkownik2.getLogin()+", \n Złamałeś regulamin strony co poskutkowalo blokadą konta.\n Powód blokady: "+ban.getReason()+"\n\nJeśli nie zgadzasz sie z ta blokadą, powiadom nas o tym jak najszybciej.");
-
-        }
-
-        return "redirect:/profile/"+userRepository.findFirstByUser_idEquals(user_id).getLogin();
-
+    private ModelAndView getBaseModelAndView(boolean isCommentPage, String name){
+        ModelAndView modelAndView = new ModelAndView("profile");
+        modelAndView.addObject("user", userService.findFirstByLogin(name).get());
+        modelAndView.addObject("comments_page", isCommentPage);
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
+        return modelAndView;
     }
 
 }

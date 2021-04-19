@@ -33,6 +33,10 @@ public class SessionService {
         return Optional.empty();
     }
 
+    public void delete(Session s){
+        sessionRepository.deleteById(s.getId());
+    }
+
     public HttpSession getCurrentSession(){
         return request.getSession();
     }

@@ -21,26 +21,15 @@ import java.util.Optional;
 @RequestMapping("/post")
 public class PostController {
 
-    private final TagRepository tagRepository;
-    private final ShopRepository shopRepository;
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final CommentService commentService;
-    private final RatingRepository ratingRepository;
     private final PostService postService;
     private final TagService tagService;
     private final ShopService shopService;
     private final RatingService ratingService;
 
     @Autowired
-    public PostController(RatingService ratingService, TagRepository tagRepository, ShopRepository shopRepository, PostRepository postRepository, UserRepository userRepository,
-                          CommentService commentService, RatingRepository ratingRepository, PostService postService, TagService tagService, ShopService shopService) {
-        this.tagRepository = tagRepository;
-        this.shopRepository = shopRepository;
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
+    public PostController(RatingService ratingService, CommentService commentService, PostService postService, TagService tagService, ShopService shopService) {
         this.commentService = commentService;
-        this.ratingRepository = ratingRepository;
         this.postService = postService;
         this.tagService = tagService;
         this.shopService = shopService;

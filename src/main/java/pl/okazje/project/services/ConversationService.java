@@ -95,9 +95,9 @@ public class ConversationService {
         return array;
     }
 
-    public String[][] getAllCurrentUserConversations(){
+    public String[][] getAllCurrentUserConversationsAsArray(){
         User currentUser = authenticationService.getCurrentUser().get();
-        ArrayList<Conversation> list = currentUser.getConversationsSorted();
+        ArrayList<Conversation> list = new ArrayList<>(this.getAllCurrentUserConversations());
         String array[][] = new String[list.size()][6];
         for (int i = 0; i < list.size(); i++) {
             array[i][0] = list.get(i).getOtherUser(currentUser).getLogin();
@@ -110,4 +110,20 @@ public class ConversationService {
         }
         return array;
     }
+
+    public Set<Conversation> getAllCurrentUserConversations(){
+        return authenticationService.getCurrentUser().get().getConversations();
+    }
+
+    public int countConversationsWithNewMessagesForCurrentUser(){
+        Set<Conversation> conversationSet = new HashSet<>(getAllCurrentUserConversations());
+        int count = 0;
+        for(Conversation conversation : conversationSet){
+            if(conversation.hasNewMessage(authenticationService.getCurrentUser().get())){
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

@@ -301,7 +301,26 @@
             <div class="row" style="font-weight: 400;font-size: 31px;padding-bottom: 20px">
                 Moje posty
             </div>
-
+            <div class="row" style="padding-top: 10px;padding-bottom: 10px;padding-left:10px;background-color: #f4f4f5;border-radius: 6px;">
+                <form th:action="@{/forum/sort}" method="post" style="padding-left: 10px">
+                    <input type="hidden" id="sort" name="sort" value="comments">
+                    <button type="submit" th:if="${#session.getAttribute('forumSort')==null||!#session.getAttribute('forumSort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
+                            class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
+                    </button>
+                    <button type="submit" th:if="${#session.getAttribute('forumSort')!=null&&#session.getAttribute('forumSort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
+                            class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
+                    </button>
+                </form>
+                <form th:action="@{/forum/sort}" method="post">
+                    <input type="hidden" id="sort" name="sort" value="date">
+                    <button type="submit" th:if="${#session.getAttribute('forumSort')!=null&&!#session.getAttribute('forumSort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button">Najnowsze promocje
+                    </button>
+                    <button type="submit" th:if="${#session.getAttribute('forumSort')==null||#session.getAttribute('forumSort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button_activated">Najnowsze promocje
+                    </button>
+                </form>
+            </div>
             <div style="height: 15px"></div>
             <div class="page-wrap d-flex flex-row align-items-center" th:if="${list_of_posts.isEmpty()}" style="padding-top: 35px">
                 <div class="container">
@@ -315,7 +334,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex" style="padding-bottom: 15px;width: 95%" th:each="post : ${list_of_posts}">
+            <div class="d-flex" style="padding-bottom: 15px;width: 100%" th:each="post : ${list_of_posts}">
                 <!--/*@thymesVar id="post" type="pl.okazje.project.entities.Post"*/-->
                 <div class="item_div d-flex flex-column align-items-center justify-content-center pink_shadow" style="width: 100%;height:fit-content;border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
 
@@ -338,6 +357,41 @@
 
                 </div>
             </div>
+
+            <nav aria-label="Page navigation example" style="padding-top: 50px">
+                <ul class="pagination justify-content-center">
+
+
+                    <li th:if="${number_of_page == 1}" class="page-item disabled" style="padding-left: 5px">
+                        <a class="page-link" href="/page/1" tabindex="-1">Poprzednia</a>
+                    </li>
+                    <li th:if="${number_of_page != 1}" class="page-item" style="padding-left: 5px">
+
+                        <a class="page-link" th:href="@{|${next_and_previous.replaceFirst('id',number_of_page -1)}|}">Poprzednia</a>
+                    </li>
+
+                    <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
+                        <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
+                            <a class="page-link" th:href="@{|${array_of_addresses[i - 1]}|}" th:text="${i}">1</a>
+                        </li>
+                        <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
+                            <a class="page-link" th:href="@{${array_of_addresses[i - 1]}}" th:text="${i}">1</a>
+                        </li>
+                    </div>
+
+
+
+                    <li th:if="${number_of_page == quantity_of_pages}" class="page-item disabled" style="padding-left: 5px">
+                        <a class="page-link" href="/page/1" tabindex="-1">Następna</a>
+                    </li>
+                    <li th:if="${number_of_page != quantity_of_pages}" class="page-item" style="padding-left: 5px">
+
+                        <a class="page-link" th:href="@{${next_and_previous.replaceFirst('id',number_of_page+1)}}">Następna</a>
+                    </li>
+
+
+                </ul>
+            </nav>
 
         </div>
 

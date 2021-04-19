@@ -56,7 +56,12 @@ public interface PostRepository extends CrudRepository<Post, Long> {
     @Query(value = "SELECT * from post where user_id in " +
             "(select user_id from user where login = ?1) ORDER BY creationdate DESC" ,
             nativeQuery = true)
-    List<Post> FindAllByUserOrderByCreationdateDesc(String user);
+    List<Post> findAllByUserOrderByCreationdateDesc(String user);
+
+    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT post_id, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY post_id ) AS c ON d.post_id = c.post_id where d.user_id in (select user_id from user where login = ?1) ORDER BY  c.disc_count DESC " ,
+            nativeQuery = true)
+    List<Post> findAllByUserOrderByCommentDesc(String user);
 
     Post findFirstByTitleOrderByCreationdateDesc(String title);
 

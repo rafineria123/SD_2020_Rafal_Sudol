@@ -66,7 +66,7 @@
                                 <button style="" class="btn add_button"
                                         aria-haspopup="true" aria-expanded="false"
                                 ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
-                                    <span class="msg_badge">3</span>
+                                    <span class="msg_badge" style="visibility: hidden" id="badge"></span>
                                 </button>
                             </a>
                         </div>
@@ -161,7 +161,6 @@
                         <button th:if="${#session.getAttribute('sort')!=null&&#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
                                 class="btn sort_button sort_button_activated" style="margin-right: 10px">Najlepiej oceniane
                         </button>
-
                     </form>
                     <form th:action="@{/sort}" method="post">
                         <input type="hidden" id="sort" name="sort" value="comments">
@@ -557,5 +556,25 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script src="/js/home.js"></script>
+<script>
+    function check() {
+        $.ajax({
+            url : "/check/",
+            success : function(data) {
+                const count = data;
+                let doc = document.getElementById("badge");
+                if(count>0){
+                    doc.style.visibility = 'visible';
+                    doc.textContent = count;
+                }else {
+                    doc.style.visibility = 'hidden';
+                }
+            }
+        });
+    }
+
+    let intervalId = 0;
+    intervalId = setInterval(check, 1000);
+</script>
 </body>
 </html>

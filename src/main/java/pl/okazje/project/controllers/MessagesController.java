@@ -10,26 +10,10 @@ import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Controller
 public class MessagesController {
-
-    @Autowired
-    DiscountRepository discountRepository;
-    @Autowired
-    ShopRepository shopRepository;
-    @Autowired
-    TagRepository tagRepository;
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    MessageRepository messageRepository;
-    @Autowired
-    EmailService emailService;
 
     private final ConversationService conversationService;
     private final ShopService shopService;
@@ -86,7 +70,7 @@ public class MessagesController {
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
     String[][] getAllConversations(){
-        return conversationService.getAllCurrentUserConversations();
+        return conversationService.getAllCurrentUserConversationsAsArray();
     }
 
     @PostMapping("/sendNewMessage")

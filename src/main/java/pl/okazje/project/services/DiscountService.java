@@ -1,6 +1,7 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.okazje.project.entities.Discount;
@@ -157,6 +158,24 @@ public class DiscountService {
         }
 
         discounts = this.filter(discounts);
+        return discounts;
+    }
+
+    public List<Discount> findAllByUserIncludeSorting(User user){
+        List<Discount> discounts = Collections.emptyList();
+        Session session = sessionService.findActiveSessionForUser(user).get();
+        if(session.getAttribute("sort")!=null&&!session.getAttribute("sort").equals("date")){
+            switch((String)session.getAttribute("sort")){
+                case "rating":
+                    discounts = this.findAllByUseridOrderByRatingDesc(user.getUser_id());
+                    break;
+                case "comments":
+                    discounts = this.findAllByUseridOrderByCommentDesc(user.getUser_id());
+                    break;
+            }
+        }else {
+            discounts = this.findAllByUseridOrderByCreationdateDesc(user.getUser_id());
+        }
         return discounts;
     }
 

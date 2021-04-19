@@ -14,16 +14,12 @@ import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.ParsingBot;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.*;
-import pl.okazje.project.services.ConversationService;
-import pl.okazje.project.services.EmailService;
+import pl.okazje.project.services.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
@@ -52,73 +48,45 @@ public class SettingsController {
     @Autowired
     ParsingBot parsingBot;
 
+    private final ShopService shopService;
+    private final TagService tagService;
+    private final AuthenticationService authenticationService;
+    private final DiscountService discountService;
+    private final PostService postService;
+    private final int ITEMS_PER_PAGE = 4;
+
+    public SettingsController(ShopService shopService, TagService tagService, AuthenticationService authenticationService, DiscountService discountService, PostService postService) {
+        this.shopService = shopService;
+        this.tagService = tagService;
+        this.authenticationService = authenticationService;
+        this.discountService = discountService;
+        this.postService = postService;
+    }
+
+
     @GetMapping("/settings")
     public ModelAndView settings() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
-        if (uzytkownik.getInformation() == null) {
-            uzytkownik.setInformation(new Information());
-        }
-
-        ModelAndView modelAndView = new ModelAndView("user_profile_main");
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("user", uzytkownik);
-
-        return modelAndView;
-
+        return getBaseModelAndView("user_profile_main");
     }
 
     @GetMapping("/settings/discounts")
-    public ModelAndView settingsDiscounts() {
+    public ModelAndView getsettingsDiscountsHomepage() {
+        return getDiscountBaseModelAndView(0);
+    }
 
-        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
-        PagedListHolder page = new PagedListHolder(discountRepository.findAllByUseridOrderByCreationdateDesc(uzytkownik.getUser_id()));
-        page.setPageSize(2); // number of items per page
-        page.setPage(0);
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("number_of_page", 1);
-        modelAndView.addObject("next_and_previous", "/settings/discounts/page/id");
-        modelAndView.addObject("picked_sort", 3);
-        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
-        List<String> listOfAdresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/settings/discounts/page/" + i);
-
-        }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
-
-
+    @GetMapping("/settings/discounts/page/{id}")
+    public ModelAndView getSettingsDiscountsPage(@PathVariable("id") String id) {
+       return getDiscountBaseModelAndView(Integer.parseInt(id)-1);
     }
 
     @GetMapping("/settings/posts")
-    public ModelAndView settingsPosts() {
+    public ModelAndView getsettingsPostsHomepage() {
+        return getPostBaseModelAndView(0);
+    }
 
-        ModelAndView modelAndView = new ModelAndView("user_profile_posts");
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
-
-        modelAndView.addObject("list_of_posts", postRepository.FindAllByUserOrderByCreationdateDesc(uzytkownik.getLogin()));
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("user", uzytkownik);
-
-        return modelAndView;
-
-
+    @GetMapping("/settings/posts/page/{id}")
+    public ModelAndView getsettingsPostsPage(@PathVariable("id") String id) {
+        return getPostBaseModelAndView(Integer.parseInt(id));
     }
 
     @GetMapping("/settings/admin/discounts")
@@ -178,93 +146,6 @@ public class SettingsController {
 
     }
 
-
-    @GetMapping("/settings/discounts/page/{id}")
-    public ModelAndView pageSettingsDiscounts(@PathVariable("id") String id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
-        PagedListHolder page = new PagedListHolder(discountRepository.findAllByUseridOrderByCreationdateDesc(uzytkownik.getUser_id()));
-        page.setPageSize(2); // number of items per page
-        page.setPage(Integer.parseInt(id) - 1);
-        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("next_and_previous", "/settings/discounts/page/id");
-        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("picked_sort", 3);
-        List<String> listOfAdresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/settings/discounts/page/" + i);
-
-        }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
-
-    }
-
-    @GetMapping("/settings/discounts/page/{id}/sort/{sort}")
-    public ModelAndView pageSettingsDiscountsSort(@PathVariable("id") String id, @PathVariable("sort") String sort) {
-        List<String> listOfAdresses = new ArrayList<>();
-        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
-        PagedListHolder page = null;
-        if (sort.equals("date")) {
-            modelAndView.addObject("picked_sort", 3);
-            modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/date");
-            page = new PagedListHolder(discountRepository.findAllByUseridOrderByCreationdateDesc(uzytkownik.getUser_id()));
-            page.setPageSize(2);
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/settings/discounts/page/" + i + "/sort/date");
-
-            }
-        }
-
-        if (sort.equals("most-comments")) {
-            modelAndView.addObject("picked_sort", 2);
-            modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/most-comments");
-            page = new PagedListHolder(discountRepository.findAllByUseridOrderByCommentDesc(uzytkownik.getUser_id()));
-            page.setPageSize(2);
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/settings/discounts/page/" + i + "/sort/most-comments");
-
-            }
-        }
-
-        if (sort.equals("top-rated")) {
-            modelAndView.addObject("picked_sort", 1);
-            modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/top-rated");
-            page = new PagedListHolder(discountRepository.findAllByUseridOrderByRatingDesc(uzytkownik.getUser_id()));
-            page.setPageSize(2);
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/settings/discounts/page/" + i + "/sort/top-rated");
-
-            }
-        }
-
-        page.setPage(Integer.parseInt(id) - 1);
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("user", uzytkownik);
-
-        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
-
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
-
-    }
-
     @GetMapping("/settings/messages")
     public ModelAndView profileMessages() {
 
@@ -281,8 +162,53 @@ public class SettingsController {
 
     }
 
+    @GetMapping("/settings/liked/page/{id}")
+    public ModelAndView liked(@PathVariable("id") String id){
+
+        ModelAndView modelAndView = new ModelAndView("user_profile_liked");
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
+        PagedListHolder page = new PagedListHolder(discountRepository.findAllByUserAndLiked(uzytkownik.getLogin()));
+        page.setPageSize(2); // number of items per page
+        page.setPage(Integer.parseInt(id)-1);
+        modelAndView.addObject("list_of_discounts", page.getPageList());
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("quantity_of_pages", page.getPageCount());
+        modelAndView.addObject("user", uzytkownik);
+        modelAndView.addObject("number_of_page", Integer.parseInt(id));
+        modelAndView.addObject("next_and_previous", "/settings/liked/page/id");
+        modelAndView.addObject("picked_sort", 3);
+        List<String> listOfAdresses = new ArrayList<>();
+        for (int i = 1; i <= page.getPageCount(); i++) {
+
+            listOfAdresses.add("/settings/liked/page/" + i);
+
+        }
+        modelAndView.addObject("list_of_adresses", listOfAdresses);
+        return modelAndView;
+
+    }
+
+    @GetMapping("/settings/admin/functions")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ModelAndView functions() {
+
+        ModelAndView modelAndView = new ModelAndView("user_admin_profile_functions");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
+        modelAndView.addObject("user", uzytkownik);
+        modelAndView.addObject("list_of_tags", tagRepository.findAll());
+        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        return modelAndView;
+
+
+    }
+
     @PostMapping("/settings/messages")
-    public RedirectView newMessageToUser(@ModelAttribute("login") String login, @ModelAttribute("message") String message, RedirectAttributes redir) throws MessagingException {
+    public RedirectView newMessageToUser(@ModelAttribute("login") String login, @ModelAttribute("message") String message, RedirectAttributes redir){
 
         RedirectView redirectView = new RedirectView("/settings/messages", true);
 
@@ -474,50 +400,6 @@ public class SettingsController {
 
     }
 
-    @GetMapping("/settings/liked/page/{id}")
-    public ModelAndView liked(@PathVariable("id") String id){
-
-        ModelAndView modelAndView = new ModelAndView("user_profile_liked");
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
-        PagedListHolder page = new PagedListHolder(discountRepository.findAllByUserAndLiked(uzytkownik.getLogin()));
-        page.setPageSize(2); // number of items per page
-        page.setPage(Integer.parseInt(id)-1);
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("next_and_previous", "/settings/liked/page/id");
-        modelAndView.addObject("picked_sort", 3);
-        List<String> listOfAdresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/settings/liked/page/" + i);
-
-        }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
-
-    }
-
-    @GetMapping("/settings/admin/functions")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ModelAndView functions() {
-
-        ModelAndView modelAndView = new ModelAndView("user_admin_profile_functions");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findFirstByLogin(authentication.getName()).get();
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        return modelAndView;
-
-
-    }
 
     @PostMapping("/settings/admin/xkom")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -567,6 +449,48 @@ public class SettingsController {
 
         return array;
 
+    }
+
+    private ModelAndView getBaseModelAndView(String viewName){
+        ModelAndView modelAndView = new ModelAndView(viewName);
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
+        modelAndView.addObject("user", authenticationService.getCurrentUser().get());
+        return modelAndView;
+    }
+
+    private ModelAndView getDiscountBaseModelAndView(int currentPage){
+        ModelAndView modelAndView = getBaseModelAndView("user_profile_discounts");
+        PagedListHolder<Discount> discountPages = new PagedListHolder(discountService.findAllByUserIncludeSorting(authenticationService.getCurrentUser().get()));
+        discountPages.setPageSize(ITEMS_PER_PAGE);
+        discountPages.setPage(currentPage);
+        modelAndView.addObject("list_of_discounts", discountPages.getPageList());
+        modelAndView.addObject("quantity_of_pages", discountPages.getPageCount());
+        modelAndView.addObject("number_of_page", discountPages.getPage()+1);
+        modelAndView.addObject("next_and_previous", "/settings/discounts/page/id");
+        String[] arrayOfAddresses = new String[discountPages.getPageCount()];
+        for (int i = 0; i < arrayOfAddresses.length; i++) {
+            arrayOfAddresses[i] = "/settings/discounts/page/" + (i + 1);
+        }
+        modelAndView.addObject("array_of_addresses", arrayOfAddresses);
+        return modelAndView;
+    }
+
+    private ModelAndView getPostBaseModelAndView(int currentPage){
+        ModelAndView modelAndView = getBaseModelAndView("user_profile_posts");
+        PagedListHolder<Post> postPages = new PagedListHolder(postService.findAllByUserIncludeSorting(authenticationService.getCurrentUser().get()));
+        postPages.setPageSize(ITEMS_PER_PAGE);
+        postPages.setPage(currentPage);
+        modelAndView.addObject("list_of_posts", postPages.getPageList());
+        modelAndView.addObject("quantity_of_pages", postPages.getPageCount());
+        modelAndView.addObject("number_of_page", postPages.getPage()+1);
+        modelAndView.addObject("next_and_previous", "/settings/posts/page/id");
+        String[] arrayOfAddresses = new String[postPages.getPageCount()];
+        for (int i = 0; i < arrayOfAddresses.length; i++) {
+            arrayOfAddresses[i] = "/settings/posts/page/" + (i + 1);
+        }
+        modelAndView.addObject("array_of_addresses", arrayOfAddresses);
+        return modelAndView;
     }
 
 

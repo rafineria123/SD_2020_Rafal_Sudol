@@ -1,19 +1,13 @@
 package pl.okazje.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.okazje.project.entities.*;
-import pl.okazje.project.repositories.*;
-import pl.okazje.project.services.AuthenticationService;
-import pl.okazje.project.services.EmailService;
-import pl.okazje.project.services.RegisterService;
+import pl.okazje.project.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -21,31 +15,17 @@ import java.util.*;
 @Controller
 public class LoginAndRegisterController {
 
-    @Autowired
-    DiscountRepository discountRepository;
-    @Autowired
-    ShopRepository shopRepository;
-    @Autowired
-    TagRepository tagRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    EmailService emailService;
-    @Autowired
-    ApplicationEventPublisher eventPublisher;
-    @Autowired
-    TokenRepository tokenRepository;
-
-
     private final AuthenticationService authenticationService;
     private final RegisterService registerService;
+    private final ShopService shopService;
+    private final TagService tagService;
 
     @Autowired
-    public LoginAndRegisterController(AuthenticationService authenticationService, RegisterService registerService) {
+    public LoginAndRegisterController(AuthenticationService authenticationService, RegisterService registerService, ShopService shopService, TagService tagService) {
         this.authenticationService = authenticationService;
         this.registerService = registerService;
+        this.shopService = shopService;
+        this.tagService = tagService;
     }
 
     @GetMapping("/login")
@@ -97,8 +77,8 @@ public class LoginAndRegisterController {
             return modelAndView;
         }
         modelAndView = new ModelAndView(viewName);
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
         return modelAndView;
     }
 }

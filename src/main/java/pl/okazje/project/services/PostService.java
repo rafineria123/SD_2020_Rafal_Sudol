@@ -1,6 +1,7 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.PostRepository;
@@ -114,6 +115,18 @@ public class PostService {
         return posts;
     }
 
+    public List<Post> findAllByUserIncludeSorting(User user){
+        List<Post> posts;
+        Session session = sessionService.findActiveSessionForUser(user).get();
+        if(session.getAttribute("forumSort")!=null&&session.getAttribute("forumSort").equals("comments")){
+            posts = this.findAllByUserOrderByCommentDesc(user.getLogin());
+        }else {
+            posts = this.findAllByUserOrderByCreationdateDesc(user.getLogin());
+        }
+        return posts;
+    }
+
+
     public List<Post> findAllByOrderByCreationdateDesc(){
         return postRepository.findAllByOrderByCreationdateDesc();
     }
@@ -154,8 +167,12 @@ public class PostService {
     }
 
 
-    public List<Post> FindAllByUserOrderByCreationdateDesc(String user){
-        return postRepository.FindAllByUserOrderByCreationdateDesc(user);
+    public List<Post> findAllByUserOrderByCreationdateDesc(String user){
+        return postRepository.findAllByUserOrderByCreationdateDesc(user);
+    }
+
+    public List<Post> findAllByUserOrderByCommentDesc(String user){
+        return postRepository.findAllByUserOrderByCommentDesc(user);
     }
 
     public Post findFirstByTitleOrderByCreationdateDesc(String title){
