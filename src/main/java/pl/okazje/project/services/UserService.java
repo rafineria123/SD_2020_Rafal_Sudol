@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.Ban;
+import pl.okazje.project.entities.Information;
 import pl.okazje.project.entities.Token;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.UserRepository;
@@ -23,14 +25,18 @@ public class UserService implements UserDetailsService {
     private final TokenService tokenService;
     private final SessionService sessionService;
     private final EmailService emailService;
+    private final InformationService informationService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, BanService banService, TokenService tokenService, SessionService sessionService, EmailService emailService) {
+    public UserService(UserRepository userRepository, BanService banService, TokenService tokenService, SessionService sessionService, EmailService emailService, InformationService informationService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.banService = banService;
         this.tokenService = tokenService;
         this.sessionService = sessionService;
         this.emailService = emailService;
+        this.informationService = informationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -57,6 +63,44 @@ public class UserService implements UserDetailsService {
         tokenService.save(myToken);
         user.setToken(myToken);
         this.save(user);
+    }
+
+    public void changeUserDetails(User user, String name, String surname, String email){
+        user.setEmail(email);
+        Information info = new Information();
+        if (user.getInformation() == null) {
+            info.setName(name);
+            info.setSurname(surname);
+            info.setUser(user);
+        } else {
+            info = user.getInformation();
+            info.setName(name);
+            info.setSurname(surname);
+        }
+        informationService.save(info);
+        user.setInformation(info);
+        this.save(user);
+    }
+
+    public void changeUserDescription(User user, String description){
+        Information info;
+        if (user.getInformation() == null) {
+            info = new Information();
+        } else {
+            info = user.getInformation();
+        }
+        info.setDescription(description);
+        this.informationService.save(info);
+        user.setInformation(info);
+        this.save(user);
+    }
+
+    public void changePassword(User user, String newPassword){
+        user.setPassword(passwordEncoder.encode(newPassword));
+        this.save(user);
+        emailService.sendEmail(user.getEmail(), "Norgie - Hasło zostało zmienione",
+                "Witaj " + user.getLogin() + ", \n hasło do twojego konta zostało zmienione.\n\nJeśli " +
+                        "nie zostało ono zaktualizowane przez Ciebie, powiadom nas o tym jak najszybciej.");
     }
 
     public Optional<User> findFirstByLogin(String login){

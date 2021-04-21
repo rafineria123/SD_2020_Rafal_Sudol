@@ -32,7 +32,7 @@ public class User implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "information_id")
-    private Information information = new Information();
+    private Information information;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ban_id")
     private Ban ban;
@@ -55,10 +55,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy="user")
     private Set<Comment> comments;
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+    @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name = "User_Conversation",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "conversation_id")

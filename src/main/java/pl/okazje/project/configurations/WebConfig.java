@@ -22,12 +22,7 @@ import pl.okazje.project.services.UserService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserService userService;
-
-    @Autowired
-    public WebConfig(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -55,6 +50,11 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
                 .passwordEncoder(passwordEncoder());
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @Bean

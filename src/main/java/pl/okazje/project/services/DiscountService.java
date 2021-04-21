@@ -321,8 +321,8 @@ public class DiscountService {
         return this.discountRepository.findAllByStatusEquals(status);
     }
 
-    public List<Discount> findAllByUserAndLiked(String user){
-        return this.discountRepository.findAllByUserAndLiked(user);
+    public List<Discount> findAllByUserAndLiked(User user){
+        return this.discountRepository.findAllByUserAndLiked(user.getLogin());
     }
 
     public Optional<Discount> findFirstByTitleEquals(String title){

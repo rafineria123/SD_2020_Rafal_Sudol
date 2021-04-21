@@ -1,8 +1,6 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.Conversation;
 import pl.okazje.project.entities.Message;
@@ -19,13 +17,15 @@ public class ConversationService {
     private final AuthenticationService authenticationService;
     private final MessageService messageService;
     private final EmailService emailService;
+    private final UserService userService;
 
     @Autowired
-    public ConversationService(ConversationRepository conversationRepository, AuthenticationService authenticationService, MessageService messageService, EmailService emailService) {
+    public ConversationService(ConversationRepository conversationRepository, AuthenticationService authenticationService, MessageService messageService, EmailService emailService, UserService userService) {
         this.conversationRepository = conversationRepository;
         this.authenticationService = authenticationService;
         this.messageService = messageService;
         this.emailService = emailService;
+        this.userService = userService;
     }
 
     public Optional<Conversation> findByUsers(int firstUserId, int secondUserId) {
@@ -62,6 +62,10 @@ public class ConversationService {
             }};
             conversation.setUsers(users);
             this.save(conversation);
+            currentUser.getConversations().add(conversation);
+            otherUser.getConversations().add(conversation);
+            userService.save(currentUser);
+            userService.save(otherUser);
         }
         Message message = new Message();
         message.setStatus(Message.Status.NEW);
