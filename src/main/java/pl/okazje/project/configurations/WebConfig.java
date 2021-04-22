@@ -22,39 +22,39 @@ import pl.okazje.project.services.UserService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
-    private UserService userService;
+    private final UserService userService;
+
+    public WebConfig(UserService userService) {
+        this.userService = userService;
+    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // resources access
         http.csrf().disable()
-        .authorizeRequests().antMatchers("/register", "/resources/**", "/css/**", "/js/**","/js/mixitup/dist/**","/js/mixitup/**", "/images/**").permitAll()
-        // login&login exceptions
-        .and().formLogin().loginPage("/login")
-        .usernameParameter("login").passwordParameter("password").permitAll()
-        .failureHandler((req,res,exp)->{
-            if(exp.getClass().isAssignableFrom(BadCredentialsException.class)){
-                res.sendRedirect("/login?error=true");
-            }else if(exp.getClass().isAssignableFrom(DisabledException.class)){
-                res.sendRedirect("/login?token=true");
-            }else {
-                res.sendRedirect("/login?ban=true");
-            }
-        })
-        .and().logout().permitAll().and().logout().logoutSuccessUrl("/login?logout").permitAll()
-        // session
-        .and().sessionManagement().maximumSessions(3).expiredUrl("/login?session=true").and().invalidSessionUrl("/login?session=true");
+                .authorizeRequests().antMatchers("/register", "/resources/**", "/css/**", "/js/**", "/js/mixitup/dist/**", "/js/mixitup/**", "/images/**").permitAll()
+                //set login page & exceptions
+                .and().formLogin().loginPage("/login")
+                .usernameParameter("login").passwordParameter("password").permitAll()
+                .failureHandler((req, res, exp) -> {
+                    if (exp.getClass().isAssignableFrom(BadCredentialsException.class)) {
+                        res.sendRedirect("/login?error=true");
+                    } else if (exp.getClass().isAssignableFrom(DisabledException.class)) {
+                        res.sendRedirect("/login?token=true");
+                    } else {
+                        res.sendRedirect("/login?ban=true");
+                    }
+                })
+                .and().logout().permitAll().and().logout().logoutSuccessUrl("/login?logout").permitAll()
+                // session
+                .and().sessionManagement().maximumSessions(3).expiredUrl("/login?session=true").and().invalidSessionUrl("/login?session=true");
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
                 .passwordEncoder(passwordEncoder());
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 
     @Bean
@@ -66,5 +66,5 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
 }

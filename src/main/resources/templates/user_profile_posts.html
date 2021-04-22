@@ -61,7 +61,7 @@
                 </form>
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
-                <a href="/add/discount">
+                <a href="/discount/add">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
                             style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -343,15 +343,15 @@
                     </div>
                     <div class="d-flex flex-row align-items-start" style="border-bottom: 1px solid rgba(82,73,98,.2); width: 98%;font-family: Calibri;font-weight: 900;font-size: 22px;color: black;">
                         <a href="" class="item_title" style="font-family: Calibri;font-weight: 900;font-size: 20px;color: black;padding-left: 10px;padding-right: 10px;hite-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
-                             word-wrap: break-word;max-width: 100%" th:href="@{|/post/${post.getPost_id()}|}" ><span style="" th:text="${post.getTitle()}">Ładowarka Liitokala Lii-500 za 68 zł, czy warto w tej cenie?</span></a>
+                             word-wrap: break-word;max-width: 100%" th:href="@{|/post/${post.getPostId()}|}" ><span style="" th:text="${post.getTitle()}">Ładowarka Liitokala Lii-500 za 68 zł, czy warto w tej cenie?</span></a>
                     </div>
                     <div class="d-flex flex-row align-items-start" style="padding-top: 10px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 17px;color: #000000a6;">
 
                         <span style="padding-left: 10px;padding-right: 10px;white-space: break-spaces;text-overflow: ellipsis;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;max-width: 250ch;" th:text="${post.getContent()}">Czy Waszym zdaniem 68,35 zł za ładowarkę Liitokala Lii-500 razem z zasilaczem to dobra cena? Czym różni się sklep liitokala Official Store od LiitoKala Official Flagship Store?</span>
                     </div>
                     <div class="d-flex flex-row align-items-start" style="padding-top: 15px;padding-bottom:10px;width: 98%;font-family: Calibri;font-weight: 500;font-size: 17px;color: #000000a6;">
-                        <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button class="btn" type="button" style="margin-left:10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px"><span class="fas fa-comments"></span>: <span th:text="${post.getCommentsSize()}">3</span></button></a>
-                        <a href="" th:href="@{|/post/${post.getPost_id()}|}"><button type="button" class="btn" style="margin-left: 10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px">Zobacz więcej</button></a>
+                        <a href="" th:href="@{|/post/${post.getPostId()}|}"><button class="btn" type="button" style="margin-left:10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px"><span class="fas fa-comments"></span>: <span th:text="${post.getCommentsSize()}">3</span></button></a>
+                        <a href="" th:href="@{|/post/${post.getPostId()}|}"><button type="button" class="btn" style="margin-left: 10px;color: white;background: linear-gradient(45deg,#e42d31,#ff0065);font-weight: 900;font-size: 16px">Zobacz więcej</button></a>
                     </div>
 
 

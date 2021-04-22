@@ -27,13 +27,13 @@ import java.util.Map;
 @RequestMapping("/forum")
 public class ForumController {
 
+    private final int ITEMS_PER_PAGE = 4;
+
     private final SessionService sessionService;
     private final TagService tagService;
     private final ShopService shopService;
     private final PostService postService;
-    private final int ITEMS_PER_PAGE = 4;
 
-    @Autowired
     public ForumController(SessionService sessionService, TagService tagService, ShopService shopService, PostService postService) {
         this.sessionService = sessionService;
         this.tagService = tagService;
@@ -42,51 +42,51 @@ public class ForumController {
     }
 
     @GetMapping("")
-    public ModelAndView getPostsHomepage() {
+    public ModelAndView getForumHomepage() {
         return getBaseModelAndView(new HashMap(),0,"");
     }
 
     @GetMapping("/page/{id}")
-    public ModelAndView getPostsPage(@PathVariable("id") String id) {
+    public ModelAndView getForumPage(@PathVariable("id") String id) {
         return getBaseModelAndView(new HashMap(),Integer.parseInt(id)-1,"");
     }
 
     @GetMapping("/search/{search}")
-    public ModelAndView PostsBySearchHomepage(@PathVariable("search") String search) {
+    public ModelAndView getPostsBySearchHomepage(@PathVariable("search") String search) {
         HashMap<String,String> map = new HashMap<>();
         map.put("search", search);
         return getBaseModelAndView(map,0,"/search/"+search);
     }
 
     @GetMapping("/search/{search}/page/{id}")
-    public ModelAndView PostsBySearchPage(@PathVariable("search") String search,@PathVariable("id") String id) {
+    public ModelAndView getPostsBySearchPage(@PathVariable("search") String search,@PathVariable("id") String id) {
         HashMap<String,String> map = new HashMap<>();
         map.put("search", search);
         return getBaseModelAndView(map,Integer.parseInt(id)-1,"/search/"+search);
     }
 
     @GetMapping("/categories/{category}/page/{id}")
-    public ModelAndView categories(@PathVariable("category") String category, @PathVariable("id") String id) {
+    public ModelAndView getPostsByTagPage(@PathVariable("category") String category, @PathVariable("id") String id) {
         HashMap<String,String> map = new HashMap<>();
         map.put("tag", category);
         return getBaseModelAndView(map,Integer.parseInt(id)-1,"/categories/"+category);
     }
 
     @GetMapping("/categories/{category}")
-    public ModelAndView categories(@PathVariable("category") String category) {
+    public ModelAndView getPostsByTagHomepage(@PathVariable("category") String category) {
         HashMap<String,String> map = new HashMap<>();
         map.put("tag", category);
         return getBaseModelAndView(map,0,"/categories/"+category);
     }
     @GetMapping("/shops/{shop}")
-    public ModelAndView shops(@PathVariable("shop") String shop) {
+    public ModelAndView getPostsByShopHomepage(@PathVariable("shop") String shop) {
         HashMap<String,String> map = new HashMap<>();
         map.put("shop", shop);
         return getBaseModelAndView(map,0,"/shops/"+shop);
     }
 
     @GetMapping("/shops/{shop}/page/{id}")
-    public ModelAndView shops(@PathVariable("shop") String shop, @PathVariable("id") String id) {
+    public ModelAndView getPostsByShopPage(@PathVariable("shop") String shop, @PathVariable("id") String id) {
         HashMap<String,String> map = new HashMap<>();
         map.put("shop", shop);
         return getBaseModelAndView(map,Integer.parseInt(id)-1,"/shops/"+shop);
@@ -99,8 +99,8 @@ public class ForumController {
     }
 
     @PostMapping("/search")
-    public ModelAndView search(@ModelAttribute("searchform") String searchform) throws UnsupportedEncodingException {
-        String encodedId = URLEncoder.encode(searchform, "UTF-8").replace("+", "%20");
+    public ModelAndView search(@ModelAttribute("searchform") String searchForm) throws UnsupportedEncodingException {
+        String encodedId = URLEncoder.encode(searchForm, "UTF-8").replace("+", "%20");
         ModelAndView m = new ModelAndView(new RedirectView("/forum/search/" + encodedId, true, true, false));
         return m;
     }

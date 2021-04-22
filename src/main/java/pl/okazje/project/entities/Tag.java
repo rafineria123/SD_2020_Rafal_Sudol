@@ -8,9 +8,8 @@ public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tag_id;
+    private Long tagId;
     private String name;
-
 
     @OneToMany(mappedBy="tag")
     private Set<Discount> discounts;
@@ -18,22 +17,15 @@ public class Tag {
     @OneToMany(mappedBy="tag")
     private Set<Post> posts;
 
-
     public Tag() {
     }
 
-    public Tag(String name) {
-
-        this.name = name;
-
+    public Long getTagId() {
+        return tagId;
     }
 
-    public Long getTag_id() {
-        return tag_id;
-    }
-
-    public void setTag_id(Long tag_id) {
-        this.tag_id = tag_id;
+    public void setTagId(Long tagId) {
+        this.tagId = tagId;
     }
 
     public String getName() {

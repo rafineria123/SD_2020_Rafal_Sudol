@@ -21,7 +21,6 @@ public class MessagesController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
 
-    @Autowired
     public MessagesController(ConversationService conversationService, ShopService shopService, TagService tagService, AuthenticationService authenticationService, UserService userService) {
         this.conversationService = conversationService;
         this.shopService = shopService;
@@ -35,7 +34,7 @@ public class MessagesController {
     public ModelAndView getConversationPage(@PathVariable("id") String id) {
         ModelAndView modelAndView;
         Optional<Conversation> optionalConversation = conversationService.findById(Long.parseLong(id));
-        if(optionalConversation.isPresent()){
+        if (optionalConversation.isPresent()) {
             User currentUser = authenticationService.getCurrentUser().get();
             modelAndView = new ModelAndView("user_messages");
             modelAndView.addObject("list_of_tags", tagService.findAll());
@@ -44,7 +43,7 @@ public class MessagesController {
             modelAndView.addObject("current_conversation", optionalConversation.get());
             modelAndView.addObject("user", currentUser);
             modelAndView.addObject("current_id", Integer.parseInt(id));
-        }else {
+        } else {
             modelAndView = new ModelAndView("error");
         }
         return modelAndView;
@@ -53,30 +52,28 @@ public class MessagesController {
     @PostMapping("sendMessage")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public String sendMessage(@ModelAttribute("new_message_conv_id") String conversationId, @ModelAttribute("new_message") String messageContent) {
-        conversationService.sendMessage(conversationService.findById(Long.parseLong(conversationId)).get().getOtherUser(authenticationService.getCurrentUser().get()),messageContent);
+        conversationService.sendMessage(conversationService.findById(Long.parseLong(conversationId)).get().getOtherUser(authenticationService.getCurrentUser().get()), messageContent);
         return "redirect:/messages/" + conversationId;
     }
-
 
     @GetMapping("/conversation/{id}")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
-    String[][] getConversationBody(@PathVariable String id){
+    String[][] getConversationBody(@PathVariable String id) {
         return conversationService.getConversationBody(Long.parseLong(id));
-
     }
 
     @GetMapping("/user_conversations/{id}")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
-    String[][] getAllConversations(){
+    String[][] getAllConversations() {
         return conversationService.getAllCurrentUserConversationsAsArray();
     }
 
     @PostMapping("/sendNewMessage")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
-    void sendNewMessage(@RequestParam("message") String message, @RequestParam("user") String otherUser){
-        conversationService.sendMessage(userService.findFirstByLogin(otherUser).get(),message);
-        }
+    void sendNewMessage(@RequestParam("message") String message, @RequestParam("user") String otherUser) {
+        conversationService.sendMessage(userService.findFirstByLogin(otherUser).get(), message);
+    }
 }

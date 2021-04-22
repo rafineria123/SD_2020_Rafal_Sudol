@@ -12,38 +12,38 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;
+    private Long commentId;
     @Column(length = 700)
     private String content;
     @Enumerated(EnumType.STRING)
     private Status status = Status.POSTED;
-    private Date cr_date = new Date();
+    private Date createDate;
 
     @OneToMany(mappedBy="comment")
     private Set<Rating> ratings;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="userId", nullable=false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="discount_id")
+    @JoinColumn(name="discountId")
     private Discount discount;
 
     @ManyToOne
-    @JoinColumn(name="post_id")
+    @JoinColumn(name="postId")
     private Post post;
 
     public Comment() {
+        createDate = new Date();
     }
 
-
-    public Long getComment_id() {
-        return comment_id;
+    public Long getCommentId() {
+        return commentId;
     }
 
-    public void setComment_id(Long comment_id) {
-        this.comment_id = comment_id;
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
     public String getContent() {
@@ -61,12 +61,12 @@ public class Comment {
         this.content = content;
     }
 
-    public Date getCr_date() {
-        return cr_date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCr_date(Date cr_date) {
-        this.cr_date = cr_date;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Set<Rating> getRatings() {
@@ -117,17 +117,15 @@ public class Comment {
         }
     }
 
-
-
     public int getDateDifference(){
         Date date = new Date();
-        long diff = date.getTime() - cr_date.getTime();
+        long diff = date.getTime() - createDate.getTime();
 
         return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
     public long getDataToNumber(){
-        return new Date().getTime() - this.cr_date.getTime();
+        return new Date().getTime() - this.createDate.getTime();
     }
 
 }

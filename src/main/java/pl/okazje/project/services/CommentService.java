@@ -1,12 +1,8 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.Comment;
-import pl.okazje.project.entities.User;
-import pl.okazje.project.exceptions.CommentNotFoundException;
 import pl.okazje.project.repositories.CommentRepository;
 
 import java.util.Date;
@@ -20,7 +16,6 @@ public class CommentService {
     private final AuthenticationService authenticationService;
     private final PostService postService;
 
-    @Autowired
     public CommentService(CommentRepository commentRepository, DiscountService discountService, AuthenticationService authenticationService, PostService postService) {
         this.commentRepository = commentRepository;
         this.discountService = discountService;
@@ -41,7 +36,7 @@ public class CommentService {
         comment1.setDiscount(discountService.findById(id).get());
         comment1.setUser(authenticationService.getCurrentUser().get());
         comment1.setContent(content);
-        comment1.setCr_date(new Date());
+        comment1.setCreateDate(new Date());
         this.save(comment1);
     }
 
@@ -50,7 +45,7 @@ public class CommentService {
         comment1.setPost(postService.findById(id).get());
         comment1.setUser(authenticationService.getCurrentUser().get());
         comment1.setContent(content);
-        comment1.setCr_date(new Date());
+        comment1.setCreateDate(new Date());
         this.save(comment1);
     }
 

@@ -18,7 +18,6 @@ public class AuthenticationService {
     private final UserService userService;
     private final FindByIndexNameSessionRepository sessionRepository;
 
-    @Autowired
     public AuthenticationService(UserService userService, FindByIndexNameSessionRepository sessionRepository) {
         this.userService = userService;
         this.sessionRepository = sessionRepository;
@@ -31,7 +30,6 @@ public class AuthenticationService {
             return userService.findFirstByLogin(authentication.getName());
         }
         return Optional.empty();
-
     }
 
     public boolean isUserLoggedIn(User user){

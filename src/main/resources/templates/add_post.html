@@ -149,8 +149,8 @@
                     <div class="col-lg-12">
                         <div class="row">
 
-                            <div class="col-md-3 radio-toolbar text-center" th:each="tag : ${list_of_tags}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin: 0px;"><input type="radio" th:id="|tag_${tag.getTag_id()}|" name="tag" th:value="${tag.getTag_id()}">
-                                <label th:for="|tag_${tag.getTag_id()}|" class="w-100" th:text="${tag.getName()}" style="">Apple</label>
+                            <div class="col-md-3 radio-toolbar text-center" th:each="tag : ${list_of_tags}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin: 0px;"><input type="radio" th:id="|tag_${tag.getTagId()}|" name="tag" th:value="${tag.getTagId()}">
+                                <label th:for="|tag_${tag.getTagId()}|" class="w-100" th:text="${tag.getName()}" style="">Apple</label>
                             </div>
 
 
@@ -172,8 +172,8 @@
                     <div class="col-md-12">
                         <div class="row">
 
-                            <div class="col-md-3 radio-toolbar text-center" th:each="shop : ${list_of_shops}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin: 0px;"><input type="radio" th:id="|shop_${shop.getShop_id()}|" name="shop" th:value="${shop.getShop_id()}">
-                                <label th:for="|shop_${shop.getShop_id()}|" class="w-100" th:text="${shop.getName()}">Apple</label>
+                            <div class="col-md-3 radio-toolbar text-center" th:each="shop : ${list_of_shops}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin: 0px;"><input type="radio" th:id="|shop_${shop.getShopId()}|" name="shop" th:value="${shop.getShopId()}">
+                                <label th:for="|shop_${shop.getShopId()}|" class="w-100" th:text="${shop.getName()}">Apple</label>
                             </div>
 
 

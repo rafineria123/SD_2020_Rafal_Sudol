@@ -62,7 +62,7 @@
                 </a>
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
-                <a href="/add/discount">
+                <a href="/discount/add">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
                             style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -177,13 +177,13 @@
                             Dodano do schowka!</span><span class="over_items far fa-share-square" style="padding-bottom: 5px"></span> </button>
 
 
-                    <form th:action="@{/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('AWAITING')}" sec:authorize="hasAuthority('ADMIN')">
-                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
+                    <form th:action="@{/discount/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('AWAITING')}" sec:authorize="hasAuthority('ADMIN')">
+                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
                         <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
                     </form>
 
-                    <form th:action="@{/removediscount}" method="post" sec:authorize="hasAuthority('ADMIN')">
-                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscount_id()}">
+                    <form th:action="@{/discount/removediscount}" method="post" sec:authorize="hasAuthority('ADMIN')">
+                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
                         <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
                     </form>
 
@@ -206,19 +206,19 @@
                             <div class="col-3 d-flex justify-content-center align-self-end">
                                 <div class="" style="border-radius: 15px;border: 2px solid #ff0065;width: 40%;padding-left: 15px;padding-right: 15px;min-width: fit-content">
                                     <div class="d-flex justify-content-around">
-                                        <form th:action="@{/addrate}" method="post">
+                                        <form th:action="@{/discount/addrate}" method="post">
                                             <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;" value="&#xf067;" type="submit"><input type="hidden" name="discountidadd" id="discountidadd"
-                                                                                                                                                                th:value="${discount.getDiscount_id()}">
+                                                                                                                                                                th:value="${discount.getDiscountId()}">
                                             <input type="hidden" name="redirect"
                                                    id="redirect"
-                                                   value="" th:value="|discount/${discount.getDiscount_id()}|">
+                                                   value="" th:value="|discount/${discount.getDiscountId()}|">
                                         </form>
                                         <span style="color:red;font-size: 16px;font-weight: 900;white-space:pre" th:text="|${discount.getRatingsSize()}|">  255  </span>
-                                        <form th:action="@{/removerate}" method="post"><input
-                                                class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscount_id()}">
+                                        <form th:action="@{/discount/removerate}" method="post"><input
+                                                class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4" value="&#xf068;" type="submit"><input type="hidden" name="discountidremove" id="discountidremove" th:value="${discount.getDiscountId()}">
                                             <input type="hidden" name="redirect_remove"
                                                    id="redirect_remove"
-                                                   th:value="|discount/${discount.getDiscount_id()}|">
+                                                   th:value="|discount/${discount.getDiscountId()}|">
                                         </form>
                                     </div>
                                 </div>
@@ -233,7 +233,7 @@
 
                     </div>
                 <div class="col-3 d-flex justify-content-center align-self-start" style="padding-top: 8px;padding-bottom: 15px;padding-left:15px;padding-right: 15px;min-width: fit-content;">
-                    <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                    <img th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                 </div>
                 <div class="col-xl-9" style="">
 
@@ -266,23 +266,23 @@
 
                         <div class="d-flex justify-content-start" style="width: 60%">
 
-                            <span th th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
-                            <span th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
+                            <span th th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px;text-decoration: underline"th:text="|${discount.getCurrentPrice()}zł|">552,64zł</span>
+                            <span th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOldPrice()}zł|">680zł</span>
                             <span th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
                             <span th:if="${discount.getType().equals('OBNIZKA')}" class="fas fa-truck align-self-center"
-                                  style="font-size: 18px;color: rgba(145,143,146,0.91);padding-right: 3px"></span><span th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91); " th:text="|${discount.getShipment_price()}zł|">20zł</span>
+                                  style="font-size: 18px;color: rgba(145,143,146,0.91);padding-right: 3px"></span><span th:if="${discount.getType().equals('OBNIZKA')}" style="font-weight: 500;font-size: 21px;font-family: Calibri;color: rgba(145,143,146,0.91); " th:text="|${discount.getShipmentPrice()}zł|">20zł</span>
 
-                            <span th:if="${discount.getType().equals('KUPONNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}PLN|">-19%</span>
-                            <span th:if="${discount.getType().equals('KUPONPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOld_price()}%|">-19%</span>
-                            <span th:if="${discount.getType().equals('KODNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOld_price()}PLN|">-19%</span>
-                            <span th:if="${discount.getType().equals('KODPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOld_price()}%|">-19%</span>
+                            <span th:if="${discount.getType().equals('KUPONNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOldPrice()}PLN|">-19%</span>
+                            <span th:if="${discount.getType().equals('KUPONPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KUPON: -${discount.getOldPrice()}%|">-19%</span>
+                            <span th:if="${discount.getType().equals('KODNORMALNY')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOldPrice()}PLN|">-19%</span>
+                            <span th:if="${discount.getType().equals('KODPROCENT')}" style="font-weight: 900;font-size: 21px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|KOD: -${discount.getOldPrice()}%|">-19%</span>
 
                         </div>
                     </div>
                     <div class="row" style="padding-bottom: 10px;padding-right: 40px;padding-left:40px">
                         <div class="d-flex justify-content-end" style="width: 100%">
                             <span style="font-weight: 500;font-size: 17px;font-family: Calibri;color: rgba(145,143,146,0.91);">Wygasa:<span
-                                    style="font-weight: 900;font-size: 19px;font-family: Calibri;color: #1e7e34;"th:text="${discount.getExpire_date_formatted()}">25.06.20</span></span>
+                                    style="font-weight: 900;font-size: 19px;font-family: Calibri;color: #1e7e34;"th:text="${discount.getExpireDateFormatted()}">25.06.20</span></span>
 
                         </div>
                     </div>
@@ -295,7 +295,7 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-12" style="padding-top: 10px;padding-bottom: 10px;padding-right: 0px;padding-left: 0px">
-                    <a th:href="${discount.getDiscount_link()}" href="/discount">
+                    <a th:href="${discount.getDiscountLink()}" href="/discount">
                         <button type="button" style="width: 100%" class="btn item_button d-flex justify-content-around">
 
                             <div style="width: 10%" class="d-flex justify-content-center align-self-center">
@@ -303,7 +303,7 @@
                             </div>
 
                             <div style="width: 80%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" class="d-flex justify-content-center">
-                                <span th:text="| ${discount.getDiscount_link()} |" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                <span th:text="| ${discount.getDiscountLink()} |" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
                                     https://www.amazon.de/dp/B01N5VHLUG/?language=pl_PL&tag=pepperpl09-21 </span>
                             </div>
                             <div style="width: 10%" class="d-flex justify-content-center align-self-center">
@@ -341,13 +341,13 @@
         </div>
         <div class="col-md-8" style="height: 15px;"></div>
         <div class="col-md-8 sort_div" style="box-shadow: 0px 3px 5px 0px rgba(220,220,220,1);">
-            <form th:action="@{/addcomment}" method="post">
+            <form th:action="@{/discount/addcomment}" method="post">
             <div class="row text-center" style="padding-top: 5px;padding-bottom: 5px;">
                 <div class="col-md-12" style="padding-top: 5px">
 
                      <textarea rows="5" COLS="72" id="comment" maxlength="400" name="comment" WRAP="comment" style="width: 100%;border-radius: 6px"></textarea>
                     <input type="hidden" name="discountidaddcomment" id="discountidaddcomment"
-                           th:value="${discount.getDiscount_id()}">
+                           th:value="${discount.getDiscountId()}">
 
                 </div>
 
@@ -382,8 +382,8 @@
                                         style="font-size:14px;font-weight: 900;color: rgba(145,143,146,0.91);"th:text="${comment.getRatingsSize()}">23</span>
                                 </div>
                                 <div class="d-flex justify-content-end align-items-end" style="width: 10%" sec:authorize="hasAuthority('ADMIN')">
-                                    <form th:action="@{/removecomment}" method="post">
-                                        <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getComment_id()}">
+                                    <form th:action="@{/discount/removecomment}" method="post">
+                                        <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getCommentId()}">
                                         <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style=""></span> </button>
                                     </form>
 
@@ -422,9 +422,9 @@
                                 <div class="d-flex justify-content-start" style="width: 90%">
 
                                     <div class="d-flex justify-content-start" style="width:40%;font-size: 14px;font-weight: 500">
-                                        <form th:action="@{/ratecomment}" method="post">
+                                        <form th:action="@{/discount/ratecomment}" method="post">
                                             <input type="hidden" name="commentid" id="commentid"
-                                                   th:value="${comment.getComment_id()}">
+                                                   th:value="${comment.getCommentId()}">
                                             <button type="submit" style="background-color: #f4f4f5;border: 0;" class="comment_like">
                                     <span class="fas fa-thumbs-up"
                                           style="font-size:16px;font-weight: 900;color: rgba(145,143,146,0.91);padding-right: 4px"></span><span
@@ -477,7 +477,7 @@
     function share(){
 
         const el = document.createElement('textarea');
-        el.value = "http://54.227.52.123/discount/"+"[[${discount.getDiscount_id()}]]";
+        el.value = "http://54.227.52.123/discount/"+"[[${discount.getDiscountId()}]]";
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');

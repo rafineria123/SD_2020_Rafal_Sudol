@@ -17,7 +17,6 @@ public class SessionService {
     private final FindByIndexNameSessionRepository sessionRepository;
     private final HttpServletRequest request;
 
-    @Autowired
     public SessionService(FindByIndexNameSessionRepository sessionRepository, HttpServletRequest request) {
         this.sessionRepository = sessionRepository;
         this.request = request;
@@ -53,8 +52,6 @@ public class SessionService {
                 session.setAttribute("date", "all");
             }
         }
-
-
     }
 
     public void setCurrentSessionForumSortAttribute(String sort){

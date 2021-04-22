@@ -1,13 +1,11 @@
 package pl.okazje.project.events;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.services.EmailService;
 import pl.okazje.project.services.UserService;
 
-import javax.mail.MessagingException;
 import java.util.UUID;
 
 @Component
@@ -15,12 +13,13 @@ public class RegistrationListener implements
         ApplicationListener<OnRegistrationCompleteEvent> {
 
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final EmailService mailSender;
 
-
-    @Autowired
-    private EmailService mailSender;
+    public RegistrationListener(UserService userService, EmailService mailSender) {
+        this.userService = userService;
+        this.mailSender = mailSender;
+    }
 
     @Override
     public void onApplicationEvent(OnRegistrationCompleteEvent event) {

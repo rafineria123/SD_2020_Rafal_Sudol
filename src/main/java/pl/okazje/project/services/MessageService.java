@@ -11,12 +11,8 @@ import pl.okazje.project.repositories.MessageRepository;
 public class MessageService {
     private final MessageRepository messageRepository;
 
-    private final AuthenticationService authenticationService;
-
-    @Autowired
-    public MessageService(MessageRepository messageRepository, AuthenticationService authenticationService) {
+    public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
-        this.authenticationService = authenticationService;
     }
 
     public void save(Message message){

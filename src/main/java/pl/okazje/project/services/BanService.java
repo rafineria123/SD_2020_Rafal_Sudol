@@ -10,7 +10,6 @@ public class BanService {
 
     private final BanRepository banRepository;
 
-    @Autowired
     public BanService(BanRepository banRepository) {
         this.banRepository = banRepository;
     }

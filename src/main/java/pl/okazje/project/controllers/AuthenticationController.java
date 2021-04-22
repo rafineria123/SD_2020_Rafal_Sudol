@@ -13,15 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
-public class LoginAndRegisterController {
+public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final RegisterService registerService;
     private final ShopService shopService;
     private final TagService tagService;
 
-    @Autowired
-    public LoginAndRegisterController(AuthenticationService authenticationService, RegisterService registerService, ShopService shopService, TagService tagService) {
+    public AuthenticationController(AuthenticationService authenticationService, RegisterService registerService, ShopService shopService, TagService tagService) {
         this.authenticationService = authenticationService;
         this.registerService = registerService;
         this.shopService = shopService;
@@ -37,7 +36,6 @@ public class LoginAndRegisterController {
     public ModelAndView getRegisterHomepage() {
         return getBaseModelAndView("register");
     }
-
 
     @PostMapping("/register")
     @PreAuthorize("!hasAnyAuthority('USER', 'ADMIN')")
@@ -57,13 +55,13 @@ public class LoginAndRegisterController {
 
     @GetMapping("/registrationConfirm")
     @PreAuthorize("!hasAnyAuthority('USER', 'ADMIN')")
-    public RedirectView registrationConfirm(@RequestParam("token") String token, RedirectAttributes redir) {
+    public RedirectView registerConfirmation(@RequestParam("token") String token, RedirectAttributes redir) {
         Map map = registerService.confirmRegistration(token);
         RedirectView redirectView;
         if (map.containsKey("bad_status")) {
             redirectView = new RedirectView("/login", true);
             redir.addFlashAttribute("bad_status", map.get("bad_status"));
-        }else {
+        } else {
             redirectView = new RedirectView("/login", true);
             redir.addFlashAttribute("good_status", map.get("good_status"));
         }
@@ -73,6 +71,7 @@ public class LoginAndRegisterController {
     private ModelAndView getBaseModelAndView(String viewName) {
         ModelAndView modelAndView;
         if (authenticationService.getCurrentUser().isPresent()) {
+            //redirect to homepage
             modelAndView = new ModelAndView(new RedirectView("", true, true, false));
             return modelAndView;
         }

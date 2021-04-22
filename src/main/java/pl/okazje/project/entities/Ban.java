@@ -10,28 +10,31 @@ public class Ban {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ban_id;
+    private Long banId;
     @Column(length = 300)
-    private String reason = "Powód nie podany.";
+    private String reason;
     @OneToOne(mappedBy = "ban")
     private User user;
 
     public Ban() {
+        this.reason = "Powód nie podany.";
     }
 
-    public Long getBan_id() {
-        return ban_id;
+    public Long getBanId() {
+        return banId;
     }
 
-    public void setBan_id(Long ban_id) {
-        this.ban_id = ban_id;
+    public void setBanId(Long banId) {
+        this.banId = banId;
     }
 
-    public String getReason() { return reason; }
+    public String getReason() {
+        return reason;
+    }
 
     public void setReason(String reason) {
-        if(reason.length()>300){
-            throw new DataTooLongException(reason.substring(0, Math.min(reason.length(), 50))+"...");
+        if (reason.length() > 300) {
+            throw new DataTooLongException(reason.substring(0, Math.min(reason.length(), 50)) + "...");
         }
         this.reason = reason;
     }

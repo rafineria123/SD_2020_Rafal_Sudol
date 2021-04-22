@@ -71,7 +71,7 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center" style="padding-top: 10px">
-                            <a href="/add/discount">
+                            <a href="/discount/add">
                                 <button type="button"  class="btn add_button"><span
                                         class="fas fa-plus"
                                         style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -249,54 +249,54 @@
                         <!-- Brand icon-->
                         <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                             <div class="col-lg-12">
-                                <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
-                                        th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
+                                <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="jd"> <img
+                                        th:src="|/${discount.getShop().getImageUrl()}|" class="item_image_brand"><img> </a>
                             </div>
                         </div>
                 <!-- Discount image-->
                 <div class="row item_parts_padding">
 
                     <div class="col-lg-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
-                            <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="/">
+                            <img th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                         </a>
                     </div>
                 </div>
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-lg-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>
                 <!-- Price-->
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('OBNIZKA')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
-                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOldPrice()}zł|">680zł</span>
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrentPrice()}zł|">552,64zł</span>
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONNORMALNY')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONPROCENT')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}%|">552,64zł</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODNORMALNY')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODPROCENT')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}%|">552,64zł</span>
 
                     </div>
                 </div>
@@ -305,7 +305,7 @@
                     <div class="col-lg-12">
                         <span class="item_date">Oferta wygasa: </span><span class="item_user"
                                                                             style="font-weight: 900; font-size: 15px; color: #1e7e34"
-                                                                            th:text="${discount.getExpire_date_formated()}">25.06.20</span>
+                                                                            th:text="${discount.getExpireDateFormatted()}">25.06.20</span>
                     </div>
 
                 </div>
@@ -321,11 +321,11 @@
                 <div class="row item_parts_padding d-flex justify-content-around" style="padding-top: 10px">
                     <div class="">
                         <div class="row">
-                            <form th:action="@{/addrate}" method="post">
+                            <form th:action="@{/discount/addrate}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
                                        value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
                                                                              id="discountidadd"
-                                                                             th:value="${discount.getDiscount_id()}">
+                                                                             th:value="${discount.getDiscountId()}">
                                 <input type="hidden" name="redirect"
                                        id="redirect"
                                        value="">
@@ -333,11 +333,11 @@
                             <span
                                     style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
                                     th:text="|${discount.getRatingsSize()}|">  255  </span>
-                            <form th:action="@{/removerate}" method="post"><input
+                            <form th:action="@{/discount/removerate}" method="post"><input
                                     class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
                                     value="&#xf068;" type="submit"><input type="hidden" name="discountidremove"
                                                                           id="discountidremove"
-                                                                          th:value="${discount.getDiscount_id()}">
+                                                                          th:value="${discount.getDiscountId()}">
                                 <input type="hidden" name="redirect_remove"
                                        id="redirect_remove"
                                        value="">
@@ -347,7 +347,7 @@
 
                     </div>
                     <div class="">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" class="no_text_decoration"><span
                                 class="fas fa-comments"
                                 style="color: #9e9ea4;font-size: 14px;"></span><span
                                 style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre"
@@ -357,7 +357,7 @@
                 <!--Discount Button-->
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
                     <div class="col-lg-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}">
                             <button type="button"  class="btn item_button" th:if="${!discount.isOutDated()}">
 
                                     Przejdz do promocji
@@ -375,54 +375,54 @@
                 <!-- Brand icon-->
                 <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
-                                th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="jd"> <img
+                                th:src="|/${discount.getShop().getImageUrl()}|" class="item_image_brand"><img> </a>
                     </div>
                 </div>
                 <!-- Discount image-->
                 <div class="row item_parts_padding">
 
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
-                            <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="/">
+                            <img th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                         </a>
                     </div>
                 </div>
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="asd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="asd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>
                 <!-- Price-->
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('OBNIZKA')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
-                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOldPrice()}zł|">680zł</span>
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrentPrice()}zł|">552,64zł</span>
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONNORMALNY')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONPROCENT')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}%|">552,64zł</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODNORMALNY')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODPROCENT')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}%|">552,64zł</span>
 
                     </div>
                 </div>
@@ -431,7 +431,7 @@
                     <div class="col-md-12">
                         <span class="item_date">Oferta wygasa: </span><span class="item_user"
                                                                             style="font-weight: 900; font-size: 15px; color: #1e7e34"
-                                                                            th:text="${discount.getExpire_date_formated()}">25.06.20</span>
+                                                                            th:text="${discount.getExpireDateFormatted()}">25.06.20</span>
                     </div>
 
                 </div>
@@ -447,11 +447,11 @@
                 <div class="row item_parts_padding d-flex justify-content-around" style="padding-top: 10px">
                     <div class="">
                         <div class="row">
-                            <form th:action="@{/addrate}" method="post">
+                            <form th:action="@{/discount/addrate}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
                                        value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
                                                                              id="discountidadd"
-                                                                             th:value="${discount.getDiscount_id()}">
+                                                                             th:value="${discount.getDiscountId()}">
                                 <input type="hidden" name="redirect"
                                        id="redirect"
                                        value="">
@@ -459,11 +459,11 @@
                             <span
                                     style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
                                     th:text="|${discount.getRatingsSize()}|">  255  </span>
-                            <form th:action="@{/removerate}" method="post"><input
+                            <form th:action="@{/discount/removerate}" method="post"><input
                                     class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
                                     value="&#xf068;" type="submit"><input type="hidden" name="discountidremove"
                                                                           id="discountidremove"
-                                                                          th:value="${discount.getDiscount_id()}">
+                                                                          th:value="${discount.getDiscountId()}">
                                 <input type="hidden" name="redirect_remove"
                                        id="redirect_remove"
                                        value="">
@@ -473,7 +473,7 @@
 
                     </div>
                     <div class="">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" class="no_text_decoration"><span
                                 class="fas fa-comments"
                                 style="color: #9e9ea4;font-size: 14px;"></span><span
                                 style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre"
@@ -483,7 +483,7 @@
                 <!--Discount Button-->
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
                     <div class="col-lg-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}">
                                                         <button type="button"  class="btn item_button" th:if="${discount.isOutDated()}" style="background: linear-gradient(45deg,lightblue,lightblue);">
 
                                                             Przejdz do promocji

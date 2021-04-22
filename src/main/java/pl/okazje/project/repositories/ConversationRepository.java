@@ -11,8 +11,8 @@ import java.util.Optional;
 @Repository
 public interface ConversationRepository extends CrudRepository<Conversation, Long> {
 
-    @Query(value = "SELECT * from conversation where conversation_id in (SELECT conversation_id FROM user_conversation WHERE" +
-            " user_id =?1 and conversation_id in(select conversation_id from user_conversation where user_id=?2));" ,
+    @Query(value = "SELECT * from conversation where conversationId in (SELECT conversationId FROM user_conversation WHERE" +
+            " userId =?1 and conversationId in(select conversationId from user_conversation where userId=?2));" ,
             nativeQuery = true)
     Optional<Conversation> findByUsers(int uid1, int uid2);
 

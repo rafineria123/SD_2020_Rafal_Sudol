@@ -3,8 +3,6 @@ package pl.okazje.project.entities;
 import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,41 +10,36 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
-//obnizka=cena pierwotna -> cena obecna
-//kupon = przecena w gazetce/sklepie lokalnym
-//kod = przecena online
 @Entity
 public class Post {
 
-    public enum Status{DELETED, AWAITING, ACCEPTED}
+    public enum Status {DELETED, AWAITING, ACCEPTED}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long post_id;
+    private Long postId;
     @Column(length = 500)
     private String title;
     @Column(length = 1500)
     private String content;
-    private Date creationdate;
+    private Date createDate;
     @Enumerated(EnumType.STRING)
     private Status status;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "tag_id", nullable = false)
+    @JoinColumn(name = "tagId", nullable = false)
     private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name = "shop_id", nullable = false)
+    @JoinColumn(name = "shopId", nullable = false)
     private Shop shop;
-
 
     @OneToMany(mappedBy = "post")
     private Set<Comment> comments;
-
 
     public Post() {
     }
@@ -67,12 +60,12 @@ public class Post {
         this.shop = shop;
     }
 
-    public Long getPost_id() {
-        return post_id;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPost_id(Long post_id) {
-        this.post_id = post_id;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public String getTitle() {
@@ -80,7 +73,7 @@ public class Post {
     }
 
     public void setTitle(String title) {
-        if(title.length()>500) throw new DataTooLongException(title);
+        if (title.length() > 500) throw new DataTooLongException(title);
         this.title = title;
     }
 
@@ -89,16 +82,16 @@ public class Post {
     }
 
     public void setContent(String content) {
-        if(content.length()>1500) throw new DataTooLongException(content);
+        if (content.length() > 1500) throw new DataTooLongException(content);
         this.content = content;
     }
 
-    public Date getCreationdate() {
-        return creationdate;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCreationdate(Date creationdate) {
-        this.creationdate = creationdate;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Status getStatus() {
@@ -126,43 +119,37 @@ public class Post {
     }
 
     public int getCommentsSize() {
-
         if (comments == null) {
             return 0;
         } else {
             return comments.size();
         }
-
     }
 
     public String getCreation_date_formated() {
-
         Format formatter = new SimpleDateFormat("dd.MM.yy");
-        String s = formatter.format(this.creationdate);
+        String s = formatter.format(this.createDate);
         return s;
     }
 
-    public ArrayList<Comment> getCommentsSorted(){
-
+    public ArrayList<Comment> getCommentsSorted() {
         ArrayList<Comment> list = new ArrayList(getComments());
-        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
-        return  list;
-
+        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
+        return list;
     }
 
-    public boolean isDeleted(){
-        if(this.status == null||!this.status.equals(Status.DELETED)){
+    public boolean isDeleted() {
+        if (this.status == null || !this.status.equals(Status.DELETED)) {
             return false;
         }
         return true;
     }
 
-    public boolean isAwaiting(){
-        if(this.status == null||!this.status.equals(Status.AWAITING)){
+    public boolean isAwaiting() {
+        if (this.status == null || !this.status.equals(Status.AWAITING)) {
             return false;
         }
         return true;
     }
-
 
 }

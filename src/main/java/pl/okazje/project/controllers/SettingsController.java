@@ -1,6 +1,5 @@
 package pl.okazje.project.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,10 +11,12 @@ import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.services.*;
 
+import javax.el.MethodNotFoundException;
 import java.util.Optional;
 
 @Controller
 @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+@RequestMapping("/settings")
 public class SettingsController {
 
     private final int ITEMS_PER_PAGE = 4;
@@ -29,7 +30,6 @@ public class SettingsController {
     private final ConversationService conversationService;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public SettingsController(ShopService shopService, TagService tagService, AuthenticationService authenticationService, DiscountService discountService, PostService postService, UserService userService, ConversationService conversationService, PasswordEncoder passwordEncoder) {
         this.shopService = shopService;
         this.tagService = tagService;
@@ -42,43 +42,43 @@ public class SettingsController {
     }
 
 
-    @GetMapping("/settings")
+    @GetMapping("")
     public ModelAndView getSettingsHomepage() {
         return getBaseModelAndView("user_profile_main");
     }
 
-    @GetMapping("/settings/discounts")
+    @GetMapping("/discounts")
     public ModelAndView getSettingsDiscountsHomepage() {
         return getDiscountBaseModelAndView("user_profile_discounts", "/settings/discounts",
                 new PagedListHolder(discountService.findAllByUserIncludeSorting(authenticationService.getCurrentUser().get())),
                 0);
     }
 
-    @GetMapping("/settings/discounts/page/{id}")
+    @GetMapping("/discounts/page/{id}")
     public ModelAndView getSettingsDiscountsPage(@PathVariable("id") String id) {
         return getDiscountBaseModelAndView("user_profile_discounts", "/settings/discounts",
                 new PagedListHolder(discountService.findAllByUserIncludeSorting(authenticationService.getCurrentUser().get())),
                 Integer.parseInt(id) - 1);
     }
 
-    @GetMapping("/settings/posts")
+    @GetMapping("/posts")
     public ModelAndView getSettingsPostsHomepage() {
         return getPostBaseModelAndView("user_profile_posts", 0);
     }
 
-    @GetMapping("/settings/posts/page/{id}")
+    @GetMapping("/posts/page/{id}")
     public ModelAndView getSettingsPostsPage(@PathVariable("id") String id) {
         return getPostBaseModelAndView("user_profile_posts", Integer.parseInt(id));
     }
 
-    @GetMapping("/settings/admin/discounts")
+    @GetMapping("/admin/discounts")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ModelAndView getSettingsAdminDiscounts() {
         return getDiscountBaseModelAndView("user_admin_profile_discounts", "/settings/admin/discounts",
                 new PagedListHolder(discountService.findAllByStatusEquals(Discount.Status.AWAITING)), 0);
     }
 
-    @GetMapping("/settings/admin/discounts/page/{id}")
+    @GetMapping("/admin/discounts/page/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ModelAndView pageSettingsAdminDiscounts(@PathVariable("id") String id) {
         return getDiscountBaseModelAndView("user_admin_profile_discounts", "/settings/admin/discounts",
@@ -86,14 +86,14 @@ public class SettingsController {
 
     }
 
-    @GetMapping("/settings/messages")
+    @GetMapping("/messages")
     public ModelAndView profileMessages() {
         ModelAndView modelAndView = getBaseModelAndView("user_profile_messages");
         modelAndView.addObject("list_of_conversations", authenticationService.getCurrentUser().get().getConversationsSorted());
         return modelAndView;
     }
 
-    @RequestMapping(value = {"/settings/liked/page/{id}", "/settings/liked"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/liked/page/{id}", "/liked"}, method = RequestMethod.GET)
     public ModelAndView liked(@PathVariable(required = false) String id) {
         return getDiscountBaseModelAndView("user_profile_liked", "/settings/liked",
                 new PagedListHolder(discountService.findAllByUserAndLiked(authenticationService.getCurrentUser().get())),
@@ -101,13 +101,13 @@ public class SettingsController {
 
     }
 
-    @GetMapping("/settings/admin/functions")
+    @GetMapping("/admin/functions")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ModelAndView functions() {
         return getBaseModelAndView("user_admin_profile_functions");
     }
 
-    @PostMapping("/settings/messages")
+    @PostMapping("/messages")
     public RedirectView sendMessageToUser(@ModelAttribute("login") String login, @ModelAttribute("message") String message, RedirectAttributes redir) {
         RedirectView redirectView = new RedirectView("/settings/messages", true);
         User currentUser = authenticationService.getCurrentUser().get();
@@ -121,33 +121,33 @@ public class SettingsController {
             return redirectView;
         }
         conversationService.sendMessage(optionalOtherUser.get(), message);
-        return new RedirectView("/messages/" + conversationService.findByUsers(currentUser.getUser_id(),
-                optionalOtherUser.get().getUser_id()).get().getConversation_id(), true);
+        return new RedirectView("/messages/" + conversationService.findByUsers(currentUser.getUserId(),
+                optionalOtherUser.get().getUserId()).get().getConversationId(), true);
     }
 
-    @PostMapping("changeUserDetails")
+    @PostMapping("/changeUserDetails")
     public RedirectView changeUserDetails(@ModelAttribute("name") String name, @ModelAttribute("surname") String surname, @ModelAttribute("email") String email, RedirectAttributes redir) {
         userService.changeUserDetails(authenticationService.getCurrentUser().get(), name, surname, email);
         redir.addFlashAttribute("status", "Zmiany pomyślnie zapisane.");
         return new RedirectView("/settings", true);
     }
 
-    @PostMapping("changeDescription")
+    @PostMapping("/changeDescription")
     public RedirectView changeDescription(@ModelAttribute("description") String description, RedirectAttributes redir) {
-        userService.changeUserDescription(authenticationService.getCurrentUser().get(),description);
+        userService.changeUserDescription(authenticationService.getCurrentUser().get(), description);
         redir.addFlashAttribute("status", "Zmiany pomyślnie zapisane.");
         return new RedirectView("/settings", true);
     }
 
-    @PostMapping("changePassword")
+    @PostMapping("/changePassword")
     public RedirectView changePassword(@ModelAttribute("currentpassword") String currentpassword, @ModelAttribute("newpassword") String newpassword,
-                                       @ModelAttribute("newpasswordconfirmation") String newpasswordconfirmation, RedirectAttributes redir){
+                                       @ModelAttribute("newpasswordconfirmation") String newpasswordconfirmation, RedirectAttributes redir) {
         RedirectView redirectView = new RedirectView("/settings", true);
         if (!newpassword.equals(newpasswordconfirmation)) {
             redir.addFlashAttribute("bad_status", "Hasła muszą się powtarzać w dwóch ostatnich polach.");
             return redirectView;
         }
-        User user  = authenticationService.getCurrentUser().get();
+        User user = authenticationService.getCurrentUser().get();
         if (!passwordEncoder.matches(currentpassword, user.getPassword())) {
             redir.addFlashAttribute("bad_status", "Twoje obecne hasło się nie zgadza.");
             return redirectView;
@@ -158,16 +158,20 @@ public class SettingsController {
     }
 
 
-    @PostMapping("/settings/admin/xkom")
+    @PostMapping("/admin/xkom")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody
     void xkom() {
+        // parsing bot not rdy
+        throw new MethodNotFoundException();
     }
 
-    @PostMapping("/settings/admin/amazon")
+    @PostMapping("/admin/amazon")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody
     void amazon() {
+        // parsing bot not rdy
+        throw new MethodNotFoundException();
     }
 
     private ModelAndView getBaseModelAndView(String viewName) {

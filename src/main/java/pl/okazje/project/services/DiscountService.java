@@ -50,33 +50,33 @@ public class DiscountService {
                     switch ((String)session.getAttribute("date")){
                         case "day":
                             if(byArgument.containsKey("tag")){
-                                discounts = this.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc((String)byArgument.get("tag"));
+                                discounts = this.findAllByTagAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc((String)byArgument.get("tag"));
                                 break;
                             }
                             if(byArgument.containsKey("shop")){
-                                discounts = this.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc((String)byArgument.get("shop"));
+                                discounts = this.findAllByShopAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc((String)byArgument.get("shop"));
                                 break;
                             }
                             if(byArgument.containsKey("search")){
-                                discounts = this.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc("%"+byArgument.get("search")+"%");
+                                discounts = this.FindAllBySearchAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc("%"+byArgument.get("search")+"%");
                                 break;
                             }
-                            discounts = this.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc();
+                            discounts = this.findAllByCreateDateBetweenNowAndYesterdayOrderByRatingDesc();
                             break;
                         case "week":
                             if(byArgument.containsKey("tag")){
-                                discounts = this.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc((String)byArgument.get("tag"));
+                                discounts = this.findAllByTagAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc((String)byArgument.get("tag"));
                                 break;
                             }
                             if(byArgument.containsKey("shop")){
-                                discounts = this.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc((String)byArgument.get("shop"));
+                                discounts = this.findAllByShopAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc((String)byArgument.get("shop"));
                                 break;
                             }
                             if(byArgument.containsKey("search")){
-                                discounts = this.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc("%"+byArgument.get("search")+"%");
+                                discounts = this.FindAllBySearchAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc("%"+byArgument.get("search")+"%");
                                 break;
                             }
-                            discounts = this.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc();
+                            discounts = this.findAllByCreateDateBetweenNowAndLastWeekOrderByRatingDesc();
                             break;
                         default:
                             if(byArgument.containsKey("tag")){
@@ -99,33 +99,33 @@ public class DiscountService {
                     switch ((String)session.getAttribute("date")){
                         case "day":
                             if(byArgument.containsKey("tag")){
-                                discounts = this.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc((String)byArgument.get("tag"));
+                                discounts = this.findAllByTagAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc((String)byArgument.get("tag"));
                                 break;
                             }
                             if(byArgument.containsKey("shop")){
-                                discounts = this.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc((String)byArgument.get("shop"));
+                                discounts = this.findAllByShopAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc((String)byArgument.get("shop"));
                                 break;
                             }
                             if(byArgument.containsKey("search")){
-                                discounts = this.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc("%"+byArgument.get("search")+"%");
+                                discounts = this.FindAllBySearchAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc("%"+byArgument.get("search")+"%");
                                 break;
                             }
                             discounts = this.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc();
                             break;
                         case "week":
                             if(byArgument.containsKey("tag")){
-                                discounts = this.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc((String)byArgument.get("tag"));
+                                discounts = this.findAllByTagAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc((String)byArgument.get("tag"));
                                 break;
                             }
                             if(byArgument.containsKey("shop")){
-                                discounts = this.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc((String)byArgument.get("shop"));
+                                discounts = this.findAllByShopAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc((String)byArgument.get("shop"));
                                 break;
                             }
                             if(byArgument.containsKey("search")){
-                                discounts = this.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc("%"+byArgument.get("search")+"%");
+                                discounts = this.FindAllBySearchAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc("%"+byArgument.get("search")+"%");
                                 break;
                             }
-                            discounts = this.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc();
+                            discounts = this.findAllByCreateDateBetweenNowAndLastWeekOrderByCommentDesc();
                             break;
                         default:
                             if(byArgument.containsKey("tag")){
@@ -147,13 +147,13 @@ public class DiscountService {
             }
         }else {
             if(byArgument.containsKey("tag")){
-                discounts = this.findAllByTagOrderByCreationdateDesc((String)byArgument.get("tag"));
+                discounts = this.findAllByTagOrderByCreateDateDesc((String)byArgument.get("tag"));
             }else if(byArgument.containsKey("shop")){
-                discounts = this.findAllByShopOrderByCreationdateDesc((String)byArgument.get("shop"));
+                discounts = this.findAllByShopOrderByCreateDateDesc((String)byArgument.get("shop"));
             }else if(byArgument.containsKey("search")){
-                discounts = this.FindAllBySearchOrderByCreationdateDesc("%"+byArgument.get("search")+"%");
+                discounts = this.FindAllBySearchOrderByCreateDateDesc("%"+byArgument.get("search")+"%");
             }else  {
-                discounts = this.findAllByOrderByCreationdateDesc();
+                discounts = this.findAllByOrderByCreateDateDesc();
             }
         }
 
@@ -167,14 +167,14 @@ public class DiscountService {
         if(session.getAttribute("sort")!=null&&!session.getAttribute("sort").equals("date")){
             switch((String)session.getAttribute("sort")){
                 case "rating":
-                    discounts = this.findAllByUseridOrderByRatingDesc(user.getUser_id());
+                    discounts = this.findAllByUserIdOrderByRatingDesc(user.getUserId());
                     break;
                 case "comments":
-                    discounts = this.findAllByUseridOrderByCommentDesc(user.getUser_id());
+                    discounts = this.findAllByUserIdOrderByCommentDesc(user.getUserId());
                     break;
             }
         }else {
-            discounts = this.findAllByUseridOrderByCreationdateDesc(user.getUser_id());
+            discounts = this.findAllByUserIdOrderByCreateDateDesc(user.getUserId());
         }
         return discounts;
     }
@@ -192,20 +192,20 @@ public class DiscountService {
         return discounts;
     }
 
-    public List<Discount> findAllByOrderByCreationdateDesc(){
-        return discountRepository.findAllByOrderByCreationdateDesc();
+    public List<Discount> findAllByOrderByCreateDateDesc(){
+        return discountRepository.findAllByOrderByCreateDateDesc();
     }
     public List<Discount> findAllByOrderByRatingDesc(){
         return this.discountRepository.findAllByOrderByRatingDesc();
     }
 
-    public List<Discount> findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc(){
-        return this.discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByRatingDesc();
+    public List<Discount> findAllByCreateDateBetweenNowAndYesterdayOrderByRatingDesc(){
+        return this.discountRepository.findAllByCreateDateBetweenNowAndYesterdayOrderByRatingDesc();
     }
 
 
-    public List<Discount> findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc(){
-        return this.discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByRatingDesc();
+    public List<Discount> findAllByCreateDateBetweenNowAndLastWeekOrderByRatingDesc(){
+        return this.discountRepository.findAllByCreateDateBetweenNowAndLastWeekOrderByRatingDesc();
     }
 
     public List<Discount> findAllByOrderByCommentDesc(){
@@ -213,19 +213,19 @@ public class DiscountService {
     }
 
     public List<Discount> findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc(){
-        return this.discountRepository.findAllByCreationdateBetweenNowAndYesterdayOrderByCommentDesc();
+        return this.discountRepository.findAllByCreateDateBetweenNowAndYesterdayOrderByCommentDesc();
     }
 
-    public List<Discount> findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc(){
-        return this.discountRepository.findAllByCreationdateBetweenNowAndLastWeekOrderByCommentDesc();
+    public List<Discount> findAllByCreateDateBetweenNowAndLastWeekOrderByCommentDesc(){
+        return this.discountRepository.findAllByCreateDateBetweenNowAndLastWeekOrderByCommentDesc();
     }
 
-    public List<Discount> findAllByTagOrderByCreationdateDesc(String tag){
-        return this.discountRepository.findAllByTagOrderByCreationdateDesc(tag);
+    public List<Discount> findAllByTagOrderByCreateDateDesc(String tag){
+        return this.discountRepository.findAllByTagOrderByCreateDateDesc(tag);
     }
 
-    public List<Discount> findAllByShopOrderByCreationdateDesc(String shop){
-        return this.discountRepository.findAllByShopOrderByCreationdateDesc(shop);
+    public List<Discount> findAllByShopOrderByCreateDateDesc(String shop){
+        return this.discountRepository.findAllByShopOrderByCreateDateDesc(shop);
     }
 
     public List<Discount> findAllByTagOrderByRatingDesc(String tag){
@@ -233,88 +233,88 @@ public class DiscountService {
     }
 
 
-    public List<Discount> findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String tag){
-        return this.discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(tag);
+    public List<Discount> findAllByTagAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc(String tag){
+        return this.discountRepository.findAllByTagAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc(tag);
     }
 
-    public List<Discount> findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String tag){
-        return this.discountRepository.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(tag);
+    public List<Discount> findAllByTagAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc(String tag){
+        return this.discountRepository.findAllByTagAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc(tag);
     }
 
     public List<Discount> findAllByTagOrderByCommentDesc(String tag){
         return this.discountRepository.findAllByTagOrderByCommentDesc(tag);
     }
 
-    public List<Discount> findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String tag){
-        return this.discountRepository.findAllByTagAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(tag);
+    public List<Discount> findAllByTagAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc(String tag){
+        return this.discountRepository.findAllByTagAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc(tag);
     }
 
-    public List<Discount> findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String tag){
-        return this.discountRepository.findAllByTagAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(tag);
+    public List<Discount> findAllByTagAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc(String tag){
+        return this.discountRepository.findAllByTagAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc(tag);
     }
 
     public List<Discount> findAllByShopOrderByRatingDesc(String shop){
         return this.discountRepository.findAllByShopOrderByRatingDesc(shop);
     }
 
-    public List<Discount> findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String shop){
-        return this.discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(shop);
+    public List<Discount> findAllByShopAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc(String shop){
+        return this.discountRepository.findAllByShopAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc(shop);
     }
 
-    public List<Discount> findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String shop){
-        return this.discountRepository.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(shop);
+    public List<Discount> findAllByShopAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc(String shop){
+        return this.discountRepository.findAllByShopAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc(shop);
     }
 
     public List<Discount> findAllByShopOrderByCommentDesc(String shop){
         return this.discountRepository.findAllByShopOrderByCommentDesc(shop);
     }
 
-    public List<Discount> findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String shop){
-        return this.discountRepository.findAllByShopAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(shop);
+    public List<Discount> findAllByShopAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc(String shop){
+        return this.discountRepository.findAllByShopAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc(shop);
     }
 
-    public List<Discount> findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String shop){
-        return this.discountRepository.findAllByShopAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(shop);
+    public List<Discount> findAllByShopAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc(String shop){
+        return this.discountRepository.findAllByShopAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc(shop);
     }
 
-    public List<Discount> FindAllBySearchOrderByCreationdateDesc(String search){
-        return this.discountRepository.FindAllBySearchOrderByCreationdateDesc(search);
+    public List<Discount> FindAllBySearchOrderByCreateDateDesc(String search){
+        return this.discountRepository.FindAllBySearchOrderByCreateDateDesc(search);
     }
 
     public List<Discount> FindAllBySearchOrderByCommentDesc(String search){
         return this.discountRepository.FindAllBySearchOrderByCommentDesc(search);
     }
 
-    public List<Discount> FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(String search){
-        return this.discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByCommentDesc(search);
+    public List<Discount> FindAllBySearchAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc(String search){
+        return this.discountRepository.FindAllBySearchAndCreateDateBetweenNowAndYesterdayOrderByCommentDesc(search);
     }
 
-    public List<Discount> FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(String search){
-        return this.discountRepository.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByCommentDesc(search);
+    public List<Discount> FindAllBySearchAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc(String search){
+        return this.discountRepository.FindAllBySearchAndCreateDateBetweenNowAndLastWeekOrderByCommentDesc(search);
     }
 
     public List<Discount> FindAllBySearchOrderByRatingDesc(String search){
         return this.discountRepository.FindAllBySearchOrderByRatingDesc(search);
     }
 
-    public List<Discount> FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(String search){
-        return this.discountRepository.FindAllBySearchAndCreationdateBetweenNowAndYesterdayOrderByRatingDesc(search);
+    public List<Discount> FindAllBySearchAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc(String search){
+        return this.discountRepository.FindAllBySearchAndCreateDateBetweenNowAndYesterdayOrderByRatingDesc(search);
     }
 
-    public List<Discount> FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(String search){
-        return this.discountRepository.FindAllBySearchAndCreationdateBetweenNowAndLastWeekOrderByRatingDesc(search);
+    public List<Discount> FindAllBySearchAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc(String search){
+        return this.discountRepository.FindAllBySearchAndCreateDateBetweenNowAndLastWeekOrderByRatingDesc(search);
     }
 
-    public List<Discount> findAllByUseridOrderByCreationdateDesc(Integer id){
-        return this.discountRepository.findAllByUseridOrderByCreationdateDesc(id);
+    public List<Discount> findAllByUserIdOrderByCreateDateDesc(Integer id){
+        return this.discountRepository.findAllByUserIdOrderByCreateDateDesc(id);
     }
 
-    public List<Discount> findAllByUseridOrderByCommentDesc(Integer id){
-        return this.discountRepository.findAllByUseridOrderByCommentDesc(id);
+    public List<Discount> findAllByUserIdOrderByCommentDesc(Integer id){
+        return this.discountRepository.findAllByUserIdOrderByCommentDesc(id);
     }
 
-    public List<Discount> findAllByUseridOrderByRatingDesc(Integer id){
-        return this.discountRepository.findAllByUseridOrderByRatingDesc(id);
+    public List<Discount> findAllByUserIdOrderByRatingDesc(Integer id){
+        return this.discountRepository.findAllByUserIdOrderByRatingDesc(id);
     }
 
     public List<Discount> findAllByStatusEquals(Discount.Status status){
@@ -335,7 +335,7 @@ public class DiscountService {
             Optional<User> user = authenticationService.getCurrentUser();
             if(discount.get().isDeleted()||discount.get().isAwaiting()){
                 if(user.isPresent()){
-                    if(user.get().getROLE().equals("ADMIN") || user.get().hasDiscount(id)){
+                    if(user.get().getRole().equals("ADMIN") || user.get().hasDiscount(id)){
                         return discount;
                     }
                 }
@@ -375,14 +375,14 @@ public class DiscountService {
         Discount discount = new Discount();
         try {
             if (typeBase.equals("OBNIZKA")) {
-                discount.setCurrent_price(Double.parseDouble(current_price));
-                discount.setOld_price(Double.parseDouble(old_price));
-                discount.setShipment_price(Double.parseDouble(shipment_price));
+                discount.setCurrentPrice(Double.parseDouble(current_price));
+                discount.setOldPrice(Double.parseDouble(old_price));
+                discount.setShipmentPrice(Double.parseDouble(shipment_price));
                 discount.setType(Discount.Type.OBNIZKA);
             }
 
             if (typeBase.equals("KOD")) {
-                discount.setOld_price(Double.parseDouble(old_price));
+                discount.setOldPrice(Double.parseDouble(old_price));
                 if (typeSuffix.equals("%")) {
                     discount.setType(Discount.Type.KODPROCENT);
                 }
@@ -392,7 +392,7 @@ public class DiscountService {
             }
 
             if (typeBase.equals("KUPON")) {
-                discount.setOld_price(Double.parseDouble(old_price));
+                discount.setOldPrice(Double.parseDouble(old_price));
                 if (typeSuffix.equals("%")) {
                     discount.setType(Discount.Type.KUPONPROCENT);
                 }
@@ -412,11 +412,11 @@ public class DiscountService {
             return false;
         }
         discount.setContent(content);
-        discount.setCreationdate(new Date());
-        discount.setDiscount_link(url);
+        discount.setCreateDate(new Date());
+        discount.setDiscountLink(url);
         discount.setTitle(title);
         try {
-            discount.setExpire_date(new SimpleDateFormat("yyyy-MM-dd").parse(expire_date));
+            discount.setExpireDate(new SimpleDateFormat("yyyy-MM-dd").parse(expire_date));
         } catch (ParseException e) {
             return false;
         }
@@ -426,7 +426,7 @@ public class DiscountService {
             return false;
         }
         discount.setUser(tempUser.get());
-        discount.setImage_url("images/" + file.getOriginalFilename());
+        discount.setImageUrl("images/" + file.getOriginalFilename());
         discountRepository.save(discount);
         return true;
     }

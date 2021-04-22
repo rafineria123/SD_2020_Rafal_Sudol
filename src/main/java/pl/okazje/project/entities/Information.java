@@ -10,25 +10,28 @@ public class Information implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer information_id;
+    private Integer informationId;
     @Column(length = 15)
-    private String name = "";
+    private String name;
     @Column(length = 15)
-    private String surname = "";
+    private String surname;
     @Column(length = 300)
-    private String description = "";
+    private String description;
     @OneToOne(mappedBy = "information")
     private User user;
 
     public Information() {
+        this.name = "";
+        this.surname = "";
+        this.description = "";
     }
 
-    public Integer getInformation_id() {
-        return information_id;
+    public Integer getInformationId() {
+        return informationId;
     }
 
-    public void setInformation_id(Integer information_id) {
-        this.information_id = information_id;
+    public void setInformationId(Integer informationId) {
+        this.informationId = informationId;
     }
 
     public String getName() {
@@ -36,7 +39,7 @@ public class Information implements Serializable {
     }
 
     public void setName(String name) {
-        if(name.length()>15) throw new DataTooLongException(name);
+        if (name.length() > 15) throw new DataTooLongException(name);
         this.name = name;
     }
 
@@ -45,7 +48,7 @@ public class Information implements Serializable {
     }
 
     public void setSurname(String surname) {
-        if(surname.length()>15) throw new DataTooLongException(surname);
+        if (surname.length() > 15) throw new DataTooLongException(surname);
         this.surname = surname;
     }
 
@@ -54,7 +57,7 @@ public class Information implements Serializable {
     }
 
     public void setDescription(String description) {
-        if(description.length()>300) throw new DataTooLongException(description);
+        if (description.length() > 300) throw new DataTooLongException(description);
         this.description = description;
     }
 

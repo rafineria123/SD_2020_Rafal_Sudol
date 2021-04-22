@@ -17,24 +17,19 @@ import java.util.*;
 @Controller
 public class HomeController {
 
-
+    private final int ITEMS_PER_PAGE = 8;
 
     private final SessionService sessionService;
     private final DiscountService discountService;
     private final TagService tagService;
     private final ShopService shopService;
     private final ConversationService conversationService;
-    private final int ITEMS_PER_PAGE = 8;
 
-
-
-    @Autowired
     public HomeController(SessionService sessionService, DiscountService discountService, TagService tagService, ShopService shopService, ConversationService conversationService) {
         this.sessionService = sessionService;
         this.discountService = discountService;
         this.tagService = tagService;
         this.shopService = shopService;
-
         this.conversationService = conversationService;
     }
 

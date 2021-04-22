@@ -1,6 +1,5 @@
 package pl.okazje.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.*;
@@ -17,7 +16,6 @@ public class PostService {
     private final ShopService shopService;
     private final SessionService sessionService;
 
-    @Autowired
     public PostService(PostRepository postRepository, AuthenticationService authenticationService, TagService tagService, ShopService shopService, SessionService sessionService) {
         this.postRepository = postRepository;
         this.authenticationService = authenticationService;
@@ -42,7 +40,7 @@ public class PostService {
             Optional<User> user = authenticationService.getCurrentUser();
             if(post.get().isDeleted()||post.get().isAwaiting()){
                 if(user.isPresent()){
-                    if(user.get().getROLE().equals("ADMIN") || user.get().hasPost(id)){
+                    if(user.get().getRole().equals("ADMIN") || user.get().hasPost(id)){
                         return post;
                     }
                 }
@@ -54,7 +52,7 @@ public class PostService {
     }
 
     public Post findByTitle(String title){
-        return postRepository.findFirstByTitleOrderByCreationdateDesc(title);
+        return postRepository.findFirstByTitleOrderByCreateDateDesc(title);
     }
 
     public boolean addPost(String content, String title, String tag, String shop){
@@ -76,7 +74,7 @@ public class PostService {
             return false;
         }
         post.setContent(content);
-        post.setCreationdate(new Date());
+        post.setCreateDate(new Date());
         post.setTitle(title);
         post.setStatus(Post.Status.ACCEPTED);
         Optional<User> tempUser = authenticationService.getCurrentUser();
@@ -103,13 +101,13 @@ public class PostService {
                }
         }else {
             if(byArgument.containsKey("search")){
-                posts = this.findAllBySearchOrderByCreationdateDesc("%"+byArgument.get("search")+"%");
+                posts = this.findAllBySearchOrderByCreateDateDesc("%"+byArgument.get("search")+"%");
             }else if(byArgument.containsKey("tag")){
-                posts = this.findAllByTagOrderByCreationdateDesc((String)byArgument.get("tag"));
+                posts = this.findAllByTagOrderByCreateDateDesc((String)byArgument.get("tag"));
             }else if(byArgument.containsKey("shop")){
-                posts = this.findAllByShopOrderByCreationdateDesc((String)byArgument.get("shop"));
+                posts = this.findAllByShopOrderByCreateDateDesc((String)byArgument.get("shop"));
             }else {
-                posts = this.findAllByOrderByCreationdateDesc();
+                posts = this.findAllByOrderByCreateDateDesc();
             }
         }
         return posts;
@@ -121,61 +119,52 @@ public class PostService {
         if(session.getAttribute("forumSort")!=null&&session.getAttribute("forumSort").equals("comments")){
             posts = this.findAllByUserOrderByCommentDesc(user.getLogin());
         }else {
-            posts = this.findAllByUserOrderByCreationdateDesc(user.getLogin());
+            posts = this.findAllByUserOrderByCreateDateDesc(user.getLogin());
         }
         return posts;
     }
 
-
-    public List<Post> findAllByOrderByCreationdateDesc(){
-        return postRepository.findAllByOrderByCreationdateDesc();
+    public List<Post> findAllByOrderByCreateDateDesc(){
+        return postRepository.findAllByOrderByCreateDateDesc();
     }
 
-
-    public List<Post> findAllByTagOrderByCreationdateDesc(String tag){
-        return postRepository.findAllByTagOrderByCreationdateDesc(tag);
+    public List<Post> findAllByTagOrderByCreateDateDesc(String tag){
+        return postRepository.findAllByTagOrderByCreateDateDesc(tag);
     }
 
-
-    public List<Post> findAllByShopOrderByCreationdateDesc(String shop){
-        return postRepository.findAllByShopOrderByCreationdateDesc(shop);
+    public List<Post> findAllByShopOrderByCreateDateDesc(String shop){
+        return postRepository.findAllByShopOrderByCreateDateDesc(shop);
     }
-
 
     public List<Post> findAllByOrderByCommentDesc(){
         return postRepository.findAllByOrderByCommentDesc();
     }
 
-
     public List<Post> findAllByTagOrderByCommentDesc(String tag){
         return postRepository.findAllByTagOrderByCommentDesc(tag);
     }
-
 
     public List<Post> findAllByShopOrderByCommentDesc(String shop){
         return postRepository.findAllByShopOrderByCommentDesc(shop);
     }
 
-
-    public List<Post> findAllBySearchOrderByCreationdateDesc(String search){
-        return postRepository.findAllBySearchOrderByCreationdateDesc(search);
+    public List<Post> findAllBySearchOrderByCreateDateDesc(String search){
+        return postRepository.findAllBySearchOrderByCreateDateDesc(search);
     }
-
 
     public List<Post> findAllBySearchOrderByCommentDesc(String search){
         return postRepository.findAllBySearchOrderByCommentDesc(search);
     }
 
-
-    public List<Post> findAllByUserOrderByCreationdateDesc(String user){
-        return postRepository.findAllByUserOrderByCreationdateDesc(user);
+    public List<Post> findAllByUserOrderByCreateDateDesc(String user){
+        return postRepository.findAllByUserOrderByCreateDateDesc(user);
     }
 
     public List<Post> findAllByUserOrderByCommentDesc(String user){
         return postRepository.findAllByUserOrderByCommentDesc(user);
     }
 
-    public Post findFirstByTitleOrderByCreationdateDesc(String title){
-        return postRepository.findFirstByTitleOrderByCreationdateDesc(title);
+    public Post findFirstByTitleOrderByCreateDateDesc(String title){
+        return postRepository.findFirstByTitleOrderByCreateDateDesc(title);
     }
 }

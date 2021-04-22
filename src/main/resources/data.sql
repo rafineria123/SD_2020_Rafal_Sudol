@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS SPRING_SESSION_ATTRIBUTES (
 
 
 
-INSERT INTO `shop` (`shop_id`, `image_url`, `name`) VALUES
+INSERT INTO `shop` (`shopId`, `imageUrl`, `name`) VALUES
 (1, 'images/shop_1.png', 'Biedronka'),
 (2, 'images/shop_2.png', 'Amazon'),
 (3, 'images/shop_3.png', 'X-kom'),
@@ -31,7 +31,7 @@ INSERT INTO `shop` (`shop_id`, `image_url`, `name`) VALUES
 (5, 'images/shop_6.png', 'Media Markt'),
 (6, 'images/shop_5.png', 'Pozostałe');
 
-INSERT INTO `tag` (`tag_id`, `name`) VALUES
+INSERT INTO `tag` (`tagId`, `name`) VALUES
 (1, 'Elektronika'),
 (2, 'Gaming'),
 (3, 'Moda'),
@@ -40,14 +40,14 @@ INSERT INTO `tag` (`tag_id`, `name`) VALUES
 (6, 'Pozostałe');
 
 
-INSERT INTO `user` (`user_id`, `role`, `cr_date`, `email`, `login`, `password`, `status`, `information_id`, `rank_id`, `enabled`) VALUES
+INSERT INTO `user` (`userId`, `role`, `createDate`, `email`, `login`, `password`, `status`, `informationId`, `rankId`, `enabled`) VALUES
 (1, 'USER', '2020-06-16 08:52:39', 'rafineria@gmail.com', 'rafineria', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL, true ),
 (2, 'USER', '2020-06-16 08:52:39', 'rafineria123@gmail.com', 'rafineria123', '$2a$10$rehd0BIqzYtkm9KNGmZ8PuPgBqIIIfzGT/a29FCyHuNrtIZdIu1XS', 'Zatwierdzone', NULL, NULL, true),
 (3, 'ADMIN', '2020-06-16 08:52:39', 'artyleria@gmail.com', 'artyleria', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL, true),
 (4, 'USER', '2020-06-16 08:52:39', 'xkom@gma', 'xkom', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL, true),
 (5, 'USER', '2020-06-16 08:52:39', 'amazon@gma', 'amazon', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL, true);
 
-INSERT INTO `discount` (`discount_id`, `content`, `creationdate`, `current_price`, `discount_link`, `expire_date`, `image_url`, `old_price`, `shipment_price`, `status`, `title`, `shop_id`, `tag_id`, `user_id`, `type`) VALUES
+INSERT INTO `discount` (`discountId`, `content`, `createDate`, `currentPrice`, `discountLink`, `expireDate`, `imageUrl`, `oldPrice`, `shipmentPrice`, `status`, `title`, `shopId`, `tagId`, `userId`, `type`) VALUES
 (1, 'W Kaufland dostępne w dobrej cenie baterie alkaliczne AA oraz AAA 10szt. (wychodzi 1zł za sztukę). Dostępna duża ilość. Znalezione w Pszczynie, ale z informacji innych użytkowników okazja ogólnopolska.', '2020-06-16 08:52:39', 220, 'https://www.biedronka.pl/pl/dom-nf-10-06', '2020-06-16 08:52:39', 'images/discount_1.jpg', 255, 15, 'ACCEPTED', 'Baterie alkaliczne AA', 6, 1, 1, 'OBNIZKA'),
 (2, 'Oferta obowiązuje od 12.06 do 13.06.2020 r.', '2020-06-16 08:52:39', 5, 'https://www2.pl.avon.com/pl-home', '2020-06-16 08:52:39', 'images/discount_2.jpg', 10, 0, 'ACCEPTED', 'Brzoskwinia @ Biedronka', 1, 4, 1, 'OBNIZKA'),
 (3, 'W ramach usługi Xbox Game Pass w czerwcu zagramy w : Xbox Game Pass - nowe gry Battlefleet Gothic Armada 2 (PC) – 11 czerwca Battletech (PC) – 11 czerwca Dungeon of the End.', '2020-06-16 08:52:39', 1, 'https://www.x-kom.pl/p/568960-smartfon-telefon-realme-x3-superzoom-12256gb-glacier-blue-120hz.html', '2020-06-16 08:52:39', 'images/discount_3.jpg', 100, 0, 'ACCEPTED', 'Xbox Game Pass - Czerwiec', 5, 2, 1, 'OBNIZKA'),
@@ -115,7 +115,7 @@ a. dokonać aktywacji e-kuponu w aplikacji Mój Carrefour;
 b. dokonać zakupu Produktów Promocyjnych (w tym płatności za Produkty Promocyjne) w Sklepie;
 c. przed dokonaniem płatności za zakup Produktów Promocyjnych okazać w kasie do zeskanowania aktywną Kartę Mobilną lub uprzednio zdigitalizowaną Kartę lub Kartę Seniora nie później niżw momencie zakończenia przez kasjera skanowania kodów kreskowych produktów nabywanych przez Uczestnika. Jeżeli Karta Mobilna lub zdigitalizowana Karta lub Karta Seniora nie zostanie okazana kasjerowi przed zakończeniem transakcji (wciśnięcie klawisza "podsuma") Uczestnik nie będzie mógł wymienić e-kuponu w Aplikacji Mobilnej „Mój Carrefour” na drukowany kupon rabatowy. Późniejsza wymiana na podstawie paragonów fiskalnych lub innych dowodów dokonania transakcji nie będzie możliwa.', '2021-01-17 08:59:39', 0.99, 'https://cdn.yes.pl/media/wysiwyg/static/pdf/CARREFOUR_Merci_regulamin_promocji_walentynkowej_2021.pdf', '2021-03-04 22:52:39', 'images/discount_15.jpg', 14, 0, 'ACCEPTED', '14% zniżki do YES przy zakupie pralin Merci', 6, 4, 1, 'KUPONPROCENT');
 
-INSERT INTO `post` (`post_id`, `content`, `creationdate`, `status`, `title`, `user_id`, `shop_id`, `tag_id`) VALUES
+INSERT INTO `post` (`postId`, `content`, `createDate`, `status`, `title`, `userId`, `shopId`, `tagId`) VALUES
 (1, 'Czy Waszym zdaniem 68,35 zł za ładowarkę Liitokala Lii-500 razem z zasilaczem to dobra cena? Czym różni się sklep liitokala Official Store od LiitoKala Official Flagship Store?','2020-06-16 08:52:39','ACCEPTED', 'Ładowarka Liitokala Lii-500 za 68 zł, czy warto w tej cenie?', 1, 6, 6),
 (2, 'Szukam laptopa dla nie wymagającej, dlatego MacBook air, dysk najlepiej 256gb, Intel i5. Nie potrzebna mi maszyna z procesorem M1.
 
@@ -138,16 +138,16 @@ Z góry dzięki','2020-06-17 08:52:39','ACCEPTED', 'Dlaczego warto VPN', 2, 6, 6
 (5, 'Ktoś może używał tego sprzętu Sharp UA-HG50E-L
 
 Prosze o konstruktywne opinie ','2020-06-19 08:52:39','ACCEPTED', 'OCZYSZCZACZ-NAWILŻACZ SHARP', 3, 6, 6);
-INSERT INTO `comment` (`comment_id`,`status`, `content`, `cr_date`, `discount_id`, `post_id`, `user_id`) VALUES
+INSERT INTO `comment` (`commentId`,`status`, `content`, `createDate`, `discountId`, `postId`, `userId`) VALUES
 (1,'POSTED', 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', 3, NULL, 1),
 (2,'POSTED', 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', NULL, 1, 1);
 
 
-INSERT INTO `conversation` (`conversation_id`) VALUES
+INSERT INTO `conversation` (`conversationId`) VALUES
 (1),
 (2);
 
-INSERT INTO `user_conversation` (`user_id`,	`conversation_id`) VALUES
+INSERT INTO `user_conversation` (`userId`,	`conversationId`) VALUES
 (1,1),
 (2,1),
 (1,2),
@@ -156,7 +156,7 @@ INSERT INTO `user_conversation` (`user_id`,	`conversation_id`) VALUES
 
 
 
-INSERT INTO `message` (`message_id`, `content`, `cr_date`,	`status`, `conversation_id`, `user_id`) VALUES
+INSERT INTO `message` (`messageId`, `content`, `createDate`,	`status`, `conversationId`, `userId`) VALUES
 (1, 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem.Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu.', '2020-06-16 08:52:39', 'SEEN', 1, 1),
 (2, 'hehe xD', '2020-06-17 08:52:39', 'NEW', 1, 2),
 (3, 'tak tak byczq', '2020-06-18 08:52:39', 'NEW', 1, 2),
@@ -171,7 +171,7 @@ INSERT INTO `message` (`message_id`, `content`, `cr_date`,	`status`, `conversati
 
 
 
-INSERT INTO `rating` (`rating_id`, `comment_id`, `discount_id`, `user_id`) VALUES
+INSERT INTO `rating` (`ratingId`, `commentId`, `discountId`, `userId`) VALUES
 (1, NULL, 3, 1),
 (2, NULL, 3, 1),
 (3, 1, NULL, 1);

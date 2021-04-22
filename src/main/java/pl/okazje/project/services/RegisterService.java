@@ -3,7 +3,6 @@ package pl.okazje.project.services;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.Token;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.events.OnRegistrationCompleteEvent;
@@ -48,7 +47,7 @@ public class RegisterService {
             return map;
         }
         User tempUser = new User();
-        tempUser.setCr_date(new Date());
+        tempUser.setCreateDate(new Date());
         tempUser.setLogin(login);
         tempUser.setPassword(passwordEncoder.encode(password));
         tempUser.setEmail(email);
@@ -67,7 +66,7 @@ public class RegisterService {
         }
         User user = verificationToken.get().getUser();
         Calendar cal = Calendar.getInstance();
-        if ((verificationToken.get().getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+        if ((verificationToken.get().getExpireDate().getTime() - cal.getTime().getTime()) <= 0) {
             map.put("bad_status", "Twój token wygasł.");
             return map;
         }

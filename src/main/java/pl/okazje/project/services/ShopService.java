@@ -13,7 +13,6 @@ import java.util.Optional;
 public class ShopService {
     private final ShopRepository shopRepository;
 
-    @Autowired
     public ShopService(ShopRepository shopRepository) {
         this.shopRepository = shopRepository;
     }

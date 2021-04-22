@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/discount")
 public class DiscountController {
 
     private final CommentService commentService;
@@ -23,7 +24,6 @@ public class DiscountController {
     private final ShopService shopService;
     private final RatingService ratingService;
 
-    @Autowired
     public DiscountController(CommentService commentService, DiscountService discountService, TagService tagService, ShopService shopService, RatingService ratingService) {
         this.commentService = commentService;
         this.discountService = discountService;
@@ -32,8 +32,8 @@ public class DiscountController {
         this.ratingService = ratingService;
     }
 
-    @GetMapping("/discount/{id}")
-    public ModelAndView getDiscount(@PathVariable("id") Long id) {
+    @GetMapping("/{id}")
+    public ModelAndView getDiscountPage(@PathVariable("id") Long id) {
         ModelAndView modelAndView;
         Optional<Discount> discount = discountService.findById(id);
         if (discount.isPresent()) {
@@ -47,23 +47,22 @@ public class DiscountController {
         return modelAndView;
     }
 
-    @GetMapping("/add/discount")
+    @GetMapping("/add")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ModelAndView addDiscount() {
+    public ModelAndView getAddDiscountPage() {
         ModelAndView modelAndView = new ModelAndView("add_discount");
         modelAndView.addObject("list_of_tags", tagService.findAll());
         modelAndView.addObject("list_of_shops", shopService.findAll());
         return modelAndView;
     }
 
-    @PostMapping(path = "/add/discount", consumes = {"multipart/form-data"})
+    @PostMapping(path = "/add", consumes = {"multipart/form-data"})
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ModelAndView addDiscount(@ModelAttribute("url") String url, @ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop,
-                                     @ModelAttribute("title") String title, @ModelAttribute("old_price") String old_price, @ModelAttribute("current_price") String current_price,
-                                     @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
-                                     @ModelAttribute("expire_date") String expire_date, @ModelAttribute("type") String typeBase, @ModelAttribute("discount") String typeSuffix, @RequestParam("image_url")
-    MultipartFile file, HttpServletRequest request, RedirectAttributes redir) {
-
+                                    @ModelAttribute("title") String title, @ModelAttribute("old_price") String old_price, @ModelAttribute("current_price") String current_price,
+                                    @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
+                                    @ModelAttribute("expire_date") String expire_date, @ModelAttribute("type") String typeBase, @ModelAttribute("discount") String typeSuffix, @RequestParam("image_url")
+                                            MultipartFile file, HttpServletRequest request, RedirectAttributes redir) {
         ModelAndView modelAndView;
         if (discountService.addDiscount(url, tag, shop, title, old_price, current_price, shipment_price, content, expire_date, typeBase, typeSuffix, file)) {
             RedirectView redirectView = new RedirectView("/settings/discounts");
@@ -71,7 +70,7 @@ public class DiscountController {
             modelAndView = new ModelAndView(redirectView);
             return modelAndView;
         }
-        RedirectView redirectView = new RedirectView("/add/discount");
+        RedirectView redirectView = new RedirectView("/discount/add");
         redir.addFlashAttribute("error", true);
         modelAndView = new ModelAndView(redirectView);
         return modelAndView;
@@ -93,21 +92,21 @@ public class DiscountController {
 
     @PostMapping("/addcomment")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public String addComment(@ModelAttribute("discountidaddcomment") String discountId, @ModelAttribute("comment") String comment) {
+    public String addCommentToDiscount(@ModelAttribute("discountidaddcomment") String discountId, @ModelAttribute("comment") String comment) {
         commentService.addCommentToDiscount(Long.parseLong(discountId), comment);
         return "redirect:/discount/" + discountId;
     }
 
     @PostMapping("/removecomment")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public String removeComment(@ModelAttribute("comment_id") String comment_id,HttpServletRequest request) {
+    public String removeCommentFromDiscount(@ModelAttribute("comment_id") String comment_id, HttpServletRequest request) {
         commentService.removeComment(Long.parseLong(comment_id));
         return "redirect:" + request.getHeader("Referer");
     }
 
     @PostMapping("/acceptdiscount")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public String acceptDiscount(@ModelAttribute("discount_id") String discount_id){
+    public String acceptDiscount(@ModelAttribute("discount_id") String discount_id) {
         discountService.acceptDiscount(Long.parseLong(discount_id));
         return "redirect:/discount/" + discount_id;
     }
@@ -121,7 +120,7 @@ public class DiscountController {
 
     @PostMapping("/ratecomment")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public String addRatingToComment(@ModelAttribute("commentid") String commentid,HttpServletRequest request) {
+    public String addRatingToComment(@ModelAttribute("commentid") String commentid, HttpServletRequest request) {
         ratingService.addRatingToComment(Long.parseLong(commentid));
         return "redirect:" + request.getHeader("Referer");
     }

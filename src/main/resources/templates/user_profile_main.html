@@ -62,7 +62,7 @@
 
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
-                <a href="/add/discount">
+                <a href="/discount/add">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
                             style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -372,7 +372,7 @@
 <div class="modal fade" id="dane" tabindex="-1" role="dialog" aria-labelledby="daneTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
 
-        <form th:action="@{/changeUserDetails}" method="post" class="modal-content">
+        <form th:action="@{/settings/changeUserDetails}" method="post" class="modal-content">
             <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
                 <h5 class="modal-title" id="daneLongTitle" style="padding-left: 15px">Twoje dane</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -428,7 +428,7 @@
 
 <div class="modal fade" id="opis" tabindex="-1" role="dialog" aria-labelledby="opisTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form th:action="@{/changeDescription}" method="post" class="modal-content">
+        <form th:action="@{/settings/changeDescription}" method="post" class="modal-content">
             <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
                 <h5 class="modal-title" id="opisLongTitle" style="padding-left: 15px">Zmiana opisu</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -461,7 +461,7 @@
 
 <div class="modal fade" id="haslo" tabindex="-1" role="dialog" aria-labelledby="hasloTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form th:action="@{/changePassword}" method="post"class="modal-content">
+        <form th:action="@{/settings/changePassword}" method="post"class="modal-content">
             <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
                 <h5 class="modal-title" id="hasloLongTitle" style="padding-left: 15px">Zmiana hasła</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

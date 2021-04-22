@@ -19,7 +19,6 @@ public class ConversationService {
     private final EmailService emailService;
     private final UserService userService;
 
-    @Autowired
     public ConversationService(ConversationRepository conversationRepository, AuthenticationService authenticationService, MessageService messageService, EmailService emailService, UserService userService) {
         this.conversationRepository = conversationRepository;
         this.authenticationService = authenticationService;
@@ -53,7 +52,7 @@ public class ConversationService {
 
     public void sendMessage(User otherUser, String messageContent){
         User currentUser = authenticationService.getCurrentUser().get();
-        Optional<Conversation> optionalConversation = this.findByUsers(currentUser.getUser_id(),otherUser.getUser_id());
+        Optional<Conversation> optionalConversation = this.findByUsers(currentUser.getUserId(),otherUser.getUserId());
         if(!optionalConversation.isPresent()){
             Conversation conversation = new Conversation();
             Set<User> users = new HashSet<User>(){{
@@ -70,8 +69,8 @@ public class ConversationService {
         Message message = new Message();
         message.setStatus(Message.Status.NEW);
         message.setContent(messageContent);
-        message.setConversation(this.findByUsers(currentUser.getUser_id(),otherUser.getUser_id()).get());
-        message.setCr_date(new Date());
+        message.setConversation(this.findByUsers(currentUser.getUserId(),otherUser.getUserId()).get());
+        message.setCreateDate(new Date());
         message.setUser(currentUser);
         messageService.save(message);
         if (!authenticationService.isUserLoggedIn(otherUser)) {
@@ -89,12 +88,12 @@ public class ConversationService {
         }
         User currentUser = authenticationService.getCurrentUser().get();
         User otherUser = optionalConversation.get().getOtherUser(currentUser);
-        ArrayList<Message> list = this.findByUsers(currentUser.getUser_id(), otherUser.getUser_id()).get().getMessagesSorted();
+        ArrayList<Message> list = this.findByUsers(currentUser.getUserId(), otherUser.getUserId()).get().getMessagesSorted();
         String array[][] = new String[list.size()][2];
         for (int i = 0; i < list.size(); i++) {
             array[i][0] = list.get(i).getContent();
-            if (list.get(i).getUser().getUser_id() == currentUser.getUser_id()) array[i][1] = "right";
-            if (list.get(i).getUser().getUser_id() == otherUser.getUser_id()) array[i][1] = "left";
+            if (list.get(i).getUser().getUserId() == currentUser.getUserId()) array[i][1] = "right";
+            if (list.get(i).getUser().getUserId() == otherUser.getUserId()) array[i][1] = "left";
         }
         return array;
     }
@@ -108,7 +107,7 @@ public class ConversationService {
             array[i][1] = list.get(i).getNewestMessage(currentUser);
             if (list.get(i).hasNewMessage(currentUser)) array[i][2] = "NEW";
             if (!list.get(i).hasNewMessage(currentUser)) array[i][2] = "SEEN";
-            array[i][3] = list.get(i).getConversation_id().toString();
+            array[i][3] = list.get(i).getConversationId().toString();
             array[i][4] = list.get(i).getOtherUser(currentUser).getLogin();
             array[i][5] = list.get(i).getNewestMessage(currentUser);
         }

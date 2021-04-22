@@ -1,6 +1,7 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +21,6 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
     private final BanService banService;
     private final TokenService tokenService;
     private final SessionService sessionService;
@@ -28,8 +28,8 @@ public class UserService implements UserDetailsService {
     private final InformationService informationService;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserService(UserRepository userRepository, BanService banService, TokenService tokenService, SessionService sessionService, EmailService emailService, InformationService informationService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BanService banService, TokenService tokenService, SessionService sessionService,
+                       EmailService emailService, InformationService informationService, @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.banService = banService;
         this.tokenService = tokenService;
@@ -38,7 +38,6 @@ public class UserService implements UserDetailsService {
         this.informationService = informationService;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -112,7 +111,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void banUser(int userID, String reason){
-        User user = userRepository.findFirstByUser_idEquals(userID);
+        User user = userRepository.findFirstByUserIdEquals(userID);
         Ban ban = new Ban();
         ban.setReason(reason);
         ban.setUser(user);

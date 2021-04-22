@@ -1,5 +1,6 @@
 package pl.okazje.project.entities;
 
+import org.apache.commons.math3.util.Precision;
 import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
@@ -12,9 +13,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
-//promocja=cena pierwotna -> cena obecna
-//kupon = przecena w gazetce/sklepie lokanlym
-//kod = przecena online
+/*
+   promocja =cena pierwotna -> cena obecna
+   kupon = przecena w gazetce/sklepie lokanlym
+   kod = przecena online
+*/
 @Entity
 public class Discount {
 
@@ -23,27 +26,26 @@ public class Discount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long discount_id;
+    private Long discountId;
     @Column(length = 200)
     private String title;
     @Column(length = 1500)
     private String content;
-    @Column(length = 500)
-    private String image_url;
-    private Date creationdate;
-    private Date expire_date;
+    private String imageUrl;
+    private Date createDate;
+    private Date expireDate;
     @Enumerated(EnumType.STRING)
     private Status status;
-    private Double old_price;
-    private Double current_price;
-    private Double shipment_price;
+    private Double oldPrice;
+    private Double currentPrice;
+    private Double shipmentPrice;
     @Column(length = 500)
-    private String discount_link;
+    private String discountLink;
     @Enumerated(EnumType.STRING)
     private Type type = Type.OBNIZKA;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "discount")
@@ -53,18 +55,18 @@ public class Discount {
     private Set<Rating> ratings;
 
     @ManyToOne
-    @JoinColumn(name = "tag_id", nullable = false)
+    @JoinColumn(name = "tagId", nullable = false)
     private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name = "shop_id", nullable = false)
+    @JoinColumn(name = "shopId", nullable = false)
     private Shop shop;
 
     public Discount() {
     }
 
-    public Long getDiscount_id() {
-        return discount_id;
+    public Long getDiscountId() {
+        return discountId;
     }
 
     public String getTitle() {
@@ -85,25 +87,25 @@ public class Discount {
         this.content = content;
     }
 
-    public String getImage_url() {
-        if(this.image_url.contains("http")){
-            return this.image_url;
+    public String getImageUrl() {
+        if(this.imageUrl.contains("http")){
+            return this.imageUrl;
         }
-        return "/" +this.image_url;
+        return "/" +this.imageUrl;
     }
 
-    public void setImage_url(String image_url) {
-        if(image_url.length()>500)throw new DataTooLongException(image_url);
-        this.image_url = image_url;
+    public void setImageUrl(String imageUrl) {
+        if(imageUrl.length()>500)throw new DataTooLongException(imageUrl);
+        this.imageUrl = imageUrl;
     }
 
-    public void setCreationdate(Date cr_date) {
-        this.creationdate = cr_date;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
-    public String getExpire_date_formatted() {
+    public String getExpireDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
-        String s = formatter.format(this.expire_date);
+        String s = formatter.format(this.expireDate);
 
         return s;
     }
@@ -128,28 +130,28 @@ public class Discount {
         }
     }
 
-    public String getCreation_date_formated() {
+    public String getCreateDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
-        String s = formatter.format(this.creationdate);
+        String s = formatter.format(this.createDate);
 
         return s;
     }
 
     public int getDifference() {
-        return (int) (100 - (current_price / old_price * 100));
+        return (int) (100 - (currentPrice / oldPrice * 100));
     }
 
-    public String getDiscount_link() {
-        return discount_link;
+    public String getDiscountLink() {
+        return discountLink;
     }
 
-    public void setDiscount_link(String discount_link) {
-        if(discount_link.length()>500) throw new DataTooLongException(discount_link);
-        this.discount_link = discount_link;
+    public void setDiscountLink(String discountLink) {
+        if(discountLink.length()>500) throw new DataTooLongException(discountLink);
+        this.discountLink = discountLink;
     }
 
-    public void setExpire_date(Date expire_date) {
-        this.expire_date = expire_date;
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
     }
 
     public String getStatus() {
@@ -160,28 +162,28 @@ public class Discount {
         this.status = status;
     }
 
-    public Double getOld_price() {
-        return round(old_price,2);
+    public Double getOldPrice() {
+        return Precision.round(oldPrice,2);
     }
 
-    public void setOld_price(Double old_price) {
-        this.old_price = old_price;
+    public void setOldPrice(Double oldPrice) {
+        this.oldPrice = oldPrice;
     }
 
-    public Double getCurrent_price() {
-        return round(current_price,2);
+    public Double getCurrentPrice() {
+        return Precision.round(currentPrice,2);
     }
 
-    public void setCurrent_price(Double current_price) {
-        this.current_price = current_price;
+    public void setCurrentPrice(Double currentPrice) {
+        this.currentPrice = currentPrice;
     }
 
-    public Double getShipment_price() {
-        return round(shipment_price,2);
+    public Double getShipmentPrice() {
+        return Precision.round(shipmentPrice,2);
     }
 
-    public void setShipment_price(Double shipment_price) {
-        this.shipment_price = shipment_price;
+    public void setShipmentPrice(Double shipmentPrice) {
+        this.shipmentPrice = shipmentPrice;
     }
 
     public User getUser() {
@@ -233,7 +235,6 @@ public class Discount {
     }
 
     public int getCommentsSize() {
-
         if (comments == null) {
             return 0;
         } else {
@@ -243,8 +244,7 @@ public class Discount {
 
     public ArrayList<Comment> getCommentsSorted(){
         ArrayList<Comment> list = new ArrayList(getComments());
-        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
-
+        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
         return  list;
     }
 
@@ -258,36 +258,20 @@ public class Discount {
 
     public boolean isOutDated() {
         Date currentDate = new Date();
-        if (currentDate.compareTo(expire_date) > 0) {
+        if (currentDate.compareTo(expireDate) > 0) {
             return true;
         }
         return false;
     }
 
     public long getDataToNumber() {
-        long daysBetween = new Date().getTime() - this.creationdate.getTime();
-
+        long daysBetween = new Date().getTime() - this.createDate.getTime();
         return daysBetween;
-    }
-
-    public String getExpire_date_formated() {
-        Format formatter = new SimpleDateFormat("dd.MM.yy");
-
-        return formatter.format(this.expire_date);
-    }
-
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-
-        return bd.doubleValue();
     }
 
     public String getTypeFormatted(){
         if(this.type.equals(Type.KODNORMALNY)||this.type.equals(Type.KODPROCENT)) return "KOD";
         if(this.type.equals(Type.KUPONNORMALNY)||this.type.equals(Type.KUPONPROCENT)) return "KUPON";
-
         return this.type.name();
     }
 }

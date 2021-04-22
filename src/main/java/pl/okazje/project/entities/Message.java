@@ -15,32 +15,33 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer message_id;
+    private Integer messageId;
     @Column(length = 300)
-    private String content = "";
-    private Date cr_date;
+    private String content;
+    private Date createDate;
     @Enumerated(EnumType.STRING)
     private Status status = Status.NEW;
 
     @ManyToOne
-    @JoinColumn(name="conversation_id", nullable=false)
+    @JoinColumn(name="conversationId", nullable=false)
     @JsonIgnore
     private Conversation conversation;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="userId", nullable=false)
     @JsonIgnore
     private User user;
 
     public Message() {
+        this.content = "";
     }
 
-    public Integer getMessage_id() {
-        return message_id;
+    public Integer getMessageId() {
+        return messageId;
     }
 
-    public void setMessage_id(Integer message_id) {
-        this.message_id = message_id;
+    public void setMessageId(Integer messageId) {
+        this.messageId = messageId;
     }
 
     public String getContent() {
@@ -52,12 +53,12 @@ public class Message {
         this.content = content;
     }
 
-    public Date getCr_date() {
-        return cr_date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCr_date(Date cr_date) {
-        this.cr_date = cr_date;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Status getStatus() {
