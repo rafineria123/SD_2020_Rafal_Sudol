@@ -5,6 +5,12 @@ This project was my first real Spring Boot & web app development experience. The
 3. allows users to find what they are looking for based on name/tag/shop and also other users' input(comments/ratings),
 4. provides quite intuitive UI.
 
+## Technologies:
+- Spring Boot(Web, Security, Data JPA, Thymeleaf, Session),
+- Maven,
+- MySQL,
+- HTML/JS/CSS.
+
 ## What is missing:
 1. all kinds of tests,
-2. both technical documentation & user documentation
+2. both technical documentation & user documentation.
