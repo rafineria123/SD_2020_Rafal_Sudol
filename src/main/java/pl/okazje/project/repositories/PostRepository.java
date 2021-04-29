@@ -3,7 +3,6 @@ package pl.okazje.project.repositories;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import pl.okazje.project.entities.Discount;
 import pl.okazje.project.entities.Post;
 
 import java.util.List;
@@ -12,56 +11,58 @@ import java.util.List;
 @Repository
 public interface PostRepository extends CrudRepository<Post, Long> {
 
-    @Query(value = "SELECT * from post where status = ?1" +
-            " ORDER BY creationdate DESC" ,
+    @Query(value = "SELECT * from post" +
+            " ORDER BY createDate DESC" ,
             nativeQuery = true)
-    public List<Post> sortPostsByDateWithGivenStatus(String status);
+    List<Post> findAllByOrderByCreateDateDesc();
 
-    @Query(value = "SELECT * from post where status = ?1 AND tag_id in (select tag_id from tag where tag.name=?2)" +
-            " ORDER BY creationdate DESC" ,
+    @Query(value = "SELECT * from post where tagId in (select tagId from tag where tag.name=?1)" +
+            " ORDER BY createDate DESC" ,
             nativeQuery = true)
-    public List<Post> sortPostsByDateWithGivenStatusAndTag(String status, String tag);
+    List<Post> findAllByTagOrderByCreateDateDesc(String tag);
 
-    @Query(value = "SELECT * from post where status = ?1 AND shop_id in (select shop_id from shop where shop.name=?2)" +
-            " ORDER BY creationdate DESC" ,
+    @Query(value = "SELECT * from post where shopId in (select shopId from shop where shop.name=?1)" +
+            " ORDER BY createDate DESC" ,
             nativeQuery = true)
-    public List<Post> sortPostsByDateWithGivenStatusAndShop(String status, String shop);
+    List<Post> findAllByShopOrderByCreateDateDesc(String shop);
 
-    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT post_id, COUNT(*) AS disc_count" +
-            " FROM comment GROUP BY post_id ) AS c ON d.post_id = c.post_id ORDER BY  c.disc_count DESC " ,
+    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT postId, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY postId ) AS c ON d.postId = c.postId ORDER BY  c.disc_count DESC " ,
             nativeQuery = true)
-    public List<Post> sortPostsByComments();
+    List<Post> findAllByOrderByCommentDesc();
 
-    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT post_id, COUNT(*) AS disc_count" +
-            " FROM comment GROUP BY post_id ) AS c ON d.post_id = c.post_id where d.tag_id in (select tag_id from tag where tag.name=?1) ORDER BY  c.disc_count DESC " ,
+    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT postId, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY postId ) AS c ON d.postId = c.postId where d.tagId in (select tagId from tag where tag.name=?1) ORDER BY  c.disc_count DESC " ,
             nativeQuery = true)
-    public List<Post> sortPostsByCommentsWithGivenTag(String tag);
+    List<Post> findAllByTagOrderByCommentDesc(String tag);
 
-    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT post_id, COUNT(*) AS disc_count" +
-            " FROM comment GROUP BY post_id ) AS c ON d.post_id = c.post_id where d.shop_id in (select shop_id from shop where shop.name=?1) ORDER BY  c.disc_count DESC " ,
+    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT postId, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY postId ) AS c ON d.postId = c.postId where d.shopId in (select shopId from shop where shop.name=?1) ORDER BY  c.disc_count DESC " ,
             nativeQuery = true)
-    public List<Post> sortPostsByCommentsWithGivenShop(String shop);
+    List<Post> findAllByShopOrderByCommentDesc(String shop);
 
     @Query(value = "SELECT * from post"+
-            " where content like ?1 or title like ?1 or user_id in (SELECT user_id from user where login like ?1) ORDER BY creationdate DESC" ,
+            " where content like ?1 or title like ?1 or userId in (SELECT userId from user where login like ?1) ORDER BY createDate DESC" ,
             nativeQuery = true)
-    public List<Post> postsBySearchInput(String search);
+    List<Post> findAllBySearchOrderByCreateDateDesc(String search);
 
-    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT post_id, COUNT(*)" +
-            " AS disc_count FROM comment GROUP BY post_id ) AS c ON d.post_id = c.post_id" +
-            " where d.content like ?1 or d.title like ?1 or d.user_id in (SELECT user_id from user where login like ?1)" +
+    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT postId, COUNT(*)" +
+            " AS disc_count FROM comment GROUP BY postId ) AS c ON d.postId = c.postId" +
+            " where d.content like ?1 or d.title like ?1 or d.userId in (SELECT userId from user where login like ?1)" +
             " ORDER BY c.disc_count DESC" ,
             nativeQuery = true)
-    public List<Post> sortPostsByCommentsWithGivenSearchInput(String search);
+    List<Post> findAllBySearchOrderByCommentDesc(String search);
 
-    @Query(value = "SELECT * from post" +
-            " ORDER BY creationdate DESC" ,
+    @Query(value = "SELECT * from post where userId in " +
+            "(select userId from user where login = ?1) ORDER BY createDate DESC" ,
             nativeQuery = true)
-    public List<Post> sortPostsByDate();
+    List<Post> findAllByUserOrderByCreateDateDesc(String user);
 
-    @Query(value = "SELECT * from post where user_id in " +
-            "(select user_id from user where login = ?1) ORDER BY creationdate DESC" ,
+    @Query(value = "SELECT d.* FROM post AS d LEFT JOIN ( SELECT postId, COUNT(*) AS disc_count" +
+            " FROM comment GROUP BY postId ) AS c ON d.postId = c.postId where d.userId in (select userId from user where login = ?1) ORDER BY  c.disc_count DESC " ,
             nativeQuery = true)
-    public List<Post> sortPostsByDateWithGivenUser(String user);
+    List<Post> findAllByUserOrderByCommentDesc(String user);
+
+    Post findFirstByTitleOrderByCreateDateDesc(String title);
 
 }

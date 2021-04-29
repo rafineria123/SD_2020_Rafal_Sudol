@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+      xmlns:th="http://thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
@@ -63,7 +63,7 @@
                 </a>
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
-                <a href="/add/discount">
+                <a href="/discount/add">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
                             style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -126,7 +126,7 @@
         <div class="col-3" style="font-weight: 400;font-size: 14px;" id="left_side_menu">
 
              <span th:each="conversation : ${list_of_conversations}">
-                 <a th:href="@{|/messages/${conversation.getConversation_id()}|}">
+                 <a th:href="@{|/messages/${conversation.getConversationId()}|}">
                     <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${conversation.hasNewMessage(user)}">
                         <div class="col-12" style="border-top: 2px solid rgb(117 117 117);border-bottom: 2px solid rgb(117 117 117);border-right: 1px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;">
 
@@ -176,9 +176,9 @@
 
 
             <span th:each="conversation : ${list_of_conversations}">
-                <a th:href="@{|/messages/${conversation.getConversation_id()}|}">
+                <a th:href="@{|/messages/${conversation.getConversationId()}|}">
                 <div class="row" style="font-size:14px;padding-top: 10px;" th:if="!${conversation.hasNewMessage(user)}">
-                    <div class="col-12" style="background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${current_conversation.getConversation_id().equals(conversation.getConversation_id())}">
+                    <div class="col-12" style="background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${current_conversation.getConversationId().equals(conversation.getConversationId())}">
 
 
                         <div class="row d-flex media_large align-items-center">
@@ -218,7 +218,7 @@
                         </div>
 
                     </div>
-                    <div class="col-12" style="background-color:#ffffff;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${!current_conversation.getConversation_id().equals(conversation.getConversation_id())}">
+                    <div class="col-12" style="background-color:#ffffff;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;" th:if="${!current_conversation.getConversationId().equals(conversation.getConversationId())}">
                         <div class="row d-flex media_large align-items-center">
                             <div class="col-2 offset-2 d-flex align-items-center" style=""><img src="/images/user.png" class="user_image"><img></div>
                             <div class="col-6 offset-1" style="font-weight: 600;">
@@ -268,10 +268,10 @@
 
 
             <span th:each="message:${current_conversation.getMessagesSorted()}">
-                <div class="d-flex align-items-start flex-column" th:if="${message.getUser().getUser_id()!=user.getUser_id()}">
+                <div class="d-flex align-items-start flex-column" th:if="${message.getUser().getUserId()!=user.getUserId()}">
                     <div class="left_message" th:text="${message.getContent()}"></div>
                 </div>
-                 <div class="d-flex align-items-end flex-column" th:if="${message.getUser().getUser_id()==user.getUser_id()}">
+                 <div class="d-flex align-items-end flex-column" th:if="${message.getUser().getUserId()==user.getUserId()}">
                     <div class="right_message"  th:text="${message.getContent()}">Flex item</div>
                 </div>
              </span>
@@ -324,7 +324,7 @@
 <script type="text/javascript">
     function refreshChat() {
         $.ajax({
-            url : "/conversation/" + "[[${current_conversation.getConversation_id()}]]",
+            url : "/conversation/" + "[[${current_conversation.getConversationId()}]]",
             success : function(data) {
                 const obj = data;
                 document.getElementById("chat").innerHTML = "";
@@ -357,15 +357,15 @@
             }
         });
         $.ajax({
-            url : "/user_conversations/" + "[[${current_conversation.getConversation_id()}]]",
+            url : "/user_conversations/" + "[[${current_conversation.getConversationId()}]]",
             success : function(data) {
                 const obj = data;
                 let list = [];
                 for (let i = 0; i < obj.length; i++) {
 
 
-                    if (obj[i][2]==="nieodczytane"){
-                        if("[[${current_conversation.getConversation_id()}]]"===obj[i][3]){
+                    if (obj[i][2]==="NEW"){
+                        if("[[${current_conversation.getConversationId()}]]"===obj[i][3]){
                             let element1 = document.createElement("div");
                             element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
                                 "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
@@ -463,10 +463,10 @@
                 };
                 for (let i = 0; i < obj.length; i++) {
 
-                    if (obj[i][2]==="odczytane"){
+                    if (obj[i][2]==="SEEN"){
 
                         let element1 = document.createElement("div");
-                        if("[[${current_conversation.getConversation_id()}]]"===obj[i][3]){
+                        if("[[${current_conversation.getConversationId()}]]"===obj[i][3]){
                         element1.innerHTML="<a href=\""+"/messages/"+obj[i][3]+"\">\n" +
                             "                    <div class=\"row\" style=\"font-size:14px;padding-top: 10px;\">\n" +
                             "                        <div class=\"col-12\" style=\"background-color:#eaeaea;border-top: 1px solid rgba(82,73,98,0.2);border-right: 1px solid rgba(82,73,98,0.2);border-bottom: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;\">\n" +

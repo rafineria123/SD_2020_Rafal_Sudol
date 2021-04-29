@@ -1,6 +1,8 @@
 package pl.okazje.project.entities;
 
 
+import pl.okazje.project.exceptions.DataTooLongException;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -11,12 +13,12 @@ import java.util.Date;
 
 @Entity
 public class Token implements Serializable {
-    private static final int EXPIRATION = 60 * 24;
 
+    private static final int EXPIRATION = 60 * 24;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long token_id;
+    private Long tokenId;
 
     @Column(length = 700)
     private String token;
@@ -24,36 +26,22 @@ public class Token implements Serializable {
     @OneToOne(mappedBy = "token")
     private User user;
 
-    private Date expiryDate = calculateExpiryDate(EXPIRATION);
-
-    private static Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
-    }
+    private Date expireDate;
 
     public Token() {
-    }
-
-    public Token(String token, User user){
-
-        this.token = token;
-        this.user = user;
-
-
+        expireDate = calculateExpireDate(EXPIRATION);
     }
 
     public static int getEXPIRATION() {
         return EXPIRATION;
     }
 
-    public Long getToken_id() {
-        return token_id;
+    public Long getTokenId() {
+        return tokenId;
     }
 
-    public void setToken_id(Long token_id) {
-        this.token_id = token_id;
+    public void setTokenId(Long token_id) {
+        this.tokenId = token_id;
     }
 
     public String getToken() {
@@ -61,6 +49,7 @@ public class Token implements Serializable {
     }
 
     public void setToken(String token) {
+        if(token.length()>700) throw new DataTooLongException(token);
         this.token = token;
     }
 
@@ -72,12 +61,19 @@ public class Token implements Serializable {
         this.user = user;
     }
 
-    public Date getExpiryDate() {
-        return expiryDate;
+    public Date getExpireDate() {
+        return expireDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setExpireDate(Date expiryDate) {
+        this.expireDate = expiryDate;
+    }
+
+    private static Date calculateExpireDate(int expireTimeInMinutes) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Timestamp(cal.getTime().getTime()));
+        cal.add(Calendar.MINUTE, expireTimeInMinutes);
+        return new Date(cal.getTime().getTime());
     }
 
 }

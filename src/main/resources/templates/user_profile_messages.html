@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+      xmlns:th="http://thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
@@ -61,7 +61,7 @@
                 </form>
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
-                <a href="/add/discount">
+                <a href="/discount/add">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
                             style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -310,7 +310,7 @@
 
             <span th:each="conversation : ${list_of_conversations}">
                 <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${conversation.hasNewMessage(user)}">
-                    <a th:href="@{|/messages/${conversation.getConversation_id()}|}" style="width: 100%">
+                    <a th:href="@{|/messages/${conversation.getConversationId()}|}" style="width: 100%">
                     <div class="col-7 div_min_width pink_shadow" style="border: 2px solid rgb(117 117 117);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
                         <div class="row" style="padding-left: 8px">
                             <div class="" style="width:auto;margin-top: -26px;z-index: 2;background-color: white;color: rgba(8,8,8,0.72)">Nowa wiadomość</div>
@@ -357,7 +357,7 @@
             </div>
             <span th:each="conversation : ${list_of_conversations}">
                 <div class="row" style="font-size:14px;padding-top: 10px;" th:if="${!conversation.hasNewMessage(user)}">
-                    <a th:href="@{|/messages/${conversation.getConversation_id()}|}" style="width: 100%">
+                    <a th:href="@{|/messages/${conversation.getConversationId()}|}" style="width: 100%">
                     <div class="col-7 div_min_width pink_shadow" style="border: 1px solid rgba(82,73,98,0.2);padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px">
                         <div class="row">
                             <div class="col-3 d-flex align-self-center"><img src="/images/user.png" class="user_image"><img></div>

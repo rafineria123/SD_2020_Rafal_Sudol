@@ -1,77 +1,72 @@
 package pl.okazje.project.entities;
 
+import pl.okazje.project.exceptions.DataTooLongException;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 public class Comment {
-
+    public enum Status{POSTED, DELETED}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;
+    private Long commentId;
     @Column(length = 700)
     private String content;
-    private String status="";
-    private Date cr_date = new Date();
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.POSTED;
+    private Date createDate;
 
     @OneToMany(mappedBy="comment")
     private Set<Rating> ratings;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="userId", nullable=false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="discount_id", nullable=true)
+    @JoinColumn(name="discountId")
     private Discount discount;
 
     @ManyToOne
-    @JoinColumn(name="post_id", nullable=true)
+    @JoinColumn(name="postId")
     private Post post;
 
     public Comment() {
+        createDate = new Date();
     }
 
-    public Comment(String content) {
-
-        this.content = content;
-
+    public Long getCommentId() {
+        return commentId;
     }
 
-    public Long getComment_id() {
-        return comment_id;
-    }
-
-    public void setComment_id(Long comment_id) {
-        this.comment_id = comment_id;
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
     public String getContent() {
-        if (this.getStatus()==null){
+        if (this.getStatus()==null||this.getStatus().equals(Status.POSTED)){
             return content;
-        }else if(this.getStatus().equals("Usuniete")){
-            return "<Komentarz usunięty przez Moderatora>";
         }else{
-
-            return content;
-
+            return "<Komentarz usunięty przez Moderatora>";
         }
-
-
     }
 
     public void setContent(String content) {
+        if(content.length()>700){
+            throw new DataTooLongException(content.substring(0, Math.min(content.length(), 50))+"...");
+        }
         this.content = content;
     }
 
-    public Date getCr_date() {
-        return cr_date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCr_date(Date cr_date) {
-        this.cr_date = cr_date;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Set<Rating> getRatings() {
@@ -106,11 +101,11 @@ public class Comment {
         this.post = post;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -122,24 +117,15 @@ public class Comment {
         }
     }
 
-
-
     public int getDateDifference(){
-
         Date date = new Date();
-        long diff = date.getTime() - cr_date.getTime();
+        long diff = date.getTime() - createDate.getTime();
 
-        int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-
-        return diffDays;
-
+        return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
     public long getDataToNumber(){
-
-        long daysBetween = new Date().getTime() - this.cr_date.getTime();
-        return daysBetween;
-
+        return new Date().getTime() - this.createDate.getTime();
     }
 
 }

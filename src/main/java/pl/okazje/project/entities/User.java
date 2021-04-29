@@ -3,6 +3,7 @@ package pl.okazje.project.entities;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
 import java.text.Format;
@@ -16,32 +17,32 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int user_id;
-    @Column(unique = true)
+    private int userId;
+    @Column(unique = true,length = 25)
     private String login;
     @Column(length = 700)
     private String password;
-    private String email = "";
+    @Column(length = 50)
+    private String email;
     private String status;
-    private String ROLE = "USER";
-    private Date cr_date;
-    private boolean enabled = false;
-
+    private String role;
+    private Date createDate;
+    private boolean enabled;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "information_id")
-    private Information information = new Information();
+    @JoinColumn(name = "informationId")
+    private Information information;
+
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ban_id")
+    @JoinColumn(name = "banId")
     private Ban ban;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "token_id", nullable = true)
+    @JoinColumn(name = "tokenId", nullable = true)
     private Token token;
 
-
     @ManyToOne
-    @JoinColumn(name="rank_id", nullable=true)
+    @JoinColumn(name="rankId", nullable=true)
     private Rank rank;
 
     @OneToMany(mappedBy="user")
@@ -53,13 +54,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy="user")
     private Set<Comment> comments;
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+    @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name = "User_Conversation",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "conversation_id")
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "conversationId")
     )
     private Set<Conversation> conversations;
 
@@ -69,10 +67,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy="user")
     private Set<Message> messages;
 
-
-
-
     public User() {
+        this.email = "";
+        this.role = "USER";
+        this.enabled = false;
     }
 
     public Ban getBan() {
@@ -95,20 +93,12 @@ public class User implements UserDetails {
         this.ban = ban;
     }
 
-    public User(String login, String password, String email) {
-        this.status = "active";
-        this.cr_date = new Date();
-        this.login = login;
-        this.password = password;
-        this.email = email;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public Integer getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer user_id) {
+        this.userId = user_id;
     }
 
     public String getLogin() {
@@ -116,43 +106,17 @@ public class User implements UserDetails {
     }
 
     public void setLogin(String login) {
+        if(login.length()>25) throw new DataTooLongException(login);
         this.login = login;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        final SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(ROLE);
-        return Collections.singletonList(simpleGrantedAuthority);
-    }
-
     public String getPassword() {
-
         return password;
     }
 
     @Override
     public String getUsername() {
         return login;
-    }
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        if (this.ban!=null){
-
-            return false;
-
-        }
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
     }
 
     @Override
@@ -161,6 +125,7 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
+        if(password.length()>700) throw new DataTooLongException(password);
         this.password = password;
     }
 
@@ -169,6 +134,7 @@ public class User implements UserDetails {
     }
 
     public void setEmail(String email) {
+        if(email.length()>50) throw new DataTooLongException(email);
         this.email = email;
     }
 
@@ -180,15 +146,18 @@ public class User implements UserDetails {
         this.status = status;
     }
 
-    public Date getCr_date() {
-        return cr_date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCr_date(Date cr_date) {
-        this.cr_date = cr_date;
+    public void setCreateDate(Date cr_date) {
+        this.createDate = cr_date;
     }
 
     public Information getInformation() {
+        if(information==null){
+            return new Information();
+        }
         return information;
     }
 
@@ -252,39 +221,32 @@ public class User implements UserDetails {
         this.ratings = ratings;
     }
 
-    public String getROLE() {
-        return ROLE;
+    public String getRole() {
+        return role;
     }
 
-    public void setROLE(String ROLE) {
-        this.ROLE = ROLE;
+    public void setRole(String ROLE) {
+        this.role = ROLE;
     }
 
     public ArrayList<Conversation> getConversationsSorted() {
-
         ArrayList<Conversation> list = new ArrayList<>(conversations);
-        Collections.sort(list, (o1, o2) -> o2.getNewestMessageObject().getCr_date().compareTo(o1.getNewestMessageObject().getCr_date()));
-
+        Collections.sort(list, (o1, o2) -> o2.getNewestMessageObject().getCreateDate().compareTo(o1.getNewestMessageObject().getCreateDate()));
         return list;
     }
 
     public int getCommentsAmount(){
-
         return new ArrayList<Comment>(comments).size();
-
     }
 
-    public String getCr_date_formated() {
-
+    public String getCreateDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
-        String s = formatter.format(this.cr_date);
+        String s = formatter.format(this.createDate);
         return s;
     }
 
     public int getDiscountsAmount(){
-
         return new ArrayList<Discount>(discounts).size();
-
     }
 
     public boolean hasName(){
@@ -299,50 +261,56 @@ public class User implements UserDetails {
     }
 
     public boolean hasSurname(){
-
         if(this.information!=null){
-
             if(information.getSurname()!=null){
-
                 if(!information.getSurname().isEmpty()||!information.getSurname().equals("")){
-
                     return true;
-
                 }
-
             }
-
         }
         return false;
-
     }
 
     public boolean hasDiscount(Long discount_id){
-
         for (Discount d:discounts) {
-
-            if (d.getDiscount_id()==discount_id){
-
+            if (d.getDiscountId()==discount_id){
                 return true;
             }
-
         }
         return false;
-
     }
 
     public boolean hasPost(Long post_id){
-
         for (Post p:posts) {
-
-            if (p.getPost_id()==post_id){
-
+            if (p.getPostId()==post_id){
                 return true;
             }
-
         }
         return false;
+    }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        final SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role);
+        return Collections.singletonList(simpleGrantedAuthority);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        if (this.ban!=null){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 }
 

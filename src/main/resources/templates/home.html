@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+      xmlns:th="http://thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
@@ -66,11 +66,12 @@
                                 <button style="" class="btn add_button"
                                         aria-haspopup="true" aria-expanded="false"
                                 ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
+                                    <span class="msg_badge" style="visibility: hidden" id="badge"></span>
                                 </button>
                             </a>
                         </div>
                         <div class="d-flex align-items-center" style="padding-top: 10px">
-                            <a href="/add/discount">
+                            <a href="/discount/add">
                                 <button type="button"  class="btn add_button"><span
                                         class="fas fa-plus"
                                         style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -152,31 +153,33 @@
         <div class="container-fluid sort_div" style="width: 100%">
             <div class="row">
                 <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;">
-                    <a th:href="|${sort_buttons_prefix +'top-rated'}|">
-
-                        <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                                class="btn sort_button sort_button_activated" style="margin-right: 10px">Najlepiej oceniane
-                        </button>
-                        <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
+                    <form th:action="@{/sort}" method="post">
+                        <input type="hidden" id="sort" name="sort" value="rating">
+                        <button th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
                                 class="btn sort_button" style="margin-right: 10px">Najlepiej oceniane
                         </button>
-                    </a>
-                    <a th:href="|${sort_buttons_prefix +'most-comments'}|">
-                        <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
+                        <button th:if="${#session.getAttribute('sort')!=null&&#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
+                                class="btn sort_button sort_button_activated" style="margin-right: 10px">Najlepiej oceniane
+                        </button>
+                    </form>
+                    <form th:action="@{/sort}" method="post">
+                        <input type="hidden" id="sort" name="sort" value="comments">
+                        <button type="submit" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
                                 class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
                         </button>
-                        <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
+                        <button type="submit" th:if="${#session.getAttribute('sort')!=null&&#session.getAttribute('sort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
                                 class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
                         </button>
-                    </a>
-                    <a th:href="|${sort_buttons_prefix +'date'}|">
-                        <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
-                                class="btn sort_button sort_button_activated">Najnowsze promocje
-                        </button>
-                        <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
+                    </form>
+                    <form th:action="@{/sort}" method="post">
+                        <input type="hidden" id="sort" name="sort" value="date">
+                        <button type="submit" th:if="${#session.getAttribute('sort')!=null&&!#session.getAttribute('sort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button">Najnowsze promocje
                         </button>
-                    </a>
+                        <button type="submit" th:if="${#session.getAttribute('sort')==null||#session.getAttribute('sort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
+                                class="btn sort_button sort_button_activated">Najnowsze promocje
+                        </button>
+                    </form>
                 </div>
                 <div class="col-lg-6 d-flex flex-row-reverse sort_div" style="padding-top: 10px;padding-bottom: 10px;">
 
@@ -198,35 +201,37 @@
         <div class="container-fluid sort_div" style="width: 100%">
             <div class="row">
 
-                <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;" th:if="${picked_time!=null}">
-                    <a th:href="|${time_buttons_prefix +'day'}|" th:if="${picked_sort != 3}">
-                        <button type="button" th:if="${picked_time!=1}"  data-mixitup-control data-sort="number-date:asc"
+                <div class="col-lg-6 d-flex flex-row sort_div" style="padding-top: 10px;padding-bottom: 10px;" th:if="${#session.getAttribute('sort')!=null&&!#session.getAttribute('sort').equals('date')}">
+                    <form th:action="@{/sort}" method="post" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('date')}">
+                        <input type="hidden" id="date" name="date" value="day">
+                        <button type="submit" th:if="${#session.getAttribute('date')==null||!#session.getAttribute('date').equals('day')}"  data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button" style="">Ostatnie 24h
                         </button>
-                        <button type="button" th:if="${picked_time==1}" data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')!=null&&#session.getAttribute('date').equals('day')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button_activated" style="">Ostatnie 24h
                         </button>
-
-                    </a>
-                    <a th:href="|${time_buttons_prefix +'week'}|" th:if="${picked_sort != 3}">
-                        <button type="button" th:if="${picked_time!=2}" data-mixitup-control data-sort="number-date:asc"
+                    </form>
+                    <form th:action="@{/sort}" method="post" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('date')}">
+                        <input type="hidden" id="date" name="date" value="week">
+                        <button type="submit" th:if="${#session.getAttribute('date')==null||!#session.getAttribute('date').equals('week')}"  data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button" style="margin-left: 10px">Ostatni tydzien
                         </button>
-                        <button type="button" th:if="${picked_time==2}" data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')!=null&&#session.getAttribute('date').equals('week')}"  data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button_activated" style="margin-left: 10px">Ostatni tydzien
                         </button>
 
-                    </a>
+                    </form>
 
-                    <a th:href="|${time_buttons_prefix +'all'}|" th:if="${picked_sort != 3}">
-                        <button type="button" th:if="${picked_time!=3}" data-mixitup-control data-sort="number-date:asc"
+                    <form th:action="@{/sort}" method="post" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('date')}">
+                        <input type="hidden" id="date" name="date" value="all">
+                        <button type="submit" th:if="${#session.getAttribute('date')==null||!#session.getAttribute('date').equals('all')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button" style="margin-left: 10px">Wszystkie
                         </button>
-                        <button type="button" th:if="${picked_time==3}" data-mixitup-control data-sort="number-date:asc"
+                        <button type="submit" th:if="${#session.getAttribute('date')!=null&&#session.getAttribute('date').equals('all')}" data-mixitup-control data-sort="number-date:asc"
                                 class="btn sort_button sort_button_activated" style="margin-left: 10px">Wszystkie
                         </button>
 
-                    </a>
+                    </form>
 
                 </div>
             </div>
@@ -235,7 +240,7 @@
 
     <!-- discounts-->
     <div class="row mix-container  h-100" style="padding-top: 20px;height: 530px">
-        <div class="col-lg-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.deletedOrNotReady()}"
+        <div class="col-lg-3 mix h-100 " th:each="discount : ${list_of_discounts}" th:if="${!discount.isDeleted()&&!discount.isAwaiting()}"
              th:classappend="|${discount.getTag().getName().toLowerCase()} ${discount.getShop().getName().toLowerCase()}|"
              style="padding-bottom: 30px;"
              th:attr="data-number-rate=${discount.getRatingsSize()}, data-number-comment=${discount.getCommentsSize()}, data-number-date=${discount.getDataToNumber()}">
@@ -244,54 +249,54 @@
                         <!-- Brand icon-->
                         <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                             <div class="col-lg-12">
-                                <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
-                                        th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
+                                <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="jd"> <img
+                                        th:src="|/${discount.getShop().getImageUrl()}|" class="item_image_brand"><img> </a>
                             </div>
                         </div>
                 <!-- Discount image-->
                 <div class="row item_parts_padding">
 
                     <div class="col-lg-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
-                            <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="/">
+                            <img th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                         </a>
                     </div>
                 </div>
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-lg-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="jd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>
                 <!-- Price-->
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('OBNIZKA')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
-                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOldPrice()}zł|">680zł</span>
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrentPrice()}zł|">552,64zł</span>
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONNORMALNY')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONPROCENT')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}%|">552,64zł</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODNORMALNY')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODPROCENT')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}%|">552,64zł</span>
 
                     </div>
                 </div>
@@ -300,7 +305,7 @@
                     <div class="col-lg-12">
                         <span class="item_date">Oferta wygasa: </span><span class="item_user"
                                                                             style="font-weight: 900; font-size: 15px; color: #1e7e34"
-                                                                            th:text="${discount.getExpire_date_formated()}">25.06.20</span>
+                                                                            th:text="${discount.getExpireDateFormatted()}">25.06.20</span>
                     </div>
 
                 </div>
@@ -316,11 +321,11 @@
                 <div class="row item_parts_padding d-flex justify-content-around" style="padding-top: 10px">
                     <div class="">
                         <div class="row">
-                            <form th:action="@{/addrate}" method="post">
+                            <form th:action="@{/discount/addrate}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
                                        value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
                                                                              id="discountidadd"
-                                                                             th:value="${discount.getDiscount_id()}">
+                                                                             th:value="${discount.getDiscountId()}">
                                 <input type="hidden" name="redirect"
                                        id="redirect"
                                        value="">
@@ -328,11 +333,11 @@
                             <span
                                     style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
                                     th:text="|${discount.getRatingsSize()}|">  255  </span>
-                            <form th:action="@{/removerate}" method="post"><input
+                            <form th:action="@{/discount/removerate}" method="post"><input
                                     class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
                                     value="&#xf068;" type="submit"><input type="hidden" name="discountidremove"
                                                                           id="discountidremove"
-                                                                          th:value="${discount.getDiscount_id()}">
+                                                                          th:value="${discount.getDiscountId()}">
                                 <input type="hidden" name="redirect_remove"
                                        id="redirect_remove"
                                        value="">
@@ -342,7 +347,7 @@
 
                     </div>
                     <div class="">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" class="no_text_decoration"><span
                                 class="fas fa-comments"
                                 style="color: #9e9ea4;font-size: 14px;"></span><span
                                 style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre"
@@ -352,7 +357,7 @@
                 <!--Discount Button-->
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
                     <div class="col-lg-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}">
                             <button type="button"  class="btn item_button" th:if="${!discount.isOutDated()}">
 
                                     Przejdz do promocji
@@ -370,54 +375,54 @@
                 <!-- Brand icon-->
                 <div class="row item_parts_padding" style="padding-top: 5px; padding-bottom: 5px;">
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="jd"> <img
-                                th:src="|/${discount.getShop().getImage_url()}|" class="item_image_brand"><img> </a>
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="jd"> <img
+                                th:src="|/${discount.getShop().getImageUrl()}|" class="item_image_brand"><img> </a>
                     </div>
                 </div>
                 <!-- Discount image-->
                 <div class="row item_parts_padding">
 
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="/">
-                            <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="/">
+                            <img th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                         </a>
                     </div>
                 </div>
                 <!-- Title-->
                 <div class="row item_parts_padding" style="padding-bottom: 0">
                     <div class="col-md-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" href="asd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" href="asd"> <span class="item_title" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
                                                                                                   th:text="${discount.getTitle()}">Oneplus 7T Pro 8/256GB (możliwe 2.630 zł)</span></a>
                     </div>
                 </div>
                 <!-- Price-->
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('OBNIZKA')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOld_price()}zł|">680zł</span>
-                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrent_price()}zł|">552,64zł</span>
+                        <span style="font-weight: 600;font-size: 16px;font-family: Calibri;color: rgba(145,143,146,0.91);padding-right: 5px; text-decoration: line-through;" th:text="|${discount.getOldPrice()}zł|">680zł</span>
+                        <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getCurrentPrice()}zł|">552,64zł</span>
                         <span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgba(22, 21, 21, 0.91);padding-right: 5px "th:text="|-${discount.getDifference()}%|">-19%</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONNORMALNY')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KUPONPROCENT')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                        KUPON: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}%|">552,64zł</span>
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODNORMALNY')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}zł|">552,64zł</span>
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}zł|">552,64zł</span>
 
                     </div>
                 </div>
                 <div class="row item_parts_padding" style="padding-bottom: 0" th:if="${discount.getType().equals('KODPROCENT')}">
                     <div class="col-lg-12" style="filter: grayscale(30%);font-weight: 900;color: #f70f55;font-size: 14px;">
-                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOld_price()}%|">552,64zł</span>
+                        KOD: -<span style="font-weight: 900;font-size: 16px;font-family: Calibri;color: rgb(235 35 62);padding-right: 5px;"th:text="|${discount.getOldPrice()}%|">552,64zł</span>
 
                     </div>
                 </div>
@@ -426,7 +431,7 @@
                     <div class="col-md-12">
                         <span class="item_date">Oferta wygasa: </span><span class="item_user"
                                                                             style="font-weight: 900; font-size: 15px; color: #1e7e34"
-                                                                            th:text="${discount.getExpire_date_formated()}">25.06.20</span>
+                                                                            th:text="${discount.getExpireDateFormatted()}">25.06.20</span>
                     </div>
 
                 </div>
@@ -442,11 +447,11 @@
                 <div class="row item_parts_padding d-flex justify-content-around" style="padding-top: 10px">
                     <div class="">
                         <div class="row">
-                            <form th:action="@{/addrate}" method="post">
+                            <form th:action="@{/discount/addrate}" method="post">
                                 <input class="fas fa-plus plus_minus" style="color: #f14648;font-size: 14px;"
                                        value="&#xf067;" type="submit"><input type="hidden" name="discountidadd"
                                                                              id="discountidadd"
-                                                                             th:value="${discount.getDiscount_id()}">
+                                                                             th:value="${discount.getDiscountId()}">
                                 <input type="hidden" name="redirect"
                                        id="redirect"
                                        value="">
@@ -454,11 +459,11 @@
                             <span
                                     style="color:red;font-size: 16px;font-weight: 900;white-space:pre"
                                     th:text="|${discount.getRatingsSize()}|">  255  </span>
-                            <form th:action="@{/removerate}" method="post"><input
+                            <form th:action="@{/discount/removerate}" method="post"><input
                                     class="fas fa-minus plus_minus" style="font-size: 14px;color: #9e9ea4"
                                     value="&#xf068;" type="submit"><input type="hidden" name="discountidremove"
                                                                           id="discountidremove"
-                                                                          th:value="${discount.getDiscount_id()}">
+                                                                          th:value="${discount.getDiscountId()}">
                                 <input type="hidden" name="redirect_remove"
                                        id="redirect_remove"
                                        value="">
@@ -468,7 +473,7 @@
 
                     </div>
                     <div class="">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}" class="no_text_decoration"><span
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}" class="no_text_decoration"><span
                                 class="fas fa-comments"
                                 style="color: #9e9ea4;font-size: 14px;"></span><span
                                 style="color: #9e9ea4;font-size: 16px;font-weight: 900;white-space:pre"
@@ -478,7 +483,7 @@
                 <!--Discount Button-->
                 <div class="row item_parts_padding" style="padding-bottom: 15px">
                     <div class="col-lg-12">
-                        <a th:href="@{|/discount/${discount.getDiscount_id()}|}">
+                        <a th:href="@{|/discount/${discount.getDiscountId()}|}">
                                                         <button type="button"  class="btn item_button" th:if="${discount.isOutDated()}" style="background: linear-gradient(45deg,lightblue,lightblue);">
 
                                                             Przejdz do promocji
@@ -522,10 +527,10 @@
 
             <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
                 <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
-                    <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
+                    <a class="page-link" th:href="@{|${array_of_addresses[i - 1]}|}" th:text="${i}">1</a>
                 </li>
                 <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
-                    <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
+                    <a class="page-link" th:href="@{${array_of_addresses[i - 1]}}" th:text="${i}">1</a>
                 </li>
             </div>
 
@@ -551,5 +556,25 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script src="/js/home.js"></script>
+<script>
+    function check() {
+        $.ajax({
+            url : "/check/",
+            success : function(data) {
+                const count = data;
+                let doc = document.getElementById("badge");
+                if(count>0){
+                    doc.style.visibility = 'visible';
+                    doc.textContent = count;
+                }else {
+                    doc.style.visibility = 'hidden';
+                }
+            }
+        });
+    }
+
+    let intervalId = 0;
+    intervalId = setInterval(check, 1000);
+</script>
 </body>
 </html>

@@ -7,30 +7,29 @@ public class Rating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer rating_id;
+    private Integer ratingId;
 
     @ManyToOne
-    @JoinColumn(name="comment_id", nullable=true)
+    @JoinColumn(name="commentId", nullable=true)
     private Comment comment;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="userId", nullable=false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="discount_id", nullable=true)
+    @JoinColumn(name="discountId", nullable=true)
     private Discount discount;
-
 
     public Rating() {
     }
 
-    public Integer getRating_id() {
-        return rating_id;
+    public Integer getRatingId() {
+        return ratingId;
     }
 
-    public void setRating_id(Integer rating_id) {
-        this.rating_id = rating_id;
+    public void setRatingId(Integer ratingId) {
+        this.ratingId = ratingId;
     }
 
     public Comment getComment() {

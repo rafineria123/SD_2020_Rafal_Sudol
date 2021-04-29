@@ -8,9 +8,9 @@ public class Shop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long shop_id;
+    private Long shopId;
     private String name;
-    private String image_url;
+    private String imageUrl;
 
     @OneToMany(mappedBy="shop")
     private Set<Discount> discounts;
@@ -21,13 +21,6 @@ public class Shop {
     public Shop() {
     }
 
-    public Shop(String name, String image_url) {
-
-        this.name = name;
-        this.image_url = image_url;
-
-    }
-
     public Set<Post> getPosts() {
         return posts;
     }
@@ -36,12 +29,12 @@ public class Shop {
         this.posts = posts;
     }
 
-    public Long getShop_id() {
-        return shop_id;
+    public Long getShopId() {
+        return shopId;
     }
 
-    public void setShop_id(Long shop_id) {
-        this.shop_id = shop_id;
+    public void setShopId(Long shop_id) {
+        this.shopId = shop_id;
     }
 
     public String getName() {
@@ -52,12 +45,12 @@ public class Shop {
         this.name = name;
     }
 
-    public String getImage_url() {
-        return image_url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Set<Discount> getDiscounts() {

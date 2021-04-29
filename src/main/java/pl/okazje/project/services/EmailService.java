@@ -1,25 +1,24 @@
 package pl.okazje.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Service
-public class SendMail {
-    @Autowired
-    private JavaMailSender javaMailSender;
+public class EmailService {
 
-    public void sendingMail(String to, String subject, String body) throws MessagingException {
+    private final JavaMailSender javaMailSender;
 
+    public EmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+
+    public void sendEmail(String to, String subject, String body){
         Thread t = new Thread(() -> {
             try {
-
                 MimeMessage message=javaMailSender.createMimeMessage();
                 MimeMessageHelper helper;
                 helper=new MimeMessageHelper(message,true);
@@ -27,15 +26,9 @@ public class SendMail {
                 helper.setSubject(subject);
                 helper.setText(body);
                 javaMailSender.send(message);
-
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
-
         });
         t.start();
-
-
-
-
     }}

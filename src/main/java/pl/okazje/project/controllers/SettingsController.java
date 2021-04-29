@@ -1,558 +1,218 @@
 package pl.okazje.project.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.okazje.project.ParsingBot;
 import pl.okazje.project.entities.*;
-import pl.okazje.project.repositories.*;
-import pl.okazje.project.services.SendMail;
+import pl.okazje.project.services.*;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import javax.el.MethodNotFoundException;
+import java.util.Optional;
 
 @Controller
+@PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+@RequestMapping("/settings")
 public class SettingsController {
 
-    @Autowired
-    DiscountRepository discountRepository;
-    @Autowired
-    ShopRepository shopRepository;
-    @Autowired
-    TagRepository tagRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    MessageRepository messageRepository;
-    @Autowired
-    ConversationRepository conversationRepository;
-    @Autowired
-    InformationRepository informationRepository;
-    @Autowired
-    PostRepository postRepository;
-    @Autowired
-    SendMail sendMail;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    ParsingBot parsingBot;
+    private final int ITEMS_PER_PAGE = 4;
 
-    @GetMapping("/settings")
-    public ModelAndView settings() {
+    private final ShopService shopService;
+    private final TagService tagService;
+    private final AuthenticationService authenticationService;
+    private final DiscountService discountService;
+    private final PostService postService;
+    private final UserService userService;
+    private final ConversationService conversationService;
+    private final PasswordEncoder passwordEncoder;
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        if (uzytkownik.getInformation() == null) {
-            uzytkownik.setInformation(new Information());
-        }
-
-        ModelAndView modelAndView = new ModelAndView("user_profile_main");
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("user", uzytkownik);
-
-        return modelAndView;
-
+    public SettingsController(ShopService shopService, TagService tagService, AuthenticationService authenticationService, DiscountService discountService, PostService postService, UserService userService, ConversationService conversationService, PasswordEncoder passwordEncoder) {
+        this.shopService = shopService;
+        this.tagService = tagService;
+        this.authenticationService = authenticationService;
+        this.discountService = discountService;
+        this.postService = postService;
+        this.userService = userService;
+        this.conversationService = conversationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/settings/discounts")
-    public ModelAndView settingsDiscounts() {
 
-        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenUserId(uzytkownik.getUser_id()));
-        page.setPageSize(2); // number of items per page
-        page.setPage(0);
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("number_of_page", 1);
-        modelAndView.addObject("next_and_previous", "/settings/discounts/page/id");
-        modelAndView.addObject("picked_sort", 3);
-        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
-        List<String> listOfAdresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/settings/discounts/page/" + i);
-
-        }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
-
-
+    @GetMapping("")
+    public ModelAndView getSettingsHomepage() {
+        return getBaseModelAndView("user_profile_main");
     }
 
-    @GetMapping("/settings/posts")
-    public ModelAndView settingsPosts() {
-
-        ModelAndView modelAndView = new ModelAndView("user_profile_posts");
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-
-        modelAndView.addObject("list_of_posts", postRepository.sortPostsByDateWithGivenUser(uzytkownik.getLogin()));
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("user", uzytkownik);
-
-        return modelAndView;
-
-
+    @GetMapping("/discounts")
+    public ModelAndView getSettingsDiscountsHomepage() {
+        return getDiscountBaseModelAndView("user_profile_discounts", "/settings/discounts",
+                new PagedListHolder(discountService.findAllByUserIncludeSorting(authenticationService.getCurrentUser().get())),
+                0);
     }
 
-    @GetMapping("/settings/admin/discounts")
-    public ModelAndView settingsAdminDiscounts() {
-
-        ModelAndView modelAndView = new ModelAndView("user_admin_profile_discounts");
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals(Discount.Status.OCZEKUJACE));
-        page.setPageSize(2); // number of items per page
-        page.setPage(0);
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("number_of_page", 1);
-        modelAndView.addObject("next_and_previous", "/settings/admin/discounts/page/id");
-        modelAndView.addObject("picked_sort", 3);
-        List<String> listOfAdresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/settings/admin/discounts/page/" + i);
-
-        }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
-
-
+    @GetMapping("/discounts/page/{id}")
+    public ModelAndView getSettingsDiscountsPage(@PathVariable("id") String id) {
+        return getDiscountBaseModelAndView("user_profile_discounts", "/settings/discounts",
+                new PagedListHolder(discountService.findAllByUserIncludeSorting(authenticationService.getCurrentUser().get())),
+                Integer.parseInt(id) - 1);
     }
 
-    @GetMapping("/settings/admin/discounts/page/{id}")
+    @GetMapping("/posts")
+    public ModelAndView getSettingsPostsHomepage() {
+        return getPostBaseModelAndView("user_profile_posts", 0);
+    }
+
+    @GetMapping("/posts/page/{id}")
+    public ModelAndView getSettingsPostsPage(@PathVariable("id") String id) {
+        return getPostBaseModelAndView("user_profile_posts", Integer.parseInt(id));
+    }
+
+    @GetMapping("/admin/discounts")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ModelAndView getSettingsAdminDiscounts() {
+        return getDiscountBaseModelAndView("user_admin_profile_discounts", "/settings/admin/discounts",
+                new PagedListHolder(discountService.findAllByStatusEquals(Discount.Status.AWAITING)), 0);
+    }
+
+    @GetMapping("/admin/discounts/page/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ModelAndView pageSettingsAdminDiscounts(@PathVariable("id") String id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.findDiscountsByStatusEquals(Discount.Status.OCZEKUJACE));
-        page.setPageSize(2); // number of items per page
-        page.setPage(Integer.parseInt(id) - 1);
-        ModelAndView modelAndView = new ModelAndView("user_admin_profile_discounts");
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("next_and_previous", "/settings/admin/discounts/page/id");
-        modelAndView.addObject("user", uzytkownik);
-        List<String> listOfAdresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/settings/admin/discounts/page/" + i);
-
-        }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
+        return getDiscountBaseModelAndView("user_admin_profile_discounts", "/settings/admin/discounts",
+                new PagedListHolder(discountService.findAllByStatusEquals(Discount.Status.AWAITING)), Integer.parseInt(id) - 1);
 
     }
 
-
-    @GetMapping("/settings/discounts/page/{id}")
-    public ModelAndView pageSettingsDiscounts(@PathVariable("id") String id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.discountByUserId(uzytkownik.getUser_id()));
-        page.setPageSize(2); // number of items per page
-        page.setPage(Integer.parseInt(id) - 1);
-        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("next_and_previous", "/settings/discounts/page/id");
-        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("picked_sort", 3);
-        List<String> listOfAdresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/settings/discounts/page/" + i);
-
-        }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
-
-    }
-
-    @GetMapping("/settings/discounts/page/{id}/sort/{sort}")
-    public ModelAndView pageSettingsDiscountsSort(@PathVariable("id") String id, @PathVariable("sort") String sort) {
-        List<String> listOfAdresses = new ArrayList<>();
-        ModelAndView modelAndView = new ModelAndView("user_profile_discounts");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = null;
-        if (sort.equals("date")) {
-            modelAndView.addObject("picked_sort", 3);
-            modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/date");
-            page = new PagedListHolder(discountRepository.sortDiscountByDateWithGivenUserId(uzytkownik.getUser_id()));
-            page.setPageSize(2);
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/settings/discounts/page/" + i + "/sort/date");
-
-            }
-        }
-
-        if (sort.equals("most-comments")) {
-            modelAndView.addObject("picked_sort", 2);
-            modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/most-comments");
-            page = new PagedListHolder(discountRepository.sortDiscountByCommentsWithGivenUserId(uzytkownik.getUser_id()));
-            page.setPageSize(2);
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/settings/discounts/page/" + i + "/sort/most-comments");
-
-            }
-        }
-
-        if (sort.equals("top-rated")) {
-            modelAndView.addObject("picked_sort", 1);
-            modelAndView.addObject("next_and_previous", "/settings/discounts/page/id/sort/top-rated");
-            page = new PagedListHolder(discountRepository.sortDiscountByRatingWithGivenUserId(uzytkownik.getUser_id()));
-            page.setPageSize(2);
-            for (int i = 1; i <= page.getPageCount(); i++) {
-
-                listOfAdresses.add("/settings/discounts/page/" + i + "/sort/top-rated");
-
-            }
-        }
-
-        page.setPage(Integer.parseInt(id) - 1);
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("user", uzytkownik);
-
-        modelAndView.addObject("sort_buttons_prefix", "/settings/discounts/page/1/sort/");
-
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
-        return modelAndView;
-
-    }
-
-    @GetMapping("/settings/messages")
+    @GetMapping("/messages")
     public ModelAndView profileMessages() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-
-
-        ModelAndView modelAndView = new ModelAndView("user_profile_messages");
-        modelAndView.addObject("list_of_conversations", uzytkownik.getConversationsSorted());
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+        ModelAndView modelAndView = getBaseModelAndView("user_profile_messages");
+        modelAndView.addObject("list_of_conversations", authenticationService.getCurrentUser().get().getConversationsSorted());
         return modelAndView;
+    }
+
+    @RequestMapping(value = {"/liked/page/{id}", "/liked"}, method = RequestMethod.GET)
+    public ModelAndView liked(@PathVariable(required = false) String id) {
+        return getDiscountBaseModelAndView("user_profile_liked", "/settings/liked",
+                new PagedListHolder(discountService.findAllByUserAndLiked(authenticationService.getCurrentUser().get())),
+                id == null || id.isEmpty() ? 0 : Integer.parseInt(id) - 1);
 
     }
 
-    @PostMapping("/settings/messages")
-    public RedirectView newMessageToUser(@ModelAttribute("login") String login, @ModelAttribute("message") String message, RedirectAttributes redir) throws MessagingException {
+    @GetMapping("/admin/functions")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ModelAndView functions() {
+        return getBaseModelAndView("user_admin_profile_functions");
+    }
 
+    @PostMapping("/messages")
+    public RedirectView sendMessageToUser(@ModelAttribute("login") String login, @ModelAttribute("message") String message, RedirectAttributes redir) {
         RedirectView redirectView = new RedirectView("/settings/messages", true);
-
-        if (userRepository.findUserByLogin(login) == null) {
+        User currentUser = authenticationService.getCurrentUser().get();
+        if (login.equals(currentUser.getLogin())) {
+            redir.addFlashAttribute("bad_status", "Nie możesz pisac wiadomości do siebie.");
+            return redirectView;
+        }
+        Optional<User> optionalOtherUser = userService.findFirstByLogin(login);
+        if (!optionalOtherUser.isPresent()) {
             redir.addFlashAttribute("bad_status", "Użytkownik o takim loginie nie istnieje.");
             return redirectView;
         }
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-
-        if (login.equals(uzytkownik.getLogin())) {
-
-            redir.addFlashAttribute("bad_status", "Nie możesz pisac wiadomości do siebie.");
-            return redirectView;
-
-        }
-
-        ArrayList<User> uzytkownicy = new ArrayList<>();
-        uzytkownicy.add(uzytkownik);
-        uzytkownicy.add(userRepository.findUserByLogin(login));
-        Conversation conversation = conversationRepository.findConversationWhereUsers(uzytkownicy.get(0).getUser_id(), uzytkownicy.get(1).getUser_id());
-
-        if (conversation != null) {
-
-
-            Message messageobject = new Message(message, new Date(), "nieodczytane", conversation, uzytkownik);
-            messageRepository.save(messageobject);
-            Message newmessageobject = conversation.getOtherUserNewMessage(uzytkownik);
-            if (!newmessageobject.getContent().equals("")) {
-                newmessageobject.setStatus("odczytane");
-                messageRepository.save(newmessageobject);
-            }
-
-            ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(uzytkownicy.get(1).getLogin()));
-            if(!list.isEmpty()){
-
-                for (String s:list) {
-                    if(Long.parseLong(s)-System.currentTimeMillis()<0){
-                        sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
-                                "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
-                                        +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+newmessageobject.getContent());
-                    }
-
-                }
-
-            }else {
-
-                sendMail.sendingMail(uzytkownicy.get(1).getEmail(),"NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
-                        +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+newmessageobject.getContent());
-
-            }
-
-
-            redirectView = new RedirectView("/messages/" + conversation.getConversation_id(), true);
-            return redirectView;
-
-
-        }
-
-        conversation = new Conversation();
-        HashSet<User> list_of_users = new HashSet<>();
-        list_of_users.add(uzytkownicy.get(0));
-        list_of_users.add(uzytkownicy.get(1));
-        ArrayList<Message> list_of_messages = new ArrayList<>();
-        conversationRepository.save(conversation);
-        Conversation finalConversation = conversation;
-        list_of_users.forEach(o -> o.getConversations().add(finalConversation));
-        ArrayList<User> lista_uzytkownikow = new ArrayList<>(list_of_users);
-        lista_uzytkownikow.forEach(o -> userRepository.save(o));
-        Message m = new Message(message, new Date(), "nieodczytane", conversation, uzytkownik);
-        messageRepository.save(m);
-        ArrayList<String> list =new ArrayList<>(userRepository.getUserSession(uzytkownicy.get(1).getLogin()));
-        if(!list.isEmpty()){
-
-            for (String s:list) {
-                if(Long.parseLong(s)-System.currentTimeMillis()<0){
-                    sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
-                            "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
-                                    +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+m.getContent());
-                }
-
-            }
-
-        }else {
-
-            sendMail.sendingMail(uzytkownicy.get(1).getEmail(),
-                    "NORGIE - Otrzymales nową wiadomość","Witaj "+uzytkownicy.get(1).getLogin()+",\n Otrzymałeś nową wiadomość od "
-                            +uzytkownicy.get(0).getLogin()+"\n Treść wiadomości: "+m.getContent());
-
-        }
-
-
-        redirectView = new RedirectView("/messages/" + conversation.getConversation_id(), true);
-        return redirectView;
-
-
+        conversationService.sendMessage(optionalOtherUser.get(), message);
+        return new RedirectView("/messages/" + conversationService.findByUsers(currentUser.getUserId(),
+                optionalOtherUser.get().getUserId()).get().getConversationId(), true);
     }
 
-    @PostMapping("changeUserDetails")
+    @PostMapping("/changeUserDetails")
     public RedirectView changeUserDetails(@ModelAttribute("name") String name, @ModelAttribute("surname") String surname, @ModelAttribute("email") String email, RedirectAttributes redir) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-
-        uzytkownik.setEmail(email);
-        Information info = new Information();
-        if (uzytkownik.getInformation() == null) {
-
-            info.setName(name);
-            info.setSurname(surname);
-            info.setUser(uzytkownik);
-
-        } else {
-            info = uzytkownik.getInformation();
-            info.setName(name);
-            info.setSurname(surname);
-        }
-
-        informationRepository.save(info);
-        uzytkownik.setInformation(info);
-        userRepository.save(uzytkownik);
-
-        RedirectView redirectView = new RedirectView("/settings", true);
+        userService.changeUserDetails(authenticationService.getCurrentUser().get(), name, surname, email);
         redir.addFlashAttribute("status", "Zmiany pomyślnie zapisane.");
-        return redirectView;
+        return new RedirectView("/settings", true);
     }
 
-    @PostMapping("changeDescription")
+    @PostMapping("/changeDescription")
     public RedirectView changeDescription(@ModelAttribute("description") String description, RedirectAttributes redir) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-
-        Information info = new Information();
-        if (uzytkownik.getInformation() == null) {
-
-            info.setDescription(description);
-
-
-        } else {
-            info = uzytkownik.getInformation();
-            info.setDescription(description);
-        }
-
-        informationRepository.save(info);
-        uzytkownik.setInformation(info);
-        userRepository.save(uzytkownik);
-
-        RedirectView redirectView = new RedirectView("/settings", true);
+        userService.changeUserDescription(authenticationService.getCurrentUser().get(), description);
         redir.addFlashAttribute("status", "Zmiany pomyślnie zapisane.");
-        return redirectView;
+        return new RedirectView("/settings", true);
     }
 
-    @PostMapping("changePassword")
-    public RedirectView changePassword(@ModelAttribute("currentpassword") String currentpassword, @ModelAttribute("newpassword") String newpassword, @ModelAttribute("newpasswordconfirmation") String newpasswordconfirmation, RedirectAttributes redir) throws MessagingException {
-
+    @PostMapping("/changePassword")
+    public RedirectView changePassword(@ModelAttribute("currentpassword") String currentpassword, @ModelAttribute("newpassword") String newpassword,
+                                       @ModelAttribute("newpasswordconfirmation") String newpasswordconfirmation, RedirectAttributes redir) {
         RedirectView redirectView = new RedirectView("/settings", true);
-
         if (!newpassword.equals(newpasswordconfirmation)) {
             redir.addFlashAttribute("bad_status", "Hasła muszą się powtarzać w dwóch ostatnich polach.");
             return redirectView;
         }
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-
-        if (!passwordEncoder.matches(currentpassword, uzytkownik.getPassword())) {
-
+        User user = authenticationService.getCurrentUser().get();
+        if (!passwordEncoder.matches(currentpassword, user.getPassword())) {
             redir.addFlashAttribute("bad_status", "Twoje obecne hasło się nie zgadza.");
             return redirectView;
-
         }
-
-        uzytkownik.setPassword(passwordEncoder.encode(newpassword));
-        userRepository.save(uzytkownik);
+        userService.changePassword(user, newpassword);
         redir.addFlashAttribute("status", "Twoje hasło zostało zmienione.");
-        sendMail.sendingMail(uzytkownik.getEmail(),"Norgie - Hasło zostało zmienione", "Witaj "+uzytkownik.getLogin()+", \n hasło do twojego konta zostało zmienione.\n\nJeśli nie zostało ono zaktualizowane przez Ciebie, powiadom nas o tym jak najszybciej.");
         return redirectView;
-
     }
 
-    @GetMapping("/settings/liked/page/{id}")
-    public ModelAndView liked(@PathVariable("id") String id){
 
-        ModelAndView modelAndView = new ModelAndView("user_profile_liked");
+    @PostMapping("/admin/xkom")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public @ResponseBody
+    void xkom() {
+        // parsing bot not rdy
+        throw new MethodNotFoundException();
+    }
 
+    @PostMapping("/admin/amazon")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public @ResponseBody
+    void amazon() {
+        // parsing bot not rdy
+        throw new MethodNotFoundException();
+    }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        PagedListHolder page = new PagedListHolder(discountRepository.DiscountsLikedByUser(uzytkownik.getLogin()));
-        page.setPageSize(2); // number of items per page
-        page.setPage(Integer.parseInt(id)-1);
-        modelAndView.addObject("list_of_discounts", page.getPageList());
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("quantity_of_pages", page.getPageCount());
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("number_of_page", Integer.parseInt(id));
-        modelAndView.addObject("next_and_previous", "/settings/liked/page/id");
-        modelAndView.addObject("picked_sort", 3);
-        List<String> listOfAdresses = new ArrayList<>();
-        for (int i = 1; i <= page.getPageCount(); i++) {
-
-            listOfAdresses.add("/settings/liked/page/" + i);
-
-        }
-        modelAndView.addObject("list_of_adresses", listOfAdresses);
+    private ModelAndView getBaseModelAndView(String viewName) {
+        ModelAndView modelAndView = new ModelAndView(viewName);
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
+        modelAndView.addObject("user", authenticationService.getCurrentUser().get());
         return modelAndView;
-
     }
 
-    @GetMapping("/settings/admin/functions")
-    public ModelAndView functions() {
-
-        ModelAndView modelAndView = new ModelAndView("user_admin_profile_functions");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        modelAndView.addObject("user", uzytkownik);
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
+    private ModelAndView getDiscountBaseModelAndView(String viewName, String addressPrefix, PagedListHolder<Discount> discountPages, int currentPage) {
+        ModelAndView modelAndView = getBaseModelAndView(viewName);
+        discountPages.setPageSize(ITEMS_PER_PAGE);
+        discountPages.setPage(currentPage);
+        modelAndView.addObject("list_of_discounts", discountPages.getPageList());
+        modelAndView.addObject("quantity_of_pages", discountPages.getPageCount());
+        modelAndView.addObject("number_of_page", discountPages.getPage() + 1);
+        modelAndView.addObject("next_and_previous", addressPrefix + "/page/id");
+        String[] arrayOfAddresses = new String[discountPages.getPageCount()];
+        for (int i = 0; i < arrayOfAddresses.length; i++) {
+            arrayOfAddresses[i] = addressPrefix + "/page/" + (i + 1);
+        }
+        modelAndView.addObject("array_of_addresses", arrayOfAddresses);
         return modelAndView;
-
-
     }
 
-    @PostMapping("/settings/admin/xkom")
-    public @ResponseBody void xkom(){
-
-        parsingBot.fetchXkom();
-
-
-    }
-
-    @PostMapping("/settings/admin/amazon")
-    public @ResponseBody void amazon(){
-
-        parsingBot.fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
-
-
-    }
-
-    //[0] - status
-    //[1] - informacja o skanowaniu
-    //[2] - ilosc poprawnie przeskanowanych
-    //[3] - blednie przeskanowane promocje
-    //[4] - ilosc dodanych nowych promocji
-    @GetMapping("/settings/admin/status")
-    public @ResponseBody String[] statusXkom(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        String array[] = new String[5];
-        if (ParsingBot.status == 1){
-
-            array[0] = "working";
-            return array;
-
+    private ModelAndView getPostBaseModelAndView(String viewName, int currentPage) {
+        ModelAndView modelAndView = getBaseModelAndView(viewName);
+        PagedListHolder<Post> postPages = new PagedListHolder(postService.findAllByUserIncludeSorting(authenticationService.getCurrentUser().get()));
+        postPages.setPageSize(ITEMS_PER_PAGE);
+        postPages.setPage(currentPage);
+        modelAndView.addObject("list_of_posts", postPages.getPageList());
+        modelAndView.addObject("quantity_of_pages", postPages.getPageCount());
+        modelAndView.addObject("number_of_page", postPages.getPage() + 1);
+        modelAndView.addObject("next_and_previous", "/settings/posts/page/id");
+        String[] arrayOfAddresses = new String[postPages.getPageCount()];
+        for (int i = 0; i < arrayOfAddresses.length; i++) {
+            arrayOfAddresses[i] = "/settings/posts/page/" + (i + 1);
         }
-        if(ParsingBot.status == 0){
-
-            array[0] = "ok";
-            array[1] = ParsingBot.info;
-            array[2] = ParsingBot.good_scan;
-            array[3] = ParsingBot.bad_scan;
-            array[4] = ParsingBot.new_prom;
-            return array;
-
-        }
-
-
-        return array;
-
+        modelAndView.addObject("array_of_addresses", arrayOfAddresses);
+        return modelAndView;
     }
-
 
 }

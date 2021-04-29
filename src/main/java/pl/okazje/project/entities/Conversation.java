@@ -8,10 +8,9 @@ public class Conversation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long conversation_id;
+    private Long conversationId;
 
-
-    @OneToMany(mappedBy="conversation")
+    @OneToMany(mappedBy = "conversation")
     private Set<Message> messages;
 
     @ManyToMany(mappedBy = "conversations")
@@ -20,16 +19,16 @@ public class Conversation {
     public Conversation() {
     }
 
-    public Long getConversation_id() {
-        return conversation_id;
+    public Long getConversationId() {
+        return conversationId;
     }
 
-    public void setConversation_id(Long conversation_id) {
-        this.conversation_id = conversation_id;
+    public void setConversationId(Long conversationId) {
+        this.conversationId = conversationId;
     }
 
     public Set<Message> getMessages() {
-        if (messages==null) return new HashSet<Message>();
+        if (messages == null) return new HashSet<>();
         return messages;
     }
 
@@ -45,70 +44,56 @@ public class Conversation {
         this.users = users;
     }
 
-
-
-    public boolean hasNewMessage(User uzytkownik){
-
+    public boolean hasNewMessage(User user) {
         ArrayList<Message> list = new ArrayList<>(getMessages());
-        if(list.isEmpty()) return false;
-        list.removeIf(o -> (o.getUser().getUser_id()==uzytkownik.getUser_id()));
-        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
-        if(!list.isEmpty()&&list.get(0).getStatus().equals("nieodczytane")) return true;
+        if (list.isEmpty()) return false;
+        list.removeIf(o -> (o.getUser().getUserId().equals(user.getUserId())));
+        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
+        if (!list.isEmpty() && list.get(0).getStatus().equals(Message.Status.NEW)) return true;
         return false;
-
     }
 
-    public Message getOtherUserNewMessage(User uzytkownik){
-
-        ArrayList<Message> list = new ArrayList<>(getMessages());
-        if(list.isEmpty()) return new Message();
-        list.removeIf(o -> (o.getUser().getUser_id()==uzytkownik.getUser_id()));
-        if (list.isEmpty()){
-
-            return new Message();
+    public Optional<Message> getOtherUserNewMessage(User currentUser) {
+        LinkedList<Message> tempMessages = new LinkedList<>(this.messages);
+        if (tempMessages.isEmpty()) return Optional.empty();
+        tempMessages.removeIf(o -> (o.getUser().getUserId() == currentUser.getUserId()));
+        if (tempMessages.isEmpty()) {
+            return Optional.empty();
         }
-        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
-        return list.get(0);
-
+        Collections.sort(tempMessages, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
+        return Optional.of(tempMessages.getFirst());
     }
 
-    public ArrayList<Message> getMessagesSorted(){
-
-
+    public ArrayList<Message> getMessagesSorted() {
         ArrayList<Message> list = new ArrayList<>(this.getMessages());
-        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
+        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
         return list;
-
     }
 
-    public Message getNewestMessageObject(){
-
+    public Message getNewestMessageObject() {
         ArrayList<Message> list = new ArrayList<>(getMessages());
-        if(list.isEmpty()) return new Message();
-        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
+        if (list.isEmpty()) return new Message();
+        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
         return list.get(0);
-
     }
 
-    public User getOtherUser(User uzytkownik){
-
+    public User getOtherUser(User user) {
         ArrayList<User> list = new ArrayList<>(getUsers());
-        list.removeIf(o -> o.getUser_id()==uzytkownik.getUser_id());
+        list.removeIf(o -> o.getUserId() == user.getUserId());
         return list.get(0);
-
     }
 
-    public String getNewestMessage(User uzytkownik){
-
+    public String getNewestMessage(User user) {
         ArrayList<Message> list = new ArrayList<>(getMessages());
-        if(list.isEmpty()) return "";
-        Collections.sort(list, (o1, o2) -> o2.getCr_date().compareTo(o1.getCr_date()));
-        if(list.get(0).getUser().getUser_id()==uzytkownik.getUser_id()){
-
-            return "Ty: "+ list.get(0).getContent();
-
+        if (list.isEmpty()) return "";
+        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
+        if (list.get(0).getUser().getUserId() == user.getUserId()) {
+            return "Ty: " + list.get(0).getContent();
         }
         return list.get(0).getContent();
+    }
 
+    public boolean isUserInConversation(User user) {
+        return this.getUsers().contains(user);
     }
 }

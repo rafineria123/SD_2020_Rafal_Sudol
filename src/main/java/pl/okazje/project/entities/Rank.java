@@ -8,7 +8,7 @@ public class Rank {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer rank_id;
+    private Integer rankId;
     private String name;
 
     @OneToMany(mappedBy="rank")

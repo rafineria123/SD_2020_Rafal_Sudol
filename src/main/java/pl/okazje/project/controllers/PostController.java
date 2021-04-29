@@ -1,199 +1,101 @@
 package pl.okazje.project.controllers;
 
-import javafx.geometry.Pos;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.okazje.project.entities.*;
-import pl.okazje.project.repositories.*;
+import pl.okazje.project.services.*;
 
-import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/post")
 public class PostController {
 
-    @Autowired
-    TagRepository tagRepository;
-    @Autowired
-    ShopRepository shopRepository;
-    @Autowired
-    PostRepository postRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    RatingRepository ratingRepository;
+    private final CommentService commentService;
+    private final PostService postService;
+    private final TagService tagService;
+    private final ShopService shopService;
+    private final RatingService ratingService;
 
-    @GetMapping("/{id}")
-    public ModelAndView postPage(@PathVariable("id") String id){
-
-        ModelAndView modelAndView = new ModelAndView("post");
-
-        if (postRepository.findById(Long.parseLong(id)).get().getStatus().equals(Post.Status.USUNIETE)) {
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication.getAuthorities().stream()
-                    .anyMatch(r -> r.getAuthority().equals("USER") || r.getAuthority().equals("ADMIN"))) {
-
-                User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
-                if (uzytkownik1.hasPost(Long.parseLong(id)) || uzytkownik1.getROLE().equals("ADMIN")) {
-
-                    modelAndView.addObject("list_of_tags", tagRepository.findAll());
-                    modelAndView.addObject("list_of_shops", shopRepository.findAll());
-                    modelAndView.addObject("post", postRepository.findById(Long.parseLong(id)).get());
-                    return modelAndView;
-
-                }
-                modelAndView = new ModelAndView("error");
-                return modelAndView;
-
-
-            } else {
-                modelAndView = new ModelAndView("error");
-                return modelAndView;
-            }
-
-
-        }
-
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-        modelAndView.addObject("post", postRepository.findById(Long.parseLong(id)).get());
-
-        return modelAndView;
-
+    public PostController(RatingService ratingService, CommentService commentService, PostService postService, TagService tagService, ShopService shopService) {
+        this.commentService = commentService;
+        this.postService = postService;
+        this.tagService = tagService;
+        this.shopService = shopService;
+        this.ratingService = ratingService;
     }
 
-
+    @GetMapping("/{id}")
+    public ModelAndView getPostPage(@PathVariable("id") String id) {
+        ModelAndView modelAndView;
+        Optional<Post> postOptional = postService.findById(Long.parseLong(id));
+        if (postOptional.isPresent()) {
+            modelAndView = new ModelAndView("post");
+            modelAndView.addObject("list_of_tags", tagService.findAll());
+            modelAndView.addObject("list_of_shops", shopService.findAll());
+            modelAndView.addObject("post", postOptional.get());
+            return modelAndView;
+        }
+        modelAndView = new ModelAndView("error");
+        return modelAndView;
+    }
 
     @PostMapping("/addcomment")
-    public String addcomment(@ModelAttribute("discountidaddcomment") String discountaddcomment, @ModelAttribute("comment") String comment) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        Comment comment1 = new Comment();
-        comment1.setPost(postRepository.findById(Long.parseLong(discountaddcomment)).get());
-        comment1.setUser(uzytkownik);
-        comment1.setContent(comment);
-        comment1.setCr_date(new Date());
-        commentRepository.save(comment1);
-
-        return "redirect:/post/" + Long.parseLong(discountaddcomment);
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public String addCommentToPost(@ModelAttribute("discountidaddcomment") String postId, @ModelAttribute("comment") String comment) {
+        commentService.addCommentToPost(Long.parseLong(postId), comment);
+        return "redirect:/post/" + postId;
     }
 
     @PostMapping("/removecomment")
-    public String removecomment(@ModelAttribute("comment_id") String comment_id){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
-        Comment comment = commentRepository.findById(Long.parseLong(comment_id)).get();
-        if(uzytkownik1.getROLE().equals("ADMIN")){
-
-
-            comment.setStatus("Usuniete");
-            commentRepository.save(comment);
-
-        }
-
-
-        return "redirect:/post/"+comment.getPost().getPost_id();
-
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String removeCommentFromPost(@ModelAttribute("comment_id") String comment_id, HttpServletRequest request) {
+        commentService.removeComment(Long.parseLong(comment_id));
+        return "redirect:" + request.getHeader("Referer");
     }
 
     @PostMapping("/ratecomment")
-    public String ratecomment(@ModelAttribute("commentid") String commentid) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
-        Comment comment = commentRepository.findById((Long.parseLong(commentid))).get();
-        for (Rating r : comment.getRatings()) {
-
-            if (r.getUser().getUser_id().equals(uzytkownik.getUser_id())) {
-                return "redirect:/discount/" + comment.getPost().getPost_id().toString();
-
-            }
-
-        }
-
-        Rating newrating = new Rating();
-        newrating.setUser(uzytkownik);
-        newrating.setComment(comment);
-        ratingRepository.save(newrating);
-
-        return "redirect:/post/" + comment.getPost().getPost_id().toString();
-
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public String rateComment(@ModelAttribute("commentid") String commentid, HttpServletRequest request) {
+        ratingService.addRatingToComment(Long.parseLong(commentid));
+        return "redirect:" + request.getHeader("Referer");
     }
 
     @GetMapping("/add")
-    public ModelAndView addPost() {
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ModelAndView getAddPostPage() {
         ModelAndView modelAndView = new ModelAndView("add_post");
-        modelAndView.addObject("list_of_tags", tagRepository.findAll());
-        modelAndView.addObject("list_of_shops", shopRepository.findAll());
-
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
         return modelAndView;
     }
 
     @PostMapping("/add")
-    public ModelAndView addPost(@ModelAttribute("content") String content,@ModelAttribute("title") String title,@ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop, RedirectAttributes redir){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik = userRepository.findUserByLogin(authentication.getName());
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ModelAndView addPost(@ModelAttribute("content") String content, @ModelAttribute("title") String title, @ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop,
+                                RedirectAttributes redir) {
         ModelAndView modelAndView;
-
-        Post post = new Post();
-        try {
-            if(title.isEmpty()||content.isEmpty()||tag.isEmpty()||shop.isEmpty()){
-                throw new IllegalArgumentException();
-            }
-            post.setTitle(title);
-            post.setContent(content);
-            post.setCreationdate(new Date());
-            post.setStatus(Post.Status.ZATWIERDZONE);
-            post.setUser(uzytkownik);
-            post.setTag(tagRepository.findById(Long.parseLong(tag)).get());
-            post.setShop(shopRepository.findById(Long.parseLong(shop)).get());
-        }catch (Exception e){
-
-
-            redir.addFlashAttribute("error", true);
-            modelAndView = new ModelAndView(new RedirectView("/post/add"));
+        if (postService.addPost(content, title, tag, shop)) {
+            RedirectView redirectView = new RedirectView("/post/" + postService.findByTitle(title).getPostId());
+            redir.addFlashAttribute("good_status", "Twoj post został dodany.");
+            modelAndView = new ModelAndView(redirectView);
             return modelAndView;
-
-
         }
-
-        postRepository.save(post);
-        RedirectView redirectView = new RedirectView("/post/"+post.getPost_id());
-        redir.addFlashAttribute("good_status", "Twoja post została dodany.");
-        modelAndView =  new ModelAndView(redirectView);
+        redir.addFlashAttribute("error", true);
+        modelAndView = new ModelAndView(new RedirectView("/post/add"));
         return modelAndView;
-
-
-
     }
 
     @PostMapping("/remove")
-    public String removePost(@ModelAttribute("post_id") String post_id){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User uzytkownik1 = userRepository.findUserByLogin(authentication.getName());
-        if(uzytkownik1.getROLE().equals("ADMIN")){
-
-            Post post = postRepository.findById(Long.parseLong(post_id)).get();
-            post.setStatus(Post.Status.USUNIETE);
-            postRepository.save(post);
-
-        }
-
-        return "redirect:/post/"+post_id;
-
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String removePost(@ModelAttribute("post_id") String post_id) {
+        postService.deletePost(Long.parseLong(post_id));
+        return "redirect:/post/" + post_id;
     }
-
-
 
 }

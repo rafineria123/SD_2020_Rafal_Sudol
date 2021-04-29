@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+      xmlns:th="http://thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
@@ -63,7 +63,7 @@
                 </a>
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
-                <a href="/add/discount">
+                <a href="/discount/add">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
                             style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -172,7 +172,7 @@
                                 <div class="comm_disc_date" style="padding-left: 10px">Komentarze:<span class="comm_disc_date_number" th:text="${user.getCommentsAmount()}">300</span></div>
                             </div>
                             <div class="row d-flex justify-content-start" style="padding-left: 15px">
-                                <div class="comm_disc_date">Dołaczyl:<span class="comm_disc_date_number" th:text="${user.getCr_date_formated()}">24.05.2020</span></div>
+                                <div class="comm_disc_date">Dołaczyl:<span class="comm_disc_date_number" th:text="${user.getCreateDateFormatted()}">24.05.2020</span></div>
 
                             </div>
 
@@ -238,10 +238,10 @@
                     </div>
                 </div>
             </div>
-                <div style="width: 100%;padding-left: 15px;padding-right: 15px;padding-bottom: 10px" th:each="discount:${user.getDiscounts()}"  th:if="${!comments_page&&!discount.deletedOrNotReady()}">
+                <div style="width: 100%;padding-left: 15px;padding-right: 15px;padding-bottom: 10px" th:each="discount:${user.getDiscounts()}"  th:if="${!comments_page&&!discount.isDeleted()&&!discount.isAwaiting()}">
                     <div class="row" style="padding-top:10px"></div>
 
-                    <a href="" th:href="@{|/discount/${discount.getDiscount_id()}|}" style="width: 100%">
+                    <a href="" th:href="@{|/discount/${discount.getDiscountId()}|}" style="width: 100%">
                     <div class="row pink_shadow" style="box-shadow: 0px 2px 6px 1px rgb(173, 173, 173);border-radius: 15px;border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
 
                             <div class="d-flex justify-content-start align-items-start flex-column" style="width:35%;padding-left:20px;border-radius: 15px 0px 0px 15px;background-color: #e5e5e6;padding-top: 25px;padding-bottom: 25px">
@@ -255,10 +255,10 @@
 
                                 </div>
                                 <div class="" style="width: fit-content">
-                                    <span style="font-weight: 400;font-size: 13px;">Wygasa:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getExpire_date_formated()}"> 29.10.2020</span>
+                                    <span style="font-weight: 400;font-size: 13px;">Wygasa:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getExpireDateFormatted()}"> 29.10.2020</span>
                                 </div>
                                 <div class="" style="width: fit-content">
-                                    <span style="font-weight: 400;font-size: 13px;">Dodane:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getCreation_date_formated()}"> 29.10.2020</span>
+                                    <span style="font-weight: 400;font-size: 13px;">Dodane:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getCreateDateFormatted()}"> 29.10.2020</span>
                                 </div>
 
                             </div>
@@ -267,7 +267,7 @@
 
                                     <div class="d-flex justify-content-center align-self-center" style="width:30%;height: 66px;padding-left: 10px">
 
-                                        <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                                        <img th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                                     </div>
 
                                     <div class="align-self-center" style="width: 60%">
@@ -288,7 +288,7 @@
             <div class="mix w-100" th:if="${comments_page}" th:each="comment : ${user.getComments()}">
                 <div class="col-12" style="height: 15px;"></div>
 
-                <a href="" class="sort_div_comm" th:href="@{|/discount/${comment.getDiscount().getDiscount_id()}|}" th:if="${comment.getDiscount()!=null}">
+                <a href="" class="sort_div_comm" th:href="@{|/discount/${comment.getDiscount().getDiscountId()}|}" th:if="${comment.getDiscount()!=null}">
                     <div class="sort_div_comm pink_shadow" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);width: 100%;padding-top: 15px;padding-bottom: 15px;
                     border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
                     <div class="row">
@@ -310,8 +310,8 @@
                                             style="font-size:14px;font-weight: 900;color: rgba(145,143,146,0.91);"th:text="${comment.getRatingsSize()}">23</span>
                                     </div>
                                     <div class="d-flex justify-content-end align-items-end" style="width: 10%" sec:authorize="hasAuthority('ADMIN')">
-                                        <form th:action="@{/removecomment}" method="post">
-                                            <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getComment_id()}">
+                                        <form th:action="@{/discount/removecomment}" method="post">
+                                            <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getCommentId()}">
                                             <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style=""></span> </button>
                                         </form>
 
@@ -349,7 +349,7 @@
                     </div>
                 </a>
 
-                <a href="" class="sort_div_comm" th:href="@{|/post/${comment.getPost().getPost_id()}|}" th:if="${comment.getPost()!=null}">
+                <a href="" class="sort_div_comm" th:href="@{|/post/${comment.getPost().getPostId()}|}" th:if="${comment.getPost()!=null}">
                     <div class="sort_div_comm pink_shadow" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);width: 100%;padding-top: 15px;padding-bottom: 15px;
                     border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
                         <div class="row">
@@ -371,8 +371,8 @@
                                                 style="font-size:14px;font-weight: 900;color: rgba(145,143,146,0.91);"th:text="${comment.getRatingsSize()}">23</span>
                                         </div>
                                         <div class="d-flex justify-content-end align-items-end" style="width: 10%" sec:authorize="hasAuthority('ADMIN')">
-                                            <form th:action="@{/removecomment}" method="post">
-                                                <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getComment_id()}">
+                                            <form th:action="@{/discount/removecomment}" method="post">
+                                                <input type="hidden" id="comment_id" name="comment_id" th:value="${comment.getCommentId()}">
                                                 <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style=""></span> </button>
                                             </form>
 
@@ -458,7 +458,7 @@
 
 <div class="modal fade" id="ban" tabindex="-1" role="dialog" aria-labelledby="banTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form th:action="@{/banuser}" method="post"class="modal-content">
+        <form th:action="@{/profile/banuser}" method="post"class="modal-content">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
                     <h5 class="modal-title" id="banLongTitle" style="padding-left: 15px">Zbanuj użytkownika <span th:text="${user.getLogin()}"></span> </h5>
@@ -473,7 +473,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12" style="width:100%">
-                                <input type="hidden" id="user_id" name="user_id" th:value="${user.getUser_id()}">
+                                <input type="hidden" id="user_id" name="user_id" th:value="${user.getUserId()}">
                             <textarea rows="4" COLS="72" id="reason" maxlength="400" name="reason" WRAP="reason" placeholder="Powód banicji" style="border: 1px solid rgba(82,73,98,0.2);
                             padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
                             </div>

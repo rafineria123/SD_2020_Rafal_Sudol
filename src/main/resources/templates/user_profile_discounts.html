@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+      xmlns:th="http://thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
@@ -61,7 +61,7 @@
                 </form>
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
-                <a href="/add/discount">
+                <a href="/discount/add">
                     <button type="button"  class="btn add_button"><span
                             class="fas fa-plus"
                             style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
@@ -237,32 +237,33 @@
                 Moje okazje
             </div>
             <div class="row" style="padding-top: 10px;padding-bottom: 10px;padding-left:10px;background-color: #f4f4f5;border-radius: 6px;">
-
-                <a th:href="|${sort_buttons_prefix +'top-rated'}|" style="padding-left: 7px">
-
-                    <button th:if="${picked_sort == 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                            class="btn sort_button sort_button_activated">Najlepiej oceniane
+                <form th:action="@{/sort}" method="post">
+                    <input type="hidden" id="sort" name="sort" value="rating">
+                    <button th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
+                            class="btn sort_button" style="margin-right: 10px">Najlepiej oceniane
                     </button>
-                    <button th:if="${picked_sort != 1}" type="button" data-mixitup-control data-sort="number-rate:desc"
-                            class="btn sort_button ">Najlepiej oceniane
+                    <button th:if="${#session.getAttribute('sort')!=null&&#session.getAttribute('sort').equals('rating')}" type="submit" data-mixitup-control data-sort="number-rate:desc"
+                            class="btn sort_button sort_button_activated" style="margin-right: 10px">Najlepiej oceniane
                     </button>
-                </a>
-                <a th:href="|${sort_buttons_prefix +'most-comments'}|" style="padding-left: 7px">
-                    <button type="button" th:if="${picked_sort != 2}"  data-mixitup-control data-sort="number-comment:desc"
-                            class="btn sort_button">Najczęściej komentowane
+                </form>
+                <form th:action="@{/sort}" method="post">
+                    <input type="hidden" id="sort" name="sort" value="comments">
+                    <button type="submit" th:if="${#session.getAttribute('sort')==null||!#session.getAttribute('sort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
+                            class="btn sort_button" style="margin-right: 10px">Najczęściej komentowane
                     </button>
-                    <button type="button" th:if="${picked_sort == 2}"  data-mixitup-control data-sort="number-comment:desc"
-                            class="btn sort_button sort_button_activated">Najczęściej komentowane
+                    <button type="submit" th:if="${#session.getAttribute('sort')!=null&&#session.getAttribute('sort').equals('comments')}"  data-mixitup-control data-sort="number-comment:desc"
+                            class="btn sort_button sort_button_activated" style="margin-right: 10px">Najczęściej komentowane
                     </button>
-                </a>
-                <a th:href="|${sort_buttons_prefix +'date'}|" style="padding-left: 7px">
-                    <button type="button" th:if="${picked_sort == 3}" data-mixitup-control data-sort="number-date:asc"
-                            class="btn sort_button sort_button_activated">Najnowsze promocje
-                    </button>
-                    <button type="button" th:if="${picked_sort != 3}" data-mixitup-control data-sort="number-date:asc"
+                </form>
+                <form th:action="@{/sort}" method="post">
+                    <input type="hidden" id="sort" name="sort" value="date">
+                    <button type="submit" th:if="${#session.getAttribute('sort')!=null&&!#session.getAttribute('sort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
                             class="btn sort_button">Najnowsze promocje
                     </button>
-                </a>
+                    <button type="submit" th:if="${#session.getAttribute('sort')==null||#session.getAttribute('sort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
+                            class="btn sort_button sort_button_activated">Najnowsze promocje
+                    </button>
+                </form>
             </div>
             <div style="height: 15px"></div>
             <div class="page-wrap d-flex flex-row align-items-center" th:if="${list_of_discounts.isEmpty()}" style="padding-top: 35px">
@@ -280,7 +281,7 @@
             <div  th:each="discount : ${list_of_discounts}">
                 <div class="row" style="padding-top:10px"></div>
 
-                <a href="" th:href="@{|/discount/${discount.getDiscount_id()}|}" style="width: 100%">
+                <a href="" th:href="@{|/discount/${discount.getDiscountId()}|}" style="width: 100%">
                     <div class="row pink_shadow" style="box-shadow: 0px 2px 6px 1px rgb(173, 173, 173);border-radius: 15px;border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
 
                         <div class="d-flex justify-content-start align-items-start flex-column" style="width:35%;padding-left:20px;border-radius: 15px 0px 0px 15px;background-color: #e5e5e6;padding-top: 25px;padding-bottom: 25px">
@@ -297,7 +298,7 @@
 
                             </div>
                             <div class="" style="width: fit-content">
-                                <span style="font-weight: 400;font-size: 13px;">Dodane:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getCreation_date_formated()}"> 29.10.2020</span>
+                                <span style="font-weight: 400;font-size: 13px;">Dodane:</span><span style="font-weight: 400;font-size: 14px;" th:text="${discount.getCreateDateFormatted()}"> 29.10.2020</span>
                             </div>
 
                         </div>
@@ -306,7 +307,7 @@
 
                                 <div class="d-flex justify-content-center align-self-center" style="width:30%;height: 66px;padding-left: 10px">
 
-                                    <img th:src="${discount.getImage_url()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                                    <img th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                                 </div>
 
                                 <div class="align-self-center" style="width: 60%">
@@ -337,10 +338,10 @@
 
                     <div th:each="i: ${#numbers.sequence(1, quantity_of_pages)}">
                         <li th:if="${i==number_of_page}" class="page-item active" style="padding-left: 5px">
-                            <a class="page-link" th:href="@{|${list_of_adresses.get(i - 1)}|}" th:text="${i}">1</a>
+                            <a class="page-link" th:href="@{|${array_of_addresses[i - 1]}|}" th:text="${i}">1</a>
                         </li>
                         <li th:if="${i!=number_of_page}" class="page-item" style="padding-left: 5px">
-                            <a class="page-link" th:href="@{${list_of_adresses.get(i - 1)}}" th:text="${i}">1</a>
+                            <a class="page-link" th:href="@{${array_of_addresses[i - 1]}}" th:text="${i}">1</a>
                         </li>
                     </div>
 
