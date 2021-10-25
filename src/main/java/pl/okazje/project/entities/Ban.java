@@ -1,9 +1,6 @@
 package pl.okazje.project.entities;
 
-import pl.okazje.project.exceptions.DataTooLongException;
-
 import javax.persistence.*;
-
 
 @Entity
 public class Ban {
@@ -33,9 +30,6 @@ public class Ban {
     }
 
     public void setReason(String reason) {
-        if (reason.length() > 300) {
-            throw new DataTooLongException(reason.substring(0, Math.min(reason.length(), 50)) + "...");
-        }
         this.reason = reason;
     }
 

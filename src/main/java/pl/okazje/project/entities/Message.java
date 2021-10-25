@@ -1,17 +1,13 @@
 package pl.okazje.project.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 public class Message {
-    public enum Status {
-        SEEN,
-        NEW
-    };
+    public enum Status {SEEN, NEW};
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +45,6 @@ public class Message {
     }
 
     public void setContent(String content) {
-        if(content.length()>300) throw new DataTooLongException(content);
         this.content = content;
     }
 

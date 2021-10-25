@@ -1,6 +1,5 @@
 package pl.okazje.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.Conversation;
 import pl.okazje.project.entities.Message;
@@ -35,7 +34,7 @@ public class ConversationService {
         Optional<Conversation> optionalConversation = conversationRepository.findById(id);
         User currentUser = authenticationService.getCurrentUser().get();
         if (optionalConversation.isPresent() && optionalConversation.get().isUserInConversation(currentUser)) {
-            Optional<Message> tempMessage = optionalConversation.get().getOtherUserNewMessage(currentUser);
+            Optional<Message> tempMessage = optionalConversation.get().getSecondUserNewMessage(currentUser);
             if (tempMessage.isPresent()) {
                 Message lastMessage = tempMessage.get();
                 lastMessage.setStatus(Message.Status.SEEN);
@@ -50,12 +49,12 @@ public class ConversationService {
         conversationRepository.save(conversation);
     }
 
-    public void sendMessage(User otherUser, String messageContent){
+    public void sendMessage(User otherUser, String messageContent) {
         User currentUser = authenticationService.getCurrentUser().get();
-        Optional<Conversation> optionalConversation = this.findByUsers(currentUser.getUserId(),otherUser.getUserId());
-        if(!optionalConversation.isPresent()){
+        Optional<Conversation> optionalConversation = this.findByUsers(currentUser.getUserId(), otherUser.getUserId());
+        if (!optionalConversation.isPresent()) {
             Conversation conversation = new Conversation();
-            Set<User> users = new HashSet<User>(){{
+            Set<User> users = new HashSet<User>() {{
                 add(currentUser);
                 add(otherUser);
             }};
@@ -69,7 +68,7 @@ public class ConversationService {
         Message message = new Message();
         message.setStatus(Message.Status.NEW);
         message.setContent(messageContent);
-        message.setConversation(this.findByUsers(currentUser.getUserId(),otherUser.getUserId()).get());
+        message.setConversation(this.findByUsers(currentUser.getUserId(), otherUser.getUserId()).get());
         message.setCreateDate(new Date());
         message.setUser(currentUser);
         messageService.save(message);
@@ -81,13 +80,13 @@ public class ConversationService {
 
     }
 
-    public String[][] getConversationBody(Long id){
+    public String[][] getConversationBody(Long id) {
         Optional<Conversation> optionalConversation = this.findById(id);
-        if(!optionalConversation.isPresent()){
+        if (!optionalConversation.isPresent()) {
             throw new ConversationNotFoundException(id);
         }
         User currentUser = authenticationService.getCurrentUser().get();
-        User otherUser = optionalConversation.get().getOtherUser(currentUser);
+        User otherUser = optionalConversation.get().getSecondUser(currentUser);
         ArrayList<Message> list = this.findByUsers(currentUser.getUserId(), otherUser.getUserId()).get().getMessagesSorted();
         String array[][] = new String[list.size()][2];
         for (int i = 0; i < list.size(); i++) {
@@ -98,31 +97,33 @@ public class ConversationService {
         return array;
     }
 
-    public String[][] getAllCurrentUserConversationsAsArray(){
+    public String[][] getAllCurrentUserConversationsAsArray() {
         User currentUser = authenticationService.getCurrentUser().get();
         ArrayList<Conversation> list = new ArrayList<>(this.getAllCurrentUserConversations());
         String array[][] = new String[list.size()][6];
         for (int i = 0; i < list.size(); i++) {
-            array[i][0] = list.get(i).getOtherUser(currentUser).getLogin();
-            array[i][1] = list.get(i).getNewestMessage(currentUser);
-            if (list.get(i).hasNewMessage(currentUser)) array[i][2] = "NEW";
-            if (!list.get(i).hasNewMessage(currentUser)) array[i][2] = "SEEN";
+            array[i][0] = list.get(i).getSecondUser(currentUser).getLogin();
+            try {
+                Message newestMessage = list.get(i).getNewestMessage();
+                array[i][1] = newestMessage.getUser().equals(currentUser) ? "Ty: " + newestMessage.getContent() : newestMessage.getContent();
+            } catch (NullPointerException e) {
+                array[i][1] = "Ta konwersacja nie ma żadnych wiadomości.";
+            }
+            array[i][2] = list.get(i).hasNewMessage(currentUser) ? "NEW" : "SEEN";
             array[i][3] = list.get(i).getConversationId().toString();
-            array[i][4] = list.get(i).getOtherUser(currentUser).getLogin();
-            array[i][5] = list.get(i).getNewestMessage(currentUser);
         }
         return array;
     }
 
-    public Set<Conversation> getAllCurrentUserConversations(){
+    public Set<Conversation> getAllCurrentUserConversations() {
         return authenticationService.getCurrentUser().get().getConversations();
     }
 
-    public int countConversationsWithNewMessagesForCurrentUser(){
+    public int countConversationsWithNewMessagesForCurrentUser() {
         Set<Conversation> conversationSet = new HashSet<>(getAllCurrentUserConversations());
         int count = 0;
-        for(Conversation conversation : conversationSet){
-            if(conversation.hasNewMessage(authenticationService.getCurrentUser().get())){
+        for (Conversation conversation : conversationSet) {
+            if (conversation.hasNewMessage(authenticationService.getCurrentUser().get())) {
                 count++;
             }
         }

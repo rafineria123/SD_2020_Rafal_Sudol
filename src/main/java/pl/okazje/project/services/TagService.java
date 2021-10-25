@@ -24,4 +24,6 @@ public class TagService {
     public Optional<Tag> findById(Long id){
         return this.tagRepository.findById(id);
     }
+
+    public Optional<Tag> findFirstByName(String name){return this.tagRepository.findFirstByName(name);}
 }

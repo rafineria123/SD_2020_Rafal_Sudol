@@ -1,14 +1,10 @@
 package pl.okazje.project.entities;
 
-import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Post {
@@ -73,7 +69,6 @@ public class Post {
     }
 
     public void setTitle(String title) {
-        if (title.length() > 500) throw new DataTooLongException(title);
         this.title = title;
     }
 
@@ -82,7 +77,6 @@ public class Post {
     }
 
     public void setContent(String content) {
-        if (content.length() > 1500) throw new DataTooLongException(content);
         this.content = content;
     }
 
@@ -111,6 +105,7 @@ public class Post {
     }
 
     public Set<Comment> getComments() {
+        if(comments == null) return new HashSet<Comment>();
         return comments;
     }
 
@@ -126,7 +121,7 @@ public class Post {
         }
     }
 
-    public String getCreation_date_formated() {
+    public String getCreateDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
         String s = formatter.format(this.createDate);
         return s;

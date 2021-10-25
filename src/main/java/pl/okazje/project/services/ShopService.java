@@ -25,4 +25,6 @@ public class ShopService {
         return this.shopRepository.findById(id);
     }
 
+    public Optional<Shop> findFirstByName(String name){return this.shopRepository.findFirstByName(name);}
+
 }

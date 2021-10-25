@@ -1,17 +1,11 @@
 package pl.okazje.project.entities;
 
 import org.apache.commons.math3.util.Precision;
-import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 /*
    promocja =cena pierwotna -> cena obecna
@@ -74,7 +68,6 @@ public class Discount {
     }
 
     public void setTitle(String title) {
-        if(title.length()>200)throw new DataTooLongException(title);
         this.title = title;
     }
 
@@ -83,7 +76,6 @@ public class Discount {
     }
 
     public void setContent(String content) {
-        if(content.length()>1500)throw new DataTooLongException(content);
         this.content = content;
     }
 
@@ -95,7 +87,6 @@ public class Discount {
     }
 
     public void setImageUrl(String imageUrl) {
-        if(imageUrl.length()>500)throw new DataTooLongException(imageUrl);
         this.imageUrl = imageUrl;
     }
 
@@ -106,7 +97,6 @@ public class Discount {
     public String getExpireDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
         String s = formatter.format(this.expireDate);
-
         return s;
     }
 
@@ -146,7 +136,6 @@ public class Discount {
     }
 
     public void setDiscountLink(String discountLink) {
-        if(discountLink.length()>500) throw new DataTooLongException(discountLink);
         this.discountLink = discountLink;
     }
 
@@ -195,6 +184,7 @@ public class Discount {
     }
 
     public Set<Comment> getComments() {
+        if(comments == null) return new HashSet<Comment>();
         return comments;
     }
 
@@ -243,9 +233,9 @@ public class Discount {
     }
 
     public ArrayList<Comment> getCommentsSorted(){
-        ArrayList<Comment> list = new ArrayList(getComments());
-        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
-        return  list;
+        ArrayList<Comment> comments = new ArrayList(getComments());
+        Collections.sort(comments, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
+        return  comments;
     }
 
     public int getRatingsSize() {

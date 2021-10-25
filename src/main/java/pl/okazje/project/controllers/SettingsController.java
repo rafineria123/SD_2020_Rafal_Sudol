@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import pl.okazje.project.DiscountFinder;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.services.*;
 
 import javax.el.MethodNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Controller
@@ -29,8 +32,9 @@ public class SettingsController {
     private final UserService userService;
     private final ConversationService conversationService;
     private final PasswordEncoder passwordEncoder;
+    private final DiscountFinder discountFinder;
 
-    public SettingsController(ShopService shopService, TagService tagService, AuthenticationService authenticationService, DiscountService discountService, PostService postService, UserService userService, ConversationService conversationService, PasswordEncoder passwordEncoder) {
+    public SettingsController(ShopService shopService, TagService tagService, AuthenticationService authenticationService, DiscountService discountService, PostService postService, UserService userService, ConversationService conversationService, PasswordEncoder passwordEncoder, DiscountFinder discountFinder) {
         this.shopService = shopService;
         this.tagService = tagService;
         this.authenticationService = authenticationService;
@@ -39,6 +43,7 @@ public class SettingsController {
         this.userService = userService;
         this.conversationService = conversationService;
         this.passwordEncoder = passwordEncoder;
+        this.discountFinder = discountFinder;
     }
 
 
@@ -162,16 +167,41 @@ public class SettingsController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody
     void xkom() {
-        // parsing bot not rdy
-        throw new MethodNotFoundException();
+        discountFinder.fetchXkom();
     }
 
     @PostMapping("/admin/amazon")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody
     void amazon() {
-        // parsing bot not rdy
-        throw new MethodNotFoundException();
+        discountFinder.fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
+    }
+
+    @GetMapping("/admin/status")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public @ResponseBody String[] statusXkom(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String array[] = new String[5];
+        if (discountFinder.status == DiscountFinder.Status.WORKING){
+
+            array[0] = "working";
+            return array;
+
+        }
+        if(discountFinder.status == DiscountFinder.Status.SUCCESS){
+
+            array[0] = "success";
+            return array;
+
+        }
+        if(discountFinder.status == DiscountFinder.Status.ERROR){
+            array[0] = "error";
+            return array;
+        }
+
+
+        return array;
+
     }
 
     private ModelAndView getBaseModelAndView(String viewName) {

@@ -1,7 +1,5 @@
 package pl.okazje.project.entities;
 
-import pl.okazje.project.exceptions.DataTooLongException;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -39,7 +37,6 @@ public class Information implements Serializable {
     }
 
     public void setName(String name) {
-        if (name.length() > 15) throw new DataTooLongException(name);
         this.name = name;
     }
 
@@ -48,7 +45,6 @@ public class Information implements Serializable {
     }
 
     public void setSurname(String surname) {
-        if (surname.length() > 15) throw new DataTooLongException(surname);
         this.surname = surname;
     }
 
@@ -57,7 +53,6 @@ public class Information implements Serializable {
     }
 
     public void setDescription(String description) {
-        if (description.length() > 300) throw new DataTooLongException(description);
         this.description = description;
     }
 

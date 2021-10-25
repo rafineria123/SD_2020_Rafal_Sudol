@@ -395,9 +395,18 @@
 
 
                 }
-                if (obj[0] == "ok") {
+                if (obj[0] == "success") {
 
-                    document.getElementById("status_text").innerHTML="<span>"+obj[1]+"</span>"+"<span>"+obj[2]+"</span>"+"<span>"+obj[3]+"</span>"+"<span>"+obj[4]+"</span>";
+                    document.getElementById("status_text").innerHTML="<span>Skanowanie zakończone sukcesem.</span>";
+                    document.getElementById("status_row").style.display = 'flex';
+                    document.getElementById("loader").style.visibility = 'hidden';
+                    document.getElementById("scanners").style.visibility = 'visible';
+
+
+                }
+                if (obj[0] == "error") {
+
+                    document.getElementById("status_text").innerHTML="<span>Błąd podczas skanowania.</span>";
                     document.getElementById("status_row").style.display = 'flex';
                     document.getElementById("loader").style.visibility = 'hidden';
                     document.getElementById("scanners").style.visibility = 'visible';

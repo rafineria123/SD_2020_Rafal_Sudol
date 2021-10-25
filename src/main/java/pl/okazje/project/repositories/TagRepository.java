@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface TagRepository extends CrudRepository<Tag, Long> {
 
-    Tag findFirstByName(String name);
+    Optional<Tag> findFirstByName(String name);
     List<Tag> findAll();
     Optional<Tag> findById(Long id);
 

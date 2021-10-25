@@ -1,7 +1,5 @@
 package pl.okazje.project.entities;
 
-import pl.okazje.project.exceptions.DataTooLongException;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -13,10 +11,13 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
+
     @Column(length = 700)
     private String content;
+
     @Enumerated(EnumType.STRING)
     private Status status = Status.POSTED;
+
     private Date createDate;
 
     @OneToMany(mappedBy="comment")
@@ -47,17 +48,11 @@ public class Comment {
     }
 
     public String getContent() {
-        if (this.getStatus()==null||this.getStatus().equals(Status.POSTED)){
+        // TODO: change content in view when comment status is DELETED
             return content;
-        }else{
-            return "<Komentarz usunięty przez Moderatora>";
-        }
     }
 
     public void setContent(String content) {
-        if(content.length()>700){
-            throw new DataTooLongException(content.substring(0, Math.min(content.length(), 50))+"...");
-        }
         this.content = content;
     }
 
@@ -119,8 +114,7 @@ public class Comment {
 
     public int getDateDifference(){
         Date date = new Date();
-        long diff = date.getTime() - createDate.getTime();
-
+        long diff = date.getTime() - this.createDate.getTime();
         return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
