@@ -1,5 +1,7 @@
 package pl.okazje.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.math3.util.Precision;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import java.util.*;
    kod = przecena online
 */
 @Entity
+@JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="@discountId")
 public class Discount {
 
     public enum Type{KUPONNORMALNY, KUPONPROCENT, KODPROCENT, KODNORMALNY, OBNIZKA}

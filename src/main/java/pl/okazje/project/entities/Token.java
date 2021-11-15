@@ -2,6 +2,9 @@ package pl.okazje.project.entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -11,6 +14,7 @@ import java.util.Date;
 
 
 @Entity
+@JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="@tokenId")
 public class Token implements Serializable {
 
     private static final int EXPIRATION = 60 * 24;

@@ -1,28 +1,40 @@
 'use strict';
+import { Router} from 'react-router';
+import routes from './routes';
 
-const React = require('react'); // <1>
-const ReactDOM = require('react-dom'); // <2>
-const client = require('./client'); // <3>
+const React = require('react');
+const ReactDOM = require('react-dom');
+const client = require('./client');
 
-class App extends React.Component { // <1>
+
+class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {employees: []};
     }
 
+    componentDidMount() {
+        client({method: 'GET', path: '/api/'}).done(response => {
+            this.setState({employees: response.entity._embedded.employees});
+        });
+    }
 
 
-    render() { // <3>
+
+    render() {
         return (
             <div>
-                ddd
+                <img src="/images/discount_1.jpg" onError="this.src='/images/default_discount_image.png'"
+                     className="item_image_discount"></img>
             </div>
         )
     }
 }
 
+export default App;
+
 ReactDOM.render(
-    <App />,
+    <Router routes={routes}/>,
     document.getElementById('react')
-)
+);

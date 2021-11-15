@@ -1,12 +1,16 @@
 package pl.okazje.project.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Entity
+@JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="@postId")
 public class Post {
 
     public enum Status {DELETED, AWAITING, ACCEPTED}
