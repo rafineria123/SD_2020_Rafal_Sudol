@@ -22,13 +22,13 @@ import pl.okazje.project.services.UserService;
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -58,82 +58,85 @@ public class DiscountFinder {
     public void fetchXkom(){
 
         status = Status.WORKING;
-        try {
-            Thread t = new Thread(() -> {
-                Document allItemsPage = null;
-                try {
-                    allItemsPage = Jsoup.connect("https://www.x-kom.pl/bestsellery?f%5BproductMarks%5D%5BCrossedPrice%5D=1&f%5BproductMarks%5D%5BPromotion%5D=1&f%5BproductMarks%5D%5BLastItems%5D=1").get();
-                } catch (IOException e) {
-                    status = Status.ERROR;
-                    return;
-                }
-                Element allItemsContainer = allItemsPage.getElementById("listing-container");
-                Elements allItems = allItemsContainer.children();
-                for (Element item : allItems) {
-                    String itemLink = "https://www.x-kom.pl" + item.selectFirst("a[href]").attr("href");
 
-                    Document itemPage = null;
+            Thread t = new Thread(() -> {
+                    Document allItemsPage = null;
                     try {
-                        itemPage = Jsoup.connect(itemLink).get();
+                        allItemsPage = Jsoup.connect("https://www.x-kom.pl/bestsellery?f%5BproductMarks%5D%5BCrossedPrice%5D=1&f%5BproductMarks%5D%5BPromotion%5D=1&f%5BproductMarks%5D%5BLastItems%5D=1").get();
                     } catch (IOException e) {
                         status = Status.ERROR;
                         return;
                     }
+                    Element allItemsContainer = allItemsPage.getElementById("listing-container");
+                    Elements allItems = allItemsContainer.children();
+                    for (Element item : allItems) {
+                        String itemLink = "https://www.x-kom.pl" + item.selectFirst("a[href]").attr("href");
 
-                    Element itemContainer = itemPage.getElementById("app");
-                    String title = itemContainer.selectFirst("h1").text();
-                    String cutTitle = title.substring(0, Math.min(title.length(), 80));
-                    String imageUrl = item.selectFirst("img[src$=.jpg]").attr("src");
-                    imageUrl = imageUrl.replaceAll("mini", "medium");
-                    Elements itemPrices = itemContainer.getElementsByClass("fZcwdN").get(0).children();
-                    String oldPrice = itemPrices.get(0).text();
-                    String currentPrice = itemPrices.get(1).text();
-                    Elements itemDescription = itemContainer.getElementsByClass("product-description");
-                    String description = "";
-                    for (Element e : itemDescription.select("p")) {
-                        description = description + e.text() + "\n";
+                        Document itemPage = null;
+                        try {
+                            itemPage = Jsoup.connect(itemLink).get();
+                        } catch (IOException e) {
+                            status = Status.ERROR;
+                            return;
+                        }
+                        try {
+
+                            Element itemContainer = itemPage.getElementById("app");
+                            String title = itemContainer.selectFirst("h1").text();
+                            String cutTitle = title.substring(0, Math.min(title.length(), 80));
+                            String imageUrl = item.selectFirst("img[src$=.jpg]").attr("src");
+                            imageUrl = imageUrl.replaceAll("mini", "medium");
+                            Elements itemPrices = itemContainer.getElementsByClass("fZcwdN").get(0).children();
+                            String oldPrice = itemPrices.get(0).text();
+                            String currentPrice = itemPrices.get(1).text();
+                            Elements itemDescription = itemContainer.getElementsByClass("product-description");
+                            String description = "";
+                            for (Element e : itemDescription.select("p")) {
+                                description = description + e.text() + "\n";
+                            }
+                            description = description.substring(0, Math.min(description.length(), 500));
+                            description = description.substring(0, description.lastIndexOf('.') + 1);
+
+                            if (!discountRepository.findFirstByTitleEquals(cutTitle).isPresent()) {
+                                Discount discount = new Discount();
+                                discount.setImageUrl(imageUrl);
+                                discount.setShop(shopService.findFirstByName("X-kom").get());
+                                discount.setTag(tagService.findFirstByName("Elektronika").get());
+                                discount.setUser(userService.findFirstByLogin("xkom").get());
+                                discount.setStatus(Discount.Status.ACCEPTED);
+                                Date dt = new Date();
+                                Calendar c = Calendar.getInstance();
+                                c.setTime(dt);
+                                c.add(Calendar.DATE, 2);
+                                dt = c.getTime();
+                                discount.setExpireDate(dt);
+                                discount.setCreateDate(new Date());
+                                discount.setTitle(cutTitle);
+                                discount.setShipmentPrice(0.0);
+                                discount.setDiscountLink(itemLink);
+                                discount.setContent(description);
+                                oldPrice = oldPrice.replaceAll("[^\\d,.]", "");
+                                oldPrice = oldPrice.replaceAll(",", ".");
+                                currentPrice = currentPrice.replaceAll("[^\\d,.]", "");
+                                currentPrice = currentPrice.replaceAll(",", ".");
+
+                                discount.setCurrentPrice(Double.parseDouble(currentPrice));
+                                discount.setOldPrice(Double.parseDouble(oldPrice));
+
+                                discountRepository.save(discount);
+
+                            }
+                        }catch (Exception e){
+                            continue;
+                        }
+
+
                     }
-                    description = description.substring(0, Math.min(description.length(), 500));
-                    description = description.substring(0, description.lastIndexOf('.') + 1);
+                    status = Status.SUCCESS;
 
-                    if (!discountRepository.findFirstByTitleEquals(cutTitle).isPresent()) {
-                        Discount discount = new Discount();
-                        discount.setImageUrl(imageUrl);
-                        discount.setShop(shopService.findFirstByName("X-kom").get());
-                        discount.setTag(tagService.findFirstByName("Elektronika").get());
-                        discount.setUser(userService.findFirstByLogin("xkom").get());
-                        discount.setStatus(Discount.Status.ACCEPTED);
-                        Date dt = new Date();
-                        Calendar c = Calendar.getInstance();
-                        c.setTime(dt);
-                        c.add(Calendar.DATE, 2);
-                        dt = c.getTime();
-                        discount.setExpireDate(dt);
-                        discount.setCreateDate(new Date());
-                        discount.setTitle(cutTitle);
-                        discount.setShipmentPrice(0.0);
-                        discount.setDiscountLink(itemLink);
-                        discount.setContent(description);
-                        oldPrice = oldPrice.replaceAll("[^\\d,.]", "");
-                        oldPrice = oldPrice.replaceAll(",", ".");
-                        currentPrice = currentPrice.replaceAll("[^\\d,.]", "");
-                        currentPrice = currentPrice.replaceAll(",", ".");
-
-                        discount.setCurrentPrice(Double.parseDouble(currentPrice));
-                        discount.setOldPrice(Double.parseDouble(oldPrice));
-
-                        discountRepository.save(discount);
-
-                    }
-
-
-                }
-                status = Status.SUCCESS;
             });
             t.start();
-        }catch (Exception e){
-            status = Status.ERROR;
-        }
+
     }
 
     public void fetchAmazon(String linkToPage, String category){
@@ -166,7 +169,7 @@ public class DiscountFinder {
                         docfirst = Jsoup.parse(myPage.asXml());
                         div = docfirst.getElementById("productDescription");
                         String desc = div.select("p").first().text();
-                        div = docfirst.getElementById("priceblock_ourprice");
+                        div = docfirst.getElementById("price_inside_buybox");
                         String pricetofix = div.text();
                         pricetofix = pricetofix.replaceAll("[^a-zA-Z0-9 .,]|(?<!\\d)[.,]|[.,](?!\\d)", "");
                         pricetofix = pricetofix.replaceAll(",", ".");
@@ -185,11 +188,12 @@ public class DiscountFinder {
                             dt = c.getTime();
                             discount.setExpireDate(dt);
                             discount.setCreateDate(new Date());
-                            discount.setTitle(translate("en", "pl", title));
+                            String wronglyCodedTitle = translate("en", "pl", title);
+                            discount.setTitle(wronglyCodedTitle);
                             discount.setShipmentPrice(0.0);
                             discount.setDiscountLink(linktodiscount);
-                            discount.setContent(translate("en", "pl", desc));
-
+                            String wronglyCodedContent = translate("en", "pl", desc);
+                            discount.setContent(wronglyCodedContent);
                             discount.setCurrentPrice(price);
                             discount.setOldPrice(discount.getCurrentPrice() * 1.3);
                             discountRepository.save(discount);
@@ -232,7 +236,26 @@ public class DiscountFinder {
             response.append(inputLine);
         }
         in.close();
+
         return response.toString();
     }
+
+    public static String convert(String value, String fromEncoding, String toEncoding) throws UnsupportedEncodingException {
+        return new String(value.getBytes(fromEncoding), toEncoding);
+    }
+
+    public static String charset(String value, String charsets[]) throws UnsupportedEncodingException {
+        String probe = StandardCharsets.UTF_8.name();
+        for(String c : charsets) {
+            Charset charset = Charset.forName(c);
+            if(charset != null) {
+                if(value.equals(convert(convert(value, charset.name(), probe), probe, charset.name()))) {
+                    return c;
+                }
+            }
+        }
+        return StandardCharsets.UTF_8.name();
+    }
+
 
 }

@@ -350,6 +350,7 @@ public class DiscountService {
                                String shipment_price, String content, String expire_date, String typeBase, String typeSuffix, MultipartFile file){
 
         if(content.isEmpty()||title.isEmpty()||url.isEmpty()||tag.isEmpty()||shop.isEmpty()||expire_date.isEmpty()||typeBase.isEmpty()||file.isEmpty()){
+            System.out.println("pusto");
             return false;
         }
         if(typeBase.equals("OBNIZKA")){
@@ -363,12 +364,12 @@ public class DiscountService {
             }
         }
 
-        Path currentPath = Paths.get("");
-        Path absolutePath = currentPath.toAbsolutePath();
-        File transferFile = new File(absolutePath+"/src/main/resources/static/images/" + file.getOriginalFilename());
+
+        File transferFile = new File("C:/zdjeciaprojekt/images/" + file.getOriginalFilename());
         try {
             file.transferTo(transferFile);
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
 
@@ -409,6 +410,7 @@ public class DiscountService {
                 return false;
             }
         }catch (NumberFormatException e){
+            e.printStackTrace();
             return false;
         }
         discount.setContent(content);
@@ -418,6 +420,7 @@ public class DiscountService {
         try {
             discount.setExpireDate(new SimpleDateFormat("yyyy-MM-dd").parse(expire_date));
         } catch (ParseException e) {
+            e.printStackTrace();
             return false;
         }
         discount.setStatus(Discount.Status.AWAITING);

@@ -1,5 +1,6 @@
 package pl.okazje.project.events;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import pl.okazje.project.entities.User;
@@ -12,7 +13,8 @@ import java.util.UUID;
 public class RegistrationListener implements
         ApplicationListener<OnRegistrationCompleteEvent> {
 
-
+    @Value("${HOST_ADDRESS}")
+    private String hostAddress;
     private final UserService userService;
     private final EmailService mailSender;
 

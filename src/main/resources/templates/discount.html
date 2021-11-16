@@ -477,7 +477,7 @@
     function share(){
 
         const el = document.createElement('textarea');
-        el.value = "http://54.227.52.123/discount/"+"[[${discount.getDiscountId()}]]";
+        el.value = "[[${@environment.getProperty('HOST_ADDRESS')}]]"+"/discount/"+"[[${discount.getDiscountId()}]]";
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');

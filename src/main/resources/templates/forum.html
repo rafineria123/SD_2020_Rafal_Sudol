@@ -156,10 +156,10 @@
         <form th:action="@{/forum/sort}" method="post">
             <input type="hidden" id="sort" name="sort" value="date">
             <button type="submit" th:if="${#session.getAttribute('forumSort')!=null&&!#session.getAttribute('forumSort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
-                    class="btn sort_button">Najnowsze promocje
+                    class="btn sort_button">Najnowsze posty
             </button>
             <button type="submit" th:if="${#session.getAttribute('forumSort')==null||#session.getAttribute('forumSort').equals('date')}" data-mixitup-control data-sort="number-date:asc"
-                    class="btn sort_button sort_button_activated">Najnowsze promocje
+                    class="btn sort_button sort_button_activated">Najnowsze posty
             </button>
         </form>
     </div>
