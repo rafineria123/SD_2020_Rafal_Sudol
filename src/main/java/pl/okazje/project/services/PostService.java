@@ -82,7 +82,15 @@ public class PostService {
             return false;
         }
         post.setUser(tempUser.get());
-        this.save(post);
+        try {
+            this.save(post);
+        }catch (Exception e){
+            if(e.toString().contains("MysqlDataTruncation")){
+                return false;
+            }
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 

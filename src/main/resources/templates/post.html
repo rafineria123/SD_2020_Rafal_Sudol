@@ -55,9 +55,9 @@
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
                 <a href="/settings">
-                    <button style="" class="btn add_button"
+                    <button style="min-width: 140px" class="btn add_button"
                             aria-haspopup="true" aria-expanded="false"
-                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
+                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span><span th:text="${#authentication.getPrincipal().getUsername().toUpperCase()}">TWOJE KONTO</span>
                     </button>
                 </a>
             </div>
@@ -189,7 +189,7 @@
                     </div>
 
                     <div class="row" style="padding-right: 25px;padding-left:25px">
-                        <div class="col-md-12" th:text="${post.getContent()}" style="padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                        <div class="col-md-12" th:utext="${post.getContent()}" style="padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
                              word-wrap: break-word;">
                             Przetworniki neodymowe o średnicy 50 mm zapewniają szeroki i jednocześnie wiernie
                             odwzorowany zakres dźwięków
@@ -220,7 +220,7 @@
             <div class="row d-flex justify-content-around align-self-center" style="padding-top: 5px;padding-bottom: 5px;">
                 <div class=""
                      style="font-family: Calibri;font-weight: 900;font-size: 17px;color: rgba(22, 21, 21, 0.91);padding-top: 3px;"th:text="|KOMENTARZE (${post.getCommentsSize()}): |">
-                    KOMENTARZE (53):
+                    ODPOWIEDZI (53):
                 </div>
 
                 <div class=""

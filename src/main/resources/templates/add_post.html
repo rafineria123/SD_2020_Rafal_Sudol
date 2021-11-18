@@ -14,6 +14,8 @@
           integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
           crossorigin="anonymous">
     <link type="text/css" href="/css/add_discount.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/js/texteditor/src/richtext.min.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-xl navbar-light bg-light"
@@ -53,10 +55,11 @@
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
                 <a href="/settings">
-                    <button style="" class="btn add_button"
+                    <button style="min-width: 140px" class="btn add_button"
                             aria-haspopup="true" aria-expanded="false"
-                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
+                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span><span th:text="${#authentication.getPrincipal().getUsername().toUpperCase()}">TWOJE KONTO</span>
                     </button>
+                    <span class="msg_badge" style="visibility: hidden;" id="badge">1</span>
                 </a>
             </div>
             <div class="d-flex align-items-center" style="padding-top: 10px">
@@ -127,7 +130,7 @@
     <div class="col-xl-6 offset-xl-3" style="padding-left: 0px;padding-right: 0px">
         <div class="alert">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-            <strong>Wypełnij wszystkie pola!</strong>
+            <strong>Wypełnij wszystkie pola poprawnymi danymi!</strong>
         </div>
     </div>
 </div>
@@ -205,7 +208,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <textarea rows="15" cols="33" style="width: 100%;border-radius: 6px" minlength="3" maxlength="1499" id="content" name="content"></textarea>
+                        <textarea class="content" rows="15" cols="33" style="width: 100%;border-radius: 6px" minlength="3" maxlength="1499" id="content" name="content"></textarea>
                     </div>
                 </div>
 
@@ -235,7 +238,149 @@
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script src="/js/texteditor/src/jquery.richtext.min.js"></script>
 <script>
+    $('.content').richText({
+
+        // text formatting
+        bold: true,
+        italic: true,
+        underline: true,
+
+        // text alignment
+        leftAlign: true,
+        centerAlign: true,
+        rightAlign: true,
+        justify: true,
+
+        // lists
+        ol: true,
+        ul: true,
+
+        // title
+        heading: true,
+
+        // fonts
+        fonts: true,
+        fontList: [
+            "Arial",
+            "Arial Black",
+            "Comic Sans MS",
+            "Courier New",
+            "Geneva",
+            "Georgia",
+            "Helvetica",
+            "Impact",
+            "Lucida Console",
+            "Tahoma",
+            "Times New Roman",
+            "Verdana"
+        ],
+        fontColor: true,
+        fontSize: true,
+
+        // uploads
+        imageUpload: true,
+
+        // media
+        videoEmbed: true,
+
+        // link
+        urls: true,
+
+        // tables
+        table: true,
+
+        // code
+        removeStyles: true,
+        code: true,
+
+        // colors
+        colors: [],
+
+        // dropdowns
+        fileHTML: '',
+        imageHTML: '',
+
+        // translations
+        translations: {
+            'title': 'Title',
+            'white': 'White',
+            'black': 'Black',
+            'brown': 'Brown',
+            'beige': 'Beige',
+            'darkBlue': 'Dark Blue',
+            'blue': 'Blue',
+            'lightBlue': 'Light Blue',
+            'darkRed': 'Dark Red',
+            'red': 'Red',
+            'darkGreen': 'Dark Green',
+            'green': 'Green',
+            'purple': 'Purple',
+            'darkTurquois': 'Dark Turquois',
+            'turquois': 'Turquois',
+            'darkOrange': 'Dark Orange',
+            'orange': 'Orange',
+            'yellow': 'Yellow',
+            'imageURL': 'Image URL',
+            'fileURL': 'File URL',
+            'linkText': 'Link text',
+            'url': 'URL',
+            'size': 'Size',
+            'responsive': 'Responsive',
+            'text': 'Text',
+            'openIn': 'Open in',
+            'sameTab': 'Same tab',
+            'newTab': 'New tab',
+            'align': 'Align',
+            'left': 'Left',
+            'center': 'Center',
+            'right': 'Right',
+            'rows': 'Rows',
+            'columns': 'Columns',
+            'add': 'Add',
+            'pleaseEnterURL': 'Please enter an URL',
+            'videoURLnotSupported': 'Video URL not supported',
+            'pleaseSelectImage': 'Please select an image',
+            'pleaseSelectFile': 'Please select a file',
+            'bold': 'Bold',
+            'italic': 'Italic',
+            'underline': 'Underline',
+            'alignLeft': 'Align left',
+            'alignCenter': 'Align centered',
+            'alignRight': 'Align right',
+            'addOrderedList': 'Add ordered list',
+            'addUnorderedList': 'Add unordered list',
+            'addHeading': 'Add Heading/title',
+            'addFont': 'Add font',
+            'addFontColor': 'Add font color',
+            'addFontSize' : 'Add font size',
+            'addImage': 'Add image',
+            'addVideo': 'Add video',
+            'addFile': 'Add file',
+            'addURL': 'Add URL',
+            'addTable': 'Add table',
+            'removeStyles': 'Remove styles',
+            'code': 'Show HTML code',
+            'undo': 'Undo',
+            'redo': 'Redo',
+            'close': 'Close'
+        },
+
+        // privacy
+        youtubeCookies: false,
+
+        // developer settings
+        useSingleQuotes: false,
+        height: 0,
+        heightPercentage: 0,
+        id: "",
+        class: "",
+        useParagraph: false,
+        maxlength: 300,
+        callback: undefined,
+        useTabForNext: false
+    });
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }

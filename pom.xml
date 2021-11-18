@@ -115,9 +115,15 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>3.4.2.Final</version>
+		</dependency>
 
 
-    </dependencies>
+
+	</dependencies>
 
 	<build>
 		<plugins>

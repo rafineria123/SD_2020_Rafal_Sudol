@@ -1,6 +1,7 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -350,7 +351,6 @@ public class DiscountService {
                                String shipment_price, String content, String expire_date, String typeBase, String typeSuffix, MultipartFile file){
 
         if(content.isEmpty()||title.isEmpty()||url.isEmpty()||tag.isEmpty()||shop.isEmpty()||expire_date.isEmpty()||typeBase.isEmpty()||file.isEmpty()){
-            System.out.println("pusto");
             return false;
         }
         if(typeBase.equals("OBNIZKA")){
@@ -430,7 +430,12 @@ public class DiscountService {
         }
         discount.setUser(tempUser.get());
         discount.setImageUrl("images/" + file.getOriginalFilename());
-        discountRepository.save(discount);
+        try {
+            discountRepository.save(discount);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 

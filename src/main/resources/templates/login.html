@@ -56,9 +56,9 @@
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
                 <a href="/settings">
-                    <button style="" class="btn add_button"
+                    <button style="min-width: 140px" class="btn add_button"
                             aria-haspopup="true" aria-expanded="false"
-                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
+                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span><span th:text="${#authentication.getPrincipal().getUsername().toUpperCase()}">TWOJE KONTO</span>
                     </button>
                 </a>
             </div>
