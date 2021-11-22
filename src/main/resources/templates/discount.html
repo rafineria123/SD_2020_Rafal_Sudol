@@ -176,7 +176,7 @@
                         <button type="button" onclick="share()" class="remove_button popup" style=""> <span class="popuptext" id="myPopup">
                             Dodano do schowka!</span><span class="over_items far fa-share-square" style="padding-bottom: 5px"></span> </button>
 
-                    <form th:action="@{/discount/editdiscount}" method="post" th:if="${discount.getUser().getLogin()==#authentication.getPrincipal().getUsername()}" >
+                    <form th:action="@{/discount/editdiscount}" sec:authorize="hasAnyAuthority('USER', 'ADMIN')" method="post" th:if="${discount.getUser().getLogin()==#authentication.getPrincipal().getUsername()}" >
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
                         <button type="submit" class="remove_button" > <span class="over_items fas fa-edit" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
                     </form>
