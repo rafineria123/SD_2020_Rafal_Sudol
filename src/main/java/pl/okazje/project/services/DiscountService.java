@@ -5,10 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pl.okazje.project.entities.Discount;
-import pl.okazje.project.entities.Shop;
-import pl.okazje.project.entities.Tag;
-import pl.okazje.project.entities.User;
+import pl.okazje.project.entities.*;
 import pl.okazje.project.repositories.DiscountRepository;
 
 import javax.servlet.http.HttpSession;
@@ -439,19 +436,122 @@ public class DiscountService {
         return true;
     }
 
+    public boolean editDiscount(String discountId, String url, String tag, String shop, String title, String old_price, String current_price,
+                               String shipment_price, String content, String expire_date, String typeBase, String typeSuffix, MultipartFile file){
+
+        if(content.isEmpty()||title.isEmpty()||url.isEmpty()||tag.isEmpty()||shop.isEmpty()||expire_date.isEmpty()||typeBase.isEmpty()){
+            return false;
+        }
+        if(typeBase.equals("OBNIZKA")){
+            if(current_price.isEmpty()||old_price.isEmpty()||shipment_price.isEmpty()){
+                return false;
+            }
+        }
+        if(typeBase.equals("KOD")||typeBase.equals("KUPON")){
+            if(old_price.isEmpty()||typeSuffix.isEmpty()){
+                return false;
+            }
+        }
+        System.out.println(file.getName());
+        if(!file.isEmpty()){
+        File transferFile = new File("C:/zdjeciaprojekt/images/" + file.getOriginalFilename());
+        try {
+            file.transferTo(transferFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        }
+
+        Discount discount = this.findById(Long.parseLong(discountId)).get();
+        try {
+            if (typeBase.equals("OBNIZKA")) {
+                discount.setCurrentPrice(Double.parseDouble(current_price));
+                discount.setOldPrice(Double.parseDouble(old_price));
+                discount.setShipmentPrice(Double.parseDouble(shipment_price));
+                discount.setType(Discount.Type.OBNIZKA);
+            }
+
+            if (typeBase.equals("KOD")) {
+                discount.setOldPrice(Double.parseDouble(old_price));
+                if (typeSuffix.equals("%")) {
+                    discount.setType(Discount.Type.KODPROCENT);
+                }
+                if (typeSuffix.equals("PLN")) {
+                    discount.setType(Discount.Type.KODNORMALNY);
+                }
+            }
+
+            if (typeBase.equals("KUPON")) {
+                discount.setOldPrice(Double.parseDouble(old_price));
+                if (typeSuffix.equals("%")) {
+                    discount.setType(Discount.Type.KUPONPROCENT);
+                }
+                if (typeSuffix.equals("PLN")) {
+                    discount.setType(Discount.Type.KUPONNORMALNY);
+                }
+            }
+            Optional<Tag> optionalTag = tagService.findById(Long.parseLong(tag));
+            Optional<Shop> optionalShop = shopService.findById(Long.parseLong(shop));
+            if(optionalShop.isPresent()&&optionalTag.isPresent()){
+                discount.setTag(optionalTag.get());
+                discount.setShop(optionalShop.get());
+            }else {
+                return false;
+            }
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+            return false;
+        }
+        discount.setContent(content);
+        discount.setCreateDate(new Date());
+        discount.setDiscountLink(url);
+        discount.setTitle(title);
+        try {
+            discount.setExpireDate(new SimpleDateFormat("yyyy-MM-dd").parse(expire_date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+        discount.setStatus(Discount.Status.AWAITING);
+        Optional<User> tempUser = authenticationService.getCurrentUser();
+        if(!tempUser.isPresent()){
+            return false;
+        }
+        discount.setUser(tempUser.get());
+        if(!file.isEmpty()){
+            discount.setImageUrl("images/" + file.getOriginalFilename());
+        }
+        try {
+            discountRepository.save(discount);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public void acceptDiscount(Long id){
         Discount disc = this.findById(id).get();
         disc.setStatus(Discount.Status.ACCEPTED);
         discountRepository.save(disc);
-        emailService.sendEmail(disc.getUser().getEmail(), "NORGIE - Okazja zatwierdzona", "Twoja okazja została zweryfikowana i zatwierdzona," +
+        emailService.sendEmail(disc.getUser().getEmail(), "NORGIE - Okazja zatwierdzona", "Twoja promocja została zweryfikowana i zatwierdzona," +
                 " juz niedługo pojawi się na stronie głównej.\n" +
                 "Tytuł okazji: " + disc.getTitle());
     }
 
-    public void deleteDiscount(Long id){
+    public void deleteDiscount(Long id, String reason){
         Discount disc = this.findById(id).get();
         disc.setStatus(Discount.Status.DELETED);
+        Ban ban = new Ban();
+        ban.setReason(reason);
+        disc.setBan(ban);
         discountRepository.save(disc);
+        emailService.sendEmail(disc.getUser().getEmail(), "NORGIE - Okazja odrzucona",  "Twoja promocja nie spełnia wymogów naszej strony i" +
+                        " została zablokowana przez moderatora.\n"+
+                "Tytuł okazji:  "+disc.getTitle() +"\n"+
+                "Powód: " +disc.getBan().getReason()
+                );
     }
 
 }

@@ -38,6 +38,10 @@ public class Discount {
     @Enumerated(EnumType.STRING)
     private Type type = Type.OBNIZKA;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "banId")
+    private Ban ban;
+
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
@@ -85,6 +89,13 @@ public class Discount {
         }
         return "/" +this.imageUrl;
     }
+    public Ban getBan() {
+        return ban;
+    }
+
+    public void setBan(Ban ban) {
+        this.ban = ban;
+    }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
@@ -120,6 +131,13 @@ public class Discount {
         }
     }
 
+    public boolean isBelongingToUser(User user){
+        if(user.getDiscounts().contains(this)){
+            return true;
+        }
+        return false;
+    }
+
     public String getCreateDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
         String s = formatter.format(this.createDate);
@@ -152,6 +170,9 @@ public class Discount {
     }
 
     public Double getOldPrice() {
+        if(oldPrice==null){
+            return 0.0;
+        }
         return Precision.round(oldPrice,2);
     }
 
@@ -160,6 +181,9 @@ public class Discount {
     }
 
     public Double getCurrentPrice() {
+        if(currentPrice==null){
+            return 0.0;
+        }
         return Precision.round(currentPrice,2);
     }
 
@@ -168,6 +192,9 @@ public class Discount {
     }
 
     public Double getShipmentPrice() {
+        if(shipmentPrice==null){
+            return 0.0;
+        }
         return Precision.round(shipmentPrice,2);
     }
 

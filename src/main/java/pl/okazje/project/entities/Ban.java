@@ -12,6 +12,8 @@ public class Ban {
     private String reason;
     @OneToOne(mappedBy = "ban")
     private User user;
+    @OneToOne(mappedBy = "ban")
+    private Discount discount;
 
     public Ban() {
         this.reason = "Powód nie podany.";
@@ -30,7 +32,11 @@ public class Ban {
     }
 
     public void setReason(String reason) {
-        this.reason = reason;
+        if(reason.isEmpty()){
+            this.reason = "Powód nie podany.";
+        }else{
+            this.reason = reason;
+        }
     }
 
     public User getUser() {
@@ -39,5 +45,13 @@ public class Ban {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
     }
 }

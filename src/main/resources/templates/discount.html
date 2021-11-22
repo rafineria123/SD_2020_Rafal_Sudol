@@ -127,7 +127,7 @@
                         <div class="col-12" style="padding-left: 0;padding-right: 0">
                             <div class="bad_alert">
                                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                <strong>Ta promocja została usunięta przez Moderatora.</strong>
+                                <strong>Ta promocja została zablokowana przez Moderatora. Powód: <span th:text="${discount.getBan().getReason()}"></span></strong>
                             </div>
                         </div>
                     </div>
@@ -176,16 +176,16 @@
                         <button type="button" onclick="share()" class="remove_button popup" style=""> <span class="popuptext" id="myPopup">
                             Dodano do schowka!</span><span class="over_items far fa-share-square" style="padding-bottom: 5px"></span> </button>
 
+                    <form th:action="@{/discount/editdiscount}" method="post" th:if="${discount.getUser().getLogin()==#authentication.getPrincipal().getUsername()}" >
+                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
+                        <button type="submit" class="remove_button" > <span class="over_items fas fa-edit" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
+                    </form>
 
                     <form th:action="@{/discount/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('AWAITING')}" sec:authorize="hasAuthority('ADMIN')">
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
-                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
+                        <button type="submit" class="remove_button" > <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
                     </form>
-
-                    <form th:action="@{/discount/removediscount}" method="post" sec:authorize="hasAuthority('ADMIN')">
-                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
-                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
-                    </form>
+                        <button type="submit" sec:authorize="hasAuthority('ADMIN')" class="remove_button" data-toggle="modal" data-target="#ban" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
 
 
 
@@ -447,6 +447,69 @@
 
     </div>
 
+</div>
+
+<div sec:authorize="hasAuthority('ADMIN')" class="modal fade" id="ban" tabindex="-1" role="dialog" aria-labelledby="banTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form th:if="${discount.isAwaiting()}" th:action="@{/discount/removediscount}" method="post" class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                    <h5 class="modal-title" id="banLongTitle" style="padding-left: 15px">Odrzuć tę promocje </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row" style="padding-left: 36px">
+                            <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Powód</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="width:100%">
+                                <input type="hidden" name="discount_id" th:value="${discount.getDiscountId()}">
+                                <textarea rows="4" COLS="72" id="reason" maxlength="400" name="reason" WRAP="reason" placeholder="powod blokady" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px;background-color:#f80d57 ">Odrzuć promocje</button>
+                </div>
+            </div>
+        </form>
+        <form th:if="${!discount.isAwaiting()}" th:action="@{/discount/removediscount}" method="post" class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                    <h5 class="modal-title" id="banLongTitle" style="padding-left: 15px">Zablokuj tę okazje </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row" style="padding-left: 36px">
+                            <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Powód</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="width:100%">
+                                <input type="hidden" name="discount_id" th:value="${discount.getDiscountId()}">
+                                <textarea rows="4" COLS="72" id="reason" maxlength="400" name="reason" WRAP="reason" placeholder="powod blokady" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px;background-color:#f80d57 ">Zablokuj promocje</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
