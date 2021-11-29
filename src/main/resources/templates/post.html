@@ -121,13 +121,13 @@
 <div class="container-fluid">
     <div class="row d-flex justify-content-center" style="width: 100%;margin: 0">
         <div class="col-8">
-            <div class="row" style="padding: 0;" th:if="${post.getStatus().toString().equals('USUNIETE')}">
+            <div class="row" style="padding: 0;" th:if="${post.getStatus().toString().equals('DELETED')}">
                 <div style="padding: 15px;width: 100%">
                     <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
                         <div class="col-12" style="padding-left: 0;padding-right: 0">
                             <div class="bad_alert">
                                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                <strong>Ten post został usunięty przez Moderatora.</strong>
+                                <strong>Ten post został usunięty przez Moderatora. Powód: <span th:text="${post.getBan().getReason()}"></span></strong>
                             </div>
                         </div>
                     </div>
@@ -149,10 +149,7 @@
                 </div>
                 <div class="col-2 d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
 
-                    <form th:action="@{/post/remove}" method="post">
-                        <input type="hidden" id="discount_id" name="post_id" th:value="${post.getPostId()}">
-                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
-                    </form>
+                    <button type="submit" sec:authorize="hasAuthority('ADMIN')" class="remove_button" data-toggle="modal" data-target="#ban" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
 
 
 
@@ -348,6 +345,39 @@
 
 </div>
 
+</div>
+<div sec:authorize="hasAuthority('ADMIN')" class="modal fade" id="ban" tabindex="-1" role="dialog" aria-labelledby="banTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form th:action="@{/post/remove}" method="post" class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                    <h5 class="modal-title" id="banLongTitle" style="padding-left: 15px">Zablokuj ten post </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row" style="padding-left: 36px">
+                            <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Powód</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="width:100%">
+                                <input type="hidden" name="post_id" th:value="${post.getPostId()}">
+                                <textarea rows="4" COLS="72" id="reason" maxlength="400" name="reason" WRAP="reason" placeholder="powod blokady" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px;background-color:#f80d57 ">Zablokuj Post</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>

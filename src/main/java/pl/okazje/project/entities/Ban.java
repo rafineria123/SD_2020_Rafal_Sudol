@@ -14,6 +14,8 @@ public class Ban {
     private User user;
     @OneToOne(mappedBy = "ban")
     private Discount discount;
+    @OneToOne(mappedBy = "ban")
+    private Post post;
 
     public Ban() {
         this.reason = "Powód nie podany.";

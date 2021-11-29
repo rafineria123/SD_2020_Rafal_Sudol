@@ -520,9 +520,10 @@
     let title = "[[${discount.getTitle()}]]";
     document.querySelector('#title').value = title;
 
-    let desc = "[[${discount.getContent()}]]";
+    let desc = "[[${text}]]";
     desc = decodeHtml(desc);
     document.getElementsByClassName("richText-editor")[0].insertAdjacentHTML('afterBegin', desc);
+    document.getElementsByClassName("richText-editor")[0].focus();
 
     let date = "[[${discount.getExpireDateFormatted()}]]".split('.');
     document.getElementById("expire_date").value = "20"+date[2]+"-"+date[1]+"-"+date[0];

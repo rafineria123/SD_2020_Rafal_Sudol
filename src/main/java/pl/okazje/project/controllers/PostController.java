@@ -93,8 +93,8 @@ public class PostController {
 
     @PostMapping("/remove")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public String removePost(@ModelAttribute("post_id") String post_id) {
-        postService.deletePost(Long.parseLong(post_id));
+    public String removePost(@ModelAttribute("post_id") String post_id, @ModelAttribute("reason") String reason) {
+        postService.deletePost(Long.parseLong(post_id), reason);
         return "redirect:/post/" + post_id;
     }
 

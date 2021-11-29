@@ -164,7 +164,7 @@
         </form>
     </div>
 
-    <div class="d-flex" style="padding-bottom: 15px;width: 95%" th:each="post : ${list_of_posts}">
+    <div class="d-flex" style="padding-bottom: 15px;width: 95%" th:each="post : ${list_of_posts}" th:if="${!post.isDeleted()&&!post.isAwaiting()}">
         <!--/*@thymesVar id="post" type="pl.okazje.project.entities.Post"*/-->
         <div class="item_div d-flex flex-column align-items-center justify-content-center pink_shadow" style="width: 100%;height:fit-content;border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
 

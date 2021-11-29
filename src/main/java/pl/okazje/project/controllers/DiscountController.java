@@ -135,6 +135,8 @@ public class DiscountController {
             modelAndView.addObject("list_of_tags", tagService.findAll());
             modelAndView.addObject("list_of_shops", shopService.findAll());
             modelAndView.addObject("discount", discount.get());
+            modelAndView.addObject("text", discount.get().getContent().replace("\n", "<br>").replace("\r", "<br>"));
+
             return modelAndView;
         }
         modelAndView = new ModelAndView("error");

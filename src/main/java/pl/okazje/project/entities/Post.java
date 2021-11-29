@@ -26,6 +26,10 @@ public class Post {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "banId")
+    private Ban ban;
+
     @ManyToOne
     @JoinColumn(name = "tagId", nullable = false)
     private Tag tag;
@@ -107,6 +111,14 @@ public class Post {
     public Set<Comment> getComments() {
         if(comments == null) return new HashSet<Comment>();
         return comments;
+    }
+
+    public Ban getBan() {
+        return ban;
+    }
+
+    public void setBan(Ban ban) {
+        this.ban = ban;
     }
 
     public void setComments(Set<Comment> comments) {
