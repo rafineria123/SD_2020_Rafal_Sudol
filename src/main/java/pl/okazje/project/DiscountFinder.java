@@ -150,6 +150,7 @@ public class DiscountFinder {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                System.out.println(docfirst.nodeName());
                 Element div = docfirst.getElementById("zg-ordered-list");
                 Elements divy = div.children();
                 int counter = 0;
