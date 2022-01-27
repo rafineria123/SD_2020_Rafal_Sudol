@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.okazje.project.DiscountFinder;
+import pl.okazje.project.utills.DiscountFinder;
 import pl.okazje.project.entities.*;
 import pl.okazje.project.services.*;
 
-import javax.el.MethodNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;

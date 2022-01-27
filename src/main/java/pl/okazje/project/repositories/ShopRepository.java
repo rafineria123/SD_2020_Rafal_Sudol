@@ -17,3 +17,4 @@ public interface ShopRepository extends CrudRepository<Shop, Long> {
     Optional<Shop> findById(Long id);
 
 }
+

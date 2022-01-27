@@ -1,4 +1,4 @@
-package pl.okazje.project;
+package pl.okazje.project.utills;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

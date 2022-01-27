@@ -1,4 +1,4 @@
-package pl.okazje.project;
+package pl.okazje.project.utills;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;

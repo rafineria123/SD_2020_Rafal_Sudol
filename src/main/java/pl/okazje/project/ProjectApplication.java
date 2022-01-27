@@ -10,9 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 @SpringBootApplication
-//@ComponentScan({"pl.okazje.project.configurations","pl.okazje.project.controllers","pl.okazje.project.repositories","pl.okazje.project.entities"})
-//@EnableJpaRepositories("pl.okazje.project.repositories")
-//@EntityScan("entities")
 @EnableJdbcHttpSession
 public class ProjectApplication {
 

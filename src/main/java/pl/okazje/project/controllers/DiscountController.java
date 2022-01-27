@@ -18,19 +18,7 @@ import java.util.Optional;
 @RequestMapping("/discount")
 public class DiscountController {
 
-    private final CommentService commentService;
-    private final DiscountService discountService;
-    private final TagService tagService;
-    private final ShopService shopService;
-    private final RatingService ratingService;
 
-    public DiscountController(CommentService commentService, DiscountService discountService, TagService tagService, ShopService shopService, RatingService ratingService) {
-        this.commentService = commentService;
-        this.discountService = discountService;
-        this.tagService = tagService;
-        this.shopService = shopService;
-        this.ratingService = ratingService;
-    }
 
     @GetMapping("/{id}")
     public ModelAndView getDiscountPage(@PathVariable("id") Long id) {
@@ -45,6 +33,20 @@ public class DiscountController {
         }
         modelAndView = new ModelAndView("error");
         return modelAndView;
+    }
+
+    private final CommentService commentService;
+    private final DiscountService discountService;
+    private final TagService tagService;
+    private final ShopService shopService;
+    private final RatingService ratingService;
+
+    public DiscountController(CommentService commentService, DiscountService discountService, TagService tagService, ShopService shopService, RatingService ratingService) {
+        this.commentService = commentService;
+        this.discountService = discountService;
+        this.tagService = tagService;
+        this.shopService = shopService;
+        this.ratingService = ratingService;
     }
 
     @GetMapping("/add")
