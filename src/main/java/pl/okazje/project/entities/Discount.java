@@ -1,17 +1,18 @@
 package pl.okazje.project.entities;
 
 import org.apache.commons.math3.util.Precision;
-import pl.okazje.project.exceptions.DataTooLongException;
+import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.bans.DiscountBan;
+import pl.okazje.project.entities.comments.Comment;
+import pl.okazje.project.entities.comments.DiscountComment;
+import pl.okazje.project.entities.ratings.DiscountRating;
+import pl.okazje.project.entities.ratings.Rating;
+import pl.okazje.project.entities.User;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 /*
    promocja =cena pierwotna -> cena obecna
@@ -44,15 +45,19 @@ public class Discount {
     @Enumerated(EnumType.STRING)
     private Type type = Type.OBNIZKA;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "banId")
+    private DiscountBan ban;
+
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "discount")
-    private Set<Comment> comments;
+    private Set<DiscountComment> comments;
 
     @OneToMany(mappedBy = "discount")
-    private Set<Rating> ratings;
+    private Set<DiscountRating> ratings;
 
     @ManyToOne
     @JoinColumn(name = "tagId", nullable = false)
@@ -74,7 +79,6 @@ public class Discount {
     }
 
     public void setTitle(String title) {
-        if(title.length()>200)throw new DataTooLongException(title);
         this.title = title;
     }
 
@@ -83,7 +87,6 @@ public class Discount {
     }
 
     public void setContent(String content) {
-        if(content.length()>1500)throw new DataTooLongException(content);
         this.content = content;
     }
 
@@ -93,9 +96,15 @@ public class Discount {
         }
         return "/" +this.imageUrl;
     }
+    public DiscountBan getBan() {
+        return ban;
+    }
+
+    public void setBan(DiscountBan ban) {
+        this.ban = ban;
+    }
 
     public void setImageUrl(String imageUrl) {
-        if(imageUrl.length()>500)throw new DataTooLongException(imageUrl);
         this.imageUrl = imageUrl;
     }
 
@@ -106,7 +115,6 @@ public class Discount {
     public String getExpireDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
         String s = formatter.format(this.expireDate);
-
         return s;
     }
 
@@ -130,6 +138,13 @@ public class Discount {
         }
     }
 
+    public boolean isBelongingToUser(User user){
+        if(user.getDiscounts().contains(this)){
+            return true;
+        }
+        return false;
+    }
+
     public String getCreateDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
         String s = formatter.format(this.createDate);
@@ -146,7 +161,6 @@ public class Discount {
     }
 
     public void setDiscountLink(String discountLink) {
-        if(discountLink.length()>500) throw new DataTooLongException(discountLink);
         this.discountLink = discountLink;
     }
 
@@ -163,6 +177,9 @@ public class Discount {
     }
 
     public Double getOldPrice() {
+        if(oldPrice==null){
+            return 0.0;
+        }
         return Precision.round(oldPrice,2);
     }
 
@@ -171,6 +188,9 @@ public class Discount {
     }
 
     public Double getCurrentPrice() {
+        if(currentPrice==null){
+            return 0.0;
+        }
         return Precision.round(currentPrice,2);
     }
 
@@ -179,6 +199,9 @@ public class Discount {
     }
 
     public Double getShipmentPrice() {
+        if(shipmentPrice==null){
+            return 0.0;
+        }
         return Precision.round(shipmentPrice,2);
     }
 
@@ -194,19 +217,20 @@ public class Discount {
         this.user = user;
     }
 
-    public Set<Comment> getComments() {
+    public Set<DiscountComment> getComments() {
+        if(comments == null) return new HashSet<DiscountComment>();
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(Set<DiscountComment> comments) {
         this.comments = comments;
     }
 
-    public Set<Rating> getRatings() {
+    public Set<DiscountRating> getRatings() {
         return ratings;
     }
 
-    public void setRatings(Set<Rating> ratings) {
+    public void setRatings(Set<DiscountRating> ratings) {
         this.ratings = ratings;
     }
 
@@ -243,9 +267,9 @@ public class Discount {
     }
 
     public ArrayList<Comment> getCommentsSorted(){
-        ArrayList<Comment> list = new ArrayList(getComments());
-        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
-        return  list;
+        ArrayList<Comment> comments = new ArrayList(getComments());
+        Collections.sort(comments, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
+        return  comments;
     }
 
     public int getRatingsSize() {

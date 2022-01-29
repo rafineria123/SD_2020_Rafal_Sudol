@@ -1,8 +1,9 @@
 package pl.okazje.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.okazje.project.entities.Comment;
+import pl.okazje.project.entities.comments.Comment;
+import pl.okazje.project.entities.comments.DiscountComment;
+import pl.okazje.project.entities.comments.PostComment;
 import pl.okazje.project.repositories.CommentRepository;
 
 import java.util.Date;
@@ -32,7 +33,7 @@ public class CommentService {
     }
 
     public void addCommentToDiscount(Long id, String content){
-        Comment comment1 = new Comment();
+        DiscountComment comment1 = new DiscountComment();
         comment1.setDiscount(discountService.findById(id).get());
         comment1.setUser(authenticationService.getCurrentUser().get());
         comment1.setContent(content);
@@ -41,7 +42,7 @@ public class CommentService {
     }
 
     public void addCommentToPost(Long id, String content){
-        Comment comment1 = new Comment();
+        PostComment comment1 = new PostComment();
         comment1.setPost(postService.findById(id).get());
         comment1.setUser(authenticationService.getCurrentUser().get());
         comment1.setContent(content);

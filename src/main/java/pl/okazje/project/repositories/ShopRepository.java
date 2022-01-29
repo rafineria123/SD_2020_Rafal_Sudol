@@ -12,8 +12,9 @@ import java.util.Optional;
 @Repository
 public interface ShopRepository extends CrudRepository<Shop, Long> {
 
-    Shop findFirstByName(String name);
+    Optional<Shop> findFirstByName(String name);
     List<Shop> findAll();
     Optional<Shop> findById(Long id);
 
 }
+

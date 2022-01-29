@@ -55,9 +55,9 @@
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
                 <a href="/settings">
-                    <button style="" class="btn add_button"
+                    <button style="min-width: 140px" class="btn add_button"
                             aria-haspopup="true" aria-expanded="false"
-                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
+                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span><span th:text="${#authentication.getPrincipal().getUsername().toUpperCase()}">TWOJE KONTO</span>
                     </button>
                 </a>
             </div>
@@ -121,13 +121,13 @@
 <div class="container-fluid">
     <div class="row d-flex justify-content-center" style="width: 100%;margin: 0">
         <div class="col-8">
-            <div class="row" style="padding: 0;" th:if="${post.getStatus().toString().equals('USUNIETE')}">
+            <div class="row" style="padding: 0;" th:if="${post.getStatus().toString().equals('DELETED')}">
                 <div style="padding: 15px;width: 100%">
                     <div class="row" style="padding-left: 0px;padding-right:0px;margin-left:0px;margin-right:0px;width: 100%">
                         <div class="col-12" style="padding-left: 0;padding-right: 0">
                             <div class="bad_alert">
                                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                <strong>Ten post został usunięty przez Moderatora.</strong>
+                                <strong>Ten post został usunięty przez Moderatora. Powód: <span th:text="${post.getBan().getReason()}"></span></strong>
                             </div>
                         </div>
                     </div>
@@ -149,10 +149,7 @@
                 </div>
                 <div class="col-2 d-flex justify-content-end align-items-end" style="" sec:authorize="hasAuthority('ADMIN')">
 
-                    <form th:action="@{/post/remove}" method="post">
-                        <input type="hidden" id="discount_id" name="post_id" th:value="${post.getPostId()}">
-                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
-                    </form>
+                    <button type="submit" sec:authorize="hasAuthority('ADMIN')" class="remove_button" data-toggle="modal" data-target="#ban" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
 
 
 
@@ -189,7 +186,7 @@
                     </div>
 
                     <div class="row" style="padding-right: 25px;padding-left:25px">
-                        <div class="col-md-12" th:text="${post.getContent()}" style="padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                        <div class="col-md-12" th:utext="${post.getContent()}" style="padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
                              word-wrap: break-word;">
                             Przetworniki neodymowe o średnicy 50 mm zapewniają szeroki i jednocześnie wiernie
                             odwzorowany zakres dźwięków
@@ -204,7 +201,7 @@
                     <div class="row" style="padding-bottom: 10px;padding-right: 40px;padding-left:40px">
                         <div class="d-flex justify-content-end" style="width: 100%">
                             <span style="font-weight: 500;font-size: 17px;font-family: Calibri;color: rgba(145,143,146,0.91);">Dodano:<span
-                                    style="font-weight: 900;font-size: 19px;font-family: Calibri;color: #1e7e34;"th:text="${post.getCreation_date_formated()}">25.06.20</span></span>
+                                    style="font-weight: 900;font-size: 19px;font-family: Calibri;color: #1e7e34;"th:text="${post.getCreateDateFormatted()}">25.06.20</span></span>
 
                         </div>
                     </div>
@@ -220,7 +217,7 @@
             <div class="row d-flex justify-content-around align-self-center" style="padding-top: 5px;padding-bottom: 5px;">
                 <div class=""
                      style="font-family: Calibri;font-weight: 900;font-size: 17px;color: rgba(22, 21, 21, 0.91);padding-top: 3px;"th:text="|KOMENTARZE (${post.getCommentsSize()}): |">
-                    KOMENTARZE (53):
+                    ODPOWIEDZI (53):
                 </div>
 
                 <div class=""
@@ -348,6 +345,39 @@
 
 </div>
 
+</div>
+<div sec:authorize="hasAuthority('ADMIN')" class="modal fade" id="ban" tabindex="-1" role="dialog" aria-labelledby="banTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form th:action="@{/post/remove}" method="post" class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                    <h5 class="modal-title" id="banLongTitle" style="padding-left: 15px">Zablokuj ten post </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row" style="padding-left: 36px">
+                            <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Powód</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="width:100%">
+                                <input type="hidden" name="post_id" th:value="${post.getPostId()}">
+                                <textarea rows="4" COLS="72" id="reason" maxlength="400" name="reason" WRAP="reason" placeholder="powod blokady" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px;background-color:#f80d57 ">Zablokuj Post</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>

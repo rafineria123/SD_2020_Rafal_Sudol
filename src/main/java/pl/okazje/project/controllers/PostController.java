@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.Post;
 import pl.okazje.project.services.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -93,8 +93,8 @@ public class PostController {
 
     @PostMapping("/remove")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public String removePost(@ModelAttribute("post_id") String post_id) {
-        postService.deletePost(Long.parseLong(post_id));
+    public String removePost(@ModelAttribute("post_id") String post_id, @ModelAttribute("reason") String reason) {
+        postService.deletePost(Long.parseLong(post_id), reason);
         return "redirect:/post/" + post_id;
     }
 

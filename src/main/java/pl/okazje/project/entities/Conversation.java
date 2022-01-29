@@ -45,16 +45,22 @@ public class Conversation {
     }
 
     public boolean hasNewMessage(User user) {
-        ArrayList<Message> list = new ArrayList<>(getMessages());
-        if (list.isEmpty()) return false;
-        list.removeIf(o -> (o.getUser().getUserId().equals(user.getUserId())));
-        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
-        if (!list.isEmpty() && list.get(0).getStatus().equals(Message.Status.NEW)) return true;
+        if(user == null){
+            throw new IllegalArgumentException("User argument is a null.");
+        }
+        ArrayList<Message> userMessages = new ArrayList<>(this.getMessages());
+        if (userMessages.isEmpty()) return false;
+        userMessages.removeIf(o -> (o.getUser().getUserId().equals(user.getUserId())));
+        Collections.sort(userMessages, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
+        if (!userMessages.isEmpty() && userMessages.get(0).getStatus().equals(Message.Status.NEW)) return true;
         return false;
     }
 
-    public Optional<Message> getOtherUserNewMessage(User currentUser) {
-        LinkedList<Message> tempMessages = new LinkedList<>(this.messages);
+    public Optional<Message> getSecondUserNewMessage(User currentUser) {
+        if(currentUser == null){
+            throw new IllegalArgumentException("User argument is a null.");
+        }
+        LinkedList<Message> tempMessages = new LinkedList<>(this.getMessages());
         if (tempMessages.isEmpty()) return Optional.empty();
         tempMessages.removeIf(o -> (o.getUser().getUserId() == currentUser.getUserId()));
         if (tempMessages.isEmpty()) {
@@ -65,32 +71,24 @@ public class Conversation {
     }
 
     public ArrayList<Message> getMessagesSorted() {
-        ArrayList<Message> list = new ArrayList<>(this.getMessages());
-        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
-        return list;
+        ArrayList<Message> conversationMessages = new ArrayList<>(this.getMessages());
+        Collections.sort(conversationMessages, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
+        return conversationMessages;
     }
 
-    public Message getNewestMessageObject() {
-        ArrayList<Message> list = new ArrayList<>(getMessages());
-        if (list.isEmpty()) return new Message();
-        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
-        return list.get(0);
+    public Message getNewestMessage() {
+        ArrayList<Message> conversationMessages = this.getMessagesSorted();
+        if (conversationMessages.isEmpty()) throw new NullPointerException("This conversation has no messages.");
+        return conversationMessages.get(0);
     }
 
-    public User getOtherUser(User user) {
-        ArrayList<User> list = new ArrayList<>(getUsers());
-        list.removeIf(o -> o.getUserId() == user.getUserId());
-        return list.get(0);
-    }
-
-    public String getNewestMessage(User user) {
-        ArrayList<Message> list = new ArrayList<>(getMessages());
-        if (list.isEmpty()) return "";
-        Collections.sort(list, (o1, o2) -> o2.getCreateDate().compareTo(o1.getCreateDate()));
-        if (list.get(0).getUser().getUserId() == user.getUserId()) {
-            return "Ty: " + list.get(0).getContent();
+    public User getSecondUser(User user) {
+        if(user == null){
+            throw new IllegalArgumentException("User argument is a null.");
         }
-        return list.get(0).getContent();
+        ArrayList<User> allUsers = new ArrayList<>(getUsers());
+        allUsers.removeIf(o -> o.getUserId() == user.getUserId());
+        return allUsers.get(0);
     }
 
     public boolean isUserInConversation(User user) {

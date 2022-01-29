@@ -3,8 +3,6 @@ package pl.okazje.project.events;
 import org.springframework.context.ApplicationEvent;
 import pl.okazje.project.entities.User;
 
-import java.util.Locale;
-
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
     private User user;

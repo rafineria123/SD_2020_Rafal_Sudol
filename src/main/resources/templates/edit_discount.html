@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Norgie - edytuj promocje</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link type="text/css" href="/css/add_discount.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/js/texteditor/src/richtext.min.css">
+
+
+</head>
+<body>
+<nav class="navbar navbar-expand-xl navbar-light bg-light"
+     style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);">
+    <div class="navbar-brand" style="cursor: pointer;padding-left: 100px;" onclick="window.location='/';">
+        <div class="row">
+            <div class="col-4 dj text-center"><h1>NG</h1></div>
+            <div class="col-6">NORGIE</div>
+        </div>
+    </div>
+    <button class="navbar-toggler" id="navbar-toggler-button" type="button" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 155px">
+        <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+            <div class="nav_items d-flex align-items-center" style="padding-top: 10px;"
+                 aria-controls="navbarToggleExternalContent"
+            ><a href="/forum" class="nav_items_clickable" >Forum</a>
+            </div>
+            <div class="nav_items d-flex align-items-center" id="kategorie-button"
+                 data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+                 aria-expanded="false" aria-label="Toggle navigation" style="padding-top: 10px"><a href="#" class="nav_items_clickable">Kategorie</a>
+            </div>
+            <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 10px;"
+                 data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+                 aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
+            </div>
+            <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
+                <a href="/login">
+                    <button type="button" style="" class="btn add_button"><span
+                            class="fas fa-user"
+                            style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
+                    </button>
+                </a>
+            </div>
+            <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
+                <a href="/settings">
+                    <button style="min-width: 140px" class="btn add_button"
+                            aria-haspopup="true" aria-expanded="false"
+                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span><span th:text="${#authentication.getPrincipal().getUsername().toUpperCase()}">TWOJE KONTO</span>
+                    </button>
+                </a>
+            </div>
+            <div class="d-flex align-items-center" style="padding-top: 10px">
+                <a href="/discount/add">
+                    <button type="button"  class="btn add_button"><span
+                            class="fas fa-plus"
+                            style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+
+
+<div class="container-fluid" style="padding-right: 0px;padding-left: 0px">
+
+    <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+         ;margin-top: 0px;margin-left: 0px">
+        <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+            <div class="row" style="padding-left: 20px;padding-right: 20px">
+                <div class="col-xl-2" th:each="shop : ${list_of_shops}"
+                     style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                th:text="${shop.getName()}">DODAJ KUPON
+                        </button>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);margin-top: 0px;margin-left: 0px">
+        <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+            <div class="row" style="padding-left: 20px;padding-right: 20px">
+                <div class="col-xl-2" th:each="tag : ${list_of_tags}"
+                     style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+                    <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+                        <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                                th:text="${tag.getName()}">DODAJ KUPON
+                        </button>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="container-fluid">
+    <div class="col-xl-6 offset-xl-3" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
+        <span class="over_items">Edytuj swoją promocje!</span>
+    </div>
+    <div style="height: 15px"></div>
+</div>
+<div class="container-fluid" th:if="${error}">
+    <div class="col-xl-6 offset-xl-3" style="padding-left: 0px;padding-right: 0px">
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <strong>Wypełnij wszystkie pola poprawnymi danymi!</strong>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid ">
+    <div class="row" sec:authorize="isAuthenticated()">
+        <form th:action="@{/discount/edit}" class="w-100" method="post" enctype="multipart/form-data">
+        <div class="col-xl-6 offset-xl-3 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);border-width: 2px;border-style: dashed;border-color: rgb(193 188 188);">
+            <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
+            <div class="row">
+                <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                    <span class="add_big">Typ</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('obnizka')">
+                            <input type="radio" id="type_obnizka" name="type" value="OBNIZKA">
+                            <label for="type_obnizka" class="w-100">OBNIZKA</label>
+                        </div>
+                        <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('kupon')">
+                            <input type="radio" id="type_kupon" name="type" value="KUPON">
+                            <label for="type_kupon" class="w-100">KUPON</label>
+                        </div>
+                        <div class="col-md-4 radio-toolbar text-center" style="font-weight:700;padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin-left: 0px;margin-right: 0px;" onclick="typ('kod')">
+                            <input type="radio" id="type_kod" name="type" value="KOD">
+                            <label for="type_kod" class="w-100">KOD</label>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+            <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                <span class="add_big">Link</span>
+            </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" class="add_input" id="url" name="url" maxlength="499" placeholder=" http://www.example.com/greatdeal...">
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                    <span class="add_big">Kategoria</span>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+
+                        <div class="col-md-3 radio-toolbar text-center" th:each="tag : ${list_of_tags}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin: 0px;"><input type="radio" th:id="|tag_${tag.getTagId()}|" name="tag" th:value="${tag.getTagId()}">
+                            <label th:for="|tag_${tag.getTagId()}|" class="w-100" th:text="${tag.getName()}" style="">Apple</label>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                    <span class="add_big">Sklep</span>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+
+                        <div class="col-md-3 radio-toolbar text-center" th:each="shop : ${list_of_shops}" style="padding-bottom: 6px;padding-right: 3px;padding-left: 3px;margin: 0px;"><input type="radio" th:id="|shop_${shop.getShopId()}|" name="shop" th:value="${shop.getShopId()}">
+                            <label th:for="|shop_${shop.getShopId()}|" class="w-100" th:text="${shop.getName()}">Apple</label>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                    <span class="add_big">Tytuł</span>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" class="add_input" maxlength="199" id="title" name="title" placeholder=" Tytuł opisujący znalezioną oferte">
+                </div>
+            </div>
+
+            <div class="row" id="nazwy_cen">
+
+                <div class="d-flex justify-content-center" style=" width:100%;padding-top: 10px;padding-bottom: 5px;">
+                    <span class="add_big">Obniżka ceny</span>
+                </div>
+
+
+            </div>
+            <div class="row d-flex justify-content-center align-items-center" id="ceny">
+
+                <div class="d-flex" style="width: 15%;padding-bottom: 6px">
+                    <input type="number" class="add_input" id="old_price" name="old_price" placeholder=" 0.00">
+                </div>
+                <div class="radio-toolbar" style="width: 10%;height:fit-content;font-weight:700;padding-right: 3px;padding-left: 3px;margin: 0;">
+                    <input type="radio" id="type_pln" name="discount" value="PLN">
+                    <label for="type_pln" class="w-100 d-flex align-self-center justify-content-center"><span>PLN</span></label>
+                </div>
+                <div  class="radio-toolbar" style="width: 10%;height:fit-content;font-weight:700;padding-left: 3px;margin: 0;">
+                    <input type="radio" id="type_procent" name="discount" value="%">
+                    <label for="type_procent" class="w-100 d-flex justify-content-center align-self-center"><span>%</span></label>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12 text-center" style="padding-top: 10px;padding-bottom: 5px;">
+                    <span class="add_big">Opis</span>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <textarea class="content" rows="5" cols="33" style="width: 100%;border-radius: 6px"  onChange='limitText()' id="content" value="jd" name="content"></textarea>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-around">
+
+                <div class="d-flex justify-content-center flex-column align-items-center" style="width: 40%">
+                    <span class="add_big">Data zakonczenia</span>
+                    <input type="date" class="add_input" id="expire_date" name="expire_date" placeholder="DD.MM.YYYY">
+                </div>
+                <div class="d-flex justify-content-center flex-column align-items-center" style="width: 40%">
+                    <span class="add_big">Dodaj obrazek</span>
+                    <input type="file" accept="image/*" style="display:none;overflow: hidden;white-space: nowrap;text-overflow: ellipsis" class="add_input hidden" id="image_url" name="image_url" placeholder="discount_12.jpg">
+                    <button type="button" class="btn item_button" style="width: fit-content;">
+                        <label for="image_url" style="
+                            margin-bottom: 0;
+                        ">Zmień poprzedni obrazek</label>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-12 offset-md-" style="padding-top: 15px;">
+                    <button type="submit" style="white-space:pre;font-size: 18px;border-radius: 10px" class="btn item_button">Edytuj promocje</button>
+                </div>
+
+            </div>
+            <div style="height: 20px"></div>
+
+
+
+        </div>
+        <div style="height: 50px;width: 100%"></div>
+        </form>
+    </div>
+</div>
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script
+        src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="/js/texteditor/src/jquery.richtext.min.js"></script>
+<script>
+    $('.content').richText({
+
+        // text formatting
+        bold: true,
+        italic: true,
+        underline: true,
+
+        // text alignment
+        leftAlign: true,
+        centerAlign: true,
+        rightAlign: true,
+        justify: true,
+
+        // lists
+        ol: true,
+        ul: true,
+
+        // title
+        heading: true,
+
+        // fonts
+        fonts: true,
+        fontList: [
+            "Arial",
+            "Arial Black",
+            "Comic Sans MS",
+            "Courier New",
+            "Geneva",
+            "Georgia",
+            "Helvetica",
+            "Impact",
+            "Lucida Console",
+            "Tahoma",
+            "Times New Roman",
+            "Verdana"
+        ],
+        fontColor: true,
+        fontSize: true,
+
+        // uploads
+        imageUpload: true,
+
+        // media
+        videoEmbed: true,
+
+        // link
+        urls: true,
+
+        // tables
+        table: true,
+
+        // code
+        removeStyles: true,
+        code: true,
+
+        // colors
+        colors: [],
+
+        // dropdowns
+        imageHTML: '',
+
+        // translations
+        translations: {
+            'title': 'Title',
+            'white': 'White',
+            'black': 'Black',
+            'brown': 'Brown',
+            'beige': 'Beige',
+            'darkBlue': 'Dark Blue',
+            'blue': 'Blue',
+            'lightBlue': 'Light Blue',
+            'darkRed': 'Dark Red',
+            'red': 'Red',
+            'darkGreen': 'Dark Green',
+            'green': 'Green',
+            'purple': 'Purple',
+            'darkTurquois': 'Dark Turquois',
+            'turquois': 'Turquois',
+            'darkOrange': 'Dark Orange',
+            'orange': 'Orange',
+            'yellow': 'Yellow',
+            'imageURL': 'Image URL',
+            'fileURL': 'File URL',
+            'linkText': 'Link text',
+            'url': 'URL',
+            'size': 'Size',
+            'responsive': 'Responsive',
+            'text': 'Text',
+            'openIn': 'Open in',
+            'sameTab': 'Same tab',
+            'newTab': 'New tab',
+            'align': 'Align',
+            'left': 'Left',
+            'center': 'Center',
+            'right': 'Right',
+            'rows': 'Rows',
+            'columns': 'Columns',
+            'add': 'Add',
+            'pleaseEnterURL': 'Please enter an URL',
+            'videoURLnotSupported': 'Video URL not supported',
+            'pleaseSelectImage': 'Please select an image',
+            'pleaseSelectFile': 'Please select a file',
+            'bold': 'Bold',
+            'italic': 'Italic',
+            'underline': 'Underline',
+            'alignLeft': 'Align left',
+            'alignCenter': 'Align centered',
+            'alignRight': 'Align right',
+            'addOrderedList': 'Add ordered list',
+            'addUnorderedList': 'Add unordered list',
+            'addHeading': 'Add Heading/title',
+            'addFont': 'Add font',
+            'addFontColor': 'Add font color',
+            'addFontSize' : 'Add font size',
+            'addImage': 'Add image',
+            'addVideo': 'Add video',
+            'addFile': 'Add file',
+            'addURL': 'Add URL',
+            'addTable': 'Add table',
+            'removeStyles': 'Remove styles',
+            'code': 'Show HTML code',
+            'undo': 'Undo',
+            'redo': 'Redo',
+            'close': 'Close'
+        },
+
+        // privacy
+        youtubeCookies: false,
+
+        // developer settings
+        useSingleQuotes: false,
+        height: 0,
+        heightPercentage: 0,
+        id: "asdasd",
+        class: "",
+        useParagraph: false,
+        maxlength: 300,
+        callback: undefined,
+        useTabForNext: false
+    });
+
+    let type = "[[${discount.getType()}]]";
+    $.each( $("input[name^='type']"), function () {
+        if(type.includes(this.value)){
+            this.checked = true;
+            if(type.includes('KUPON')){
+                typ('kupon');
+                let oldPrice = "[[${discount.getOldPrice()}]]".split(".")[0];
+                document.getElementById("old_price").value = parseFloat(oldPrice);
+                if(type.includes('KUPONPROCENT')){
+                    document.getElementById("type_procent").checked=true;
+                }
+                if(type.includes('KUPONNORMALNY')){
+                    document.getElementById("type_pln").checked=true;
+                }
+
+            }
+            if(type.includes('KOD')){
+                typ('kod');
+                let oldPrice = "[[${discount.getOldPrice()}]]".split(".")[0];
+                document.getElementById("old_price").value = parseFloat(oldPrice);
+                if(type.includes('KODPROCENT')){
+                    document.getElementById("type_procent").checked=true;
+                }
+                if(type.includes('KODNORMALNY')){
+                    document.getElementById("type_pln").checked=true;
+                }
+            }
+            if(type.includes('OBNIZKA')){
+                typ('obnizka');
+                let oldPrice = "[[${discount.getOldPrice()}]]".split(".")[0];
+                let currentPrice = "[[${discount.getCurrentPrice()}]]".split(".")[0];
+                let shipmentPrice = "[[${discount.getShipmentPrice()}]]".split(".")[0];
+                document.getElementById("old_price").value = oldPrice;
+                document.getElementById("current_price").value = currentPrice;
+                document.getElementById("shipment_price").value = shipmentPrice;
+            }
+        }
+    });
+
+    let link = "[[${discount.getDiscountLink()}]]";
+    document.querySelector('#url').value = link;
+
+    let tag = "[[${discount.getTag().getTagId()}]]";
+    $.each( $("input[name='tag']"), function () {
+        console.log(this.value);
+        if(tag.includes(this.value)){
+            this.checked = true;
+            }
+    });
+
+    let shop = "[[${discount.getShop().getShopId()}]]";
+    $.each( $("input[name^='shop']"), function () {
+        if(shop.includes(this.value)){
+            this.checked = true;
+        }
+    });
+
+
+    let title = "[[${discount.getTitle()}]]";
+    document.querySelector('#title').value = title;
+
+    let desc = "[[${text}]]";
+    desc = decodeHtml(desc);
+    document.getElementsByClassName("richText-editor")[0].insertAdjacentHTML('afterBegin', desc);
+    document.getElementsByClassName("richText-editor")[0].focus();
+
+    let date = "[[${discount.getExpireDateFormatted()}]]".split('.');
+    document.getElementById("expire_date").value = "20"+date[2]+"-"+date[1]+"-"+date[0];
+
+    let filename = "[[${discount.getImageUrl()}]]".split('/').pop();
+    document.getElementById("image_url").placeholder = filename;
+
+    function typ(typ) {
+        var nazwy_cen = document.querySelector("#nazwy_cen");
+        nazwy_cen.innerHTML="";
+        var ceny = document.querySelector("#ceny");
+        ceny.innerHTML="";
+        if(typ=="obnizka"){
+
+            nazwy_cen.innerHTML="<div class=\"d-flex justify-content-around\" style=\" width:100%;padding-top: 10px;padding-bottom: 5px;\">\n" +
+                "                    <span class=\"add_big\">Cena regularna</span>\n" +
+                "                    <span class=\"add_big\">Cena po obniżce</span>\n" +
+                "                    <span class=\"add_big\">Cena dostawy</span>\n" +
+                "                </div>";
+            ceny.innerHTML="<div class=\"d-flex justify-content-around\" style=\" width:100%;padding-top: 10px;padding-bottom: 5px;\">\n" +
+                "                    <input type=\"number\" class=\"add_input\" id=\"old_price\" name=\"old_price\" placeholder=\" 0.00\" style=\"width: 20%\">\n" +
+                "                    <input type=\"number\" class=\"add_input\" id=\"current_price\" name=\"current_price\" placeholder=\" 0.00\" style=\"width: 20%\">\n" +
+                "                    <input type=\"number\" class=\"add_input\" id=\"shipment_price\" name=\"shipment_price\" placeholder=\" 0.00\" style=\"width: 20%\">\n" +
+                "                </div>";
+
+        }
+        if(typ=="kupon"||typ=="kod"){
+
+            nazwy_cen.innerHTML="<div class=\"d-flex justify-content-center\" style=\" width:100%;padding-top: 10px;padding-bottom: 5px;\">\n" +
+                "                    <span class=\"add_big\">Obniżka ceny</span>\n" +
+                "                </div>";
+            ceny.innerHTML="<div class=\"d-flex\" style=\"width: 15%;padding-bottom: 6px\">\n" +
+                "                    <input type=\"number\" class=\"add_input\" id=\"old_price\" name=\"old_price\" placeholder=\" 0.00\">\n" +
+                "                </div>\n" +
+                "                <div class=\"radio-toolbar\" style=\"width: 10%;height:fit-content;font-weight:700;padding-right: 3px;padding-left: 3px;margin: 0;\">\n" +
+                "                    <input type=\"radio\" id=\"type_pln\" name=\"discount\" value=\"PLN\">\n" +
+                "                    <label for=\"type_pln\" class=\"w-100 d-flex align-self-center justify-content-center\"><span>PLN</span></label>\n" +
+                "                </div>\n" +
+                "                <div  class=\"radio-toolbar\" style=\"width: 10%;height:fit-content;font-weight:700;padding-left: 3px;margin: 0;\">\n" +
+                "                    <input type=\"radio\" id=\"type_procent\" name=\"discount\" value=\"%\">\n" +
+                "                    <label for=\"type_procent\" class=\"w-100 d-flex justify-content-center align-self-center\"><span>%</span></label>\n" +
+                "                </div>";
+
+        }
+
+    };
+
+    function decodeHtml(html) {
+        var txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    }
+
+
+
+
+
+</script>
+<script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    document.getElementById ("kategorie-button").addEventListener ("click", collapseSklepy, false);
+    document.getElementById ("sklepy-button").addEventListener ("click", collapseKategorie, false);
+    document.getElementById ("navbar-toggler-button").addEventListener ("click", collapseNavbar, false);
+
+
+    async function collapseKategorie() {
+        $('#kategorie').collapse('hide');
+        $('#navbarTogglerDemo02').collapse('hide');
+        await sleep(350);
+        $('#sklepy').collapse('toggle');
+    }
+    async function collapseSklepy() {
+        $('#sklepy').collapse('hide');
+        $('#navbarTogglerDemo02').collapse('hide');
+        await sleep(350);
+        $('#kategorie').collapse('toggle');
+
+    }
+    async function collapseNavbar() {
+        $('#sklepy').collapse('hide');
+        $('#kategorie').collapse('hide');
+        await sleep(350);
+        $('#navbarTogglerDemo02').collapse('toggle');
+    }
+</script>
+</body>
+</html>

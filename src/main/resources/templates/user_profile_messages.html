@@ -318,14 +318,14 @@
                         <div class="row">
                             <div class="col-3 d-flex align-self-center"><img src="/images/user.png" class="user_image"><img></div>
                             <div class="col-8 d-flex align-self-center flex-column" style="font-weight: 600;">
-                                <div th:text="${conversation.getOtherUser(user).getLogin()}">
+                                <div th:text="${conversation.getSecondUser(user).getLogin()}">
 
                                     TrailBlazer
 
                                 </div>
                                 <div style="margin-top: -5px">
 
-                                    <span style="font-size: 12px;color: rgba(8,8,8,0.72);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block" th:text="${conversation.getNewestMessage(user)}">
+                                    <span style="font-size: 12px;color: rgba(8,8,8,0.72);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block" th:text="${conversation.getNewestMessage().getContent()}">
                                         Ty: hejka, co tam? Chcesz cos z Avon'u?
                                     </span>
 
@@ -362,14 +362,14 @@
                         <div class="row">
                             <div class="col-3 d-flex align-self-center"><img src="/images/user.png" class="user_image"><img></div>
                             <div class="col-8 d-flex align-self-center flex-column" style="font-weight: 600;">
-                                <div th:text="${conversation.getOtherUser(user).getLogin()}">
+                                <div th:text="${conversation.getSecondUser(user).getLogin()}">
 
                                     JanzusKowalski123
 
                                 </div>
                                 <div style="margin-top: -5px">
 
-                                    <span style="font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block"  th:text="${conversation.getNewestMessage(user)}">
+                                    <span style="font-size: 12px;color:rgba(109,109,109,0.56);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block"  th:text="${conversation.getNewestMessage().getContent()}">
                                         Ty: rafineria123@gmail.com
                                     </span>
 

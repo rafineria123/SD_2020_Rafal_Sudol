@@ -1,6 +1,5 @@
 package pl.okazje.project.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,19 +17,7 @@ import java.util.Optional;
 @RequestMapping("/discount")
 public class DiscountController {
 
-    private final CommentService commentService;
-    private final DiscountService discountService;
-    private final TagService tagService;
-    private final ShopService shopService;
-    private final RatingService ratingService;
 
-    public DiscountController(CommentService commentService, DiscountService discountService, TagService tagService, ShopService shopService, RatingService ratingService) {
-        this.commentService = commentService;
-        this.discountService = discountService;
-        this.tagService = tagService;
-        this.shopService = shopService;
-        this.ratingService = ratingService;
-    }
 
     @GetMapping("/{id}")
     public ModelAndView getDiscountPage(@PathVariable("id") Long id) {
@@ -45,6 +32,20 @@ public class DiscountController {
         }
         modelAndView = new ModelAndView("error");
         return modelAndView;
+    }
+
+    private final CommentService commentService;
+    private final DiscountService discountService;
+    private final TagService tagService;
+    private final ShopService shopService;
+    private final RatingService ratingService;
+
+    public DiscountController(CommentService commentService, DiscountService discountService, TagService tagService, ShopService shopService, RatingService ratingService) {
+        this.commentService = commentService;
+        this.discountService = discountService;
+        this.tagService = tagService;
+        this.shopService = shopService;
+        this.ratingService = ratingService;
     }
 
     @GetMapping("/add")
@@ -113,8 +114,8 @@ public class DiscountController {
 
     @PostMapping("/removediscount")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public String deleteDiscount(@ModelAttribute("discount_id") String discount_id) {
-        discountService.deleteDiscount(Long.parseLong(discount_id));
+    public String deleteDiscount(@ModelAttribute("discount_id") String discount_id, @ModelAttribute("reason") String reason) {
+        discountService.deleteDiscount(Long.parseLong(discount_id), reason);
         return "redirect:/discount/" + discount_id;
     }
 
@@ -124,5 +125,47 @@ public class DiscountController {
         ratingService.addRatingToComment(Long.parseLong(commentid));
         return "redirect:" + request.getHeader("Referer");
     }
+
+    @PostMapping("/editdiscount")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ModelAndView getEditDiscountPage(@ModelAttribute("discount_id") String discountId){
+        ModelAndView modelAndView;
+        Optional<Discount> discount = discountService.findById(Long.parseLong(discountId));
+        if (discount.isPresent()) {
+            modelAndView = new ModelAndView("edit_discount");
+            modelAndView.addObject("list_of_tags", tagService.findAll());
+            modelAndView.addObject("list_of_shops", shopService.findAll());
+            modelAndView.addObject("discount", discount.get());
+            modelAndView.addObject("text", discount.get().getContent().replace("\n", "<br>").replace("\r", "<br>"));
+
+            return modelAndView;
+        }
+        modelAndView = new ModelAndView("error");
+        return modelAndView;
+    }
+
+    @PostMapping(path = "/edit", consumes = {"multipart/form-data"})
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ModelAndView editDiscount(@ModelAttribute("discount_id") String discountId, @ModelAttribute("url") String url, @ModelAttribute("tag") String tag, @ModelAttribute("shop") String shop,
+                                    @ModelAttribute("title") String title, @ModelAttribute("old_price") String old_price, @ModelAttribute("current_price") String current_price,
+                                    @ModelAttribute("shipment_price") String shipment_price, @ModelAttribute("content") String content,
+                                    @ModelAttribute("expire_date") String expire_date, @ModelAttribute("type") String typeBase, @ModelAttribute("discount") String typeSuffix, @RequestParam("image_url")
+                                            MultipartFile file, HttpServletRequest request, RedirectAttributes redir) {
+        ModelAndView modelAndView;
+        if (discountService.editDiscount(discountId, url, tag, shop, title, old_price, current_price, shipment_price, content, expire_date, typeBase, typeSuffix, file)) {
+            RedirectView redirectView = new RedirectView("/settings/discounts");
+            redir.addFlashAttribute("good_status", "Twoja okazja została zedytowana i oczekuje na weryfikacje.");
+            modelAndView = new ModelAndView(redirectView);
+            return modelAndView;
+        }
+        Optional<Discount> discount = discountService.findById(Long.parseLong(discountId));
+        modelAndView = new ModelAndView("edit_discount");
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
+        modelAndView.addObject("discount", discount.get());
+        modelAndView.addObject("error", true);
+        return modelAndView;
+    }
+
 
 }

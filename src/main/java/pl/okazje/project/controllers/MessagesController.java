@@ -1,13 +1,11 @@
 package pl.okazje.project.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pl.okazje.project.entities.Conversation;
 import pl.okazje.project.entities.User;
-import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.*;
 
 import java.util.Optional;
@@ -52,7 +50,7 @@ public class MessagesController {
     @PostMapping("sendMessage")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public String sendMessage(@ModelAttribute("new_message_conv_id") String conversationId, @ModelAttribute("new_message") String messageContent) {
-        conversationService.sendMessage(conversationService.findById(Long.parseLong(conversationId)).get().getOtherUser(authenticationService.getCurrentUser().get()), messageContent);
+        conversationService.sendMessage(conversationService.findById(Long.parseLong(conversationId)).get().getSecondUser(authenticationService.getCurrentUser().get()), messageContent);
         return "redirect:/messages/" + conversationId;
     }
 

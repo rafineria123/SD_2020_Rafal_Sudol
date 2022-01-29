@@ -1,7 +1,6 @@
 package pl.okazje.project.entities;
 
 
-import pl.okazje.project.exceptions.DataTooLongException;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -49,7 +48,6 @@ public class Token implements Serializable {
     }
 
     public void setToken(String token) {
-        if(token.length()>700) throw new DataTooLongException(token);
         this.token = token;
     }
 

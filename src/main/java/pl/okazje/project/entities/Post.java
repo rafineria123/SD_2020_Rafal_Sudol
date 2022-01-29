@@ -1,14 +1,16 @@
 package pl.okazje.project.entities;
 
-import pl.okazje.project.exceptions.DataTooLongException;
+
+import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.bans.PostBan;
+import pl.okazje.project.entities.comments.Comment;
+import pl.okazje.project.entities.User;
+import pl.okazje.project.entities.comments.PostComment;
 
 import javax.persistence.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Post {
@@ -30,6 +32,10 @@ public class Post {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "banId")
+    private PostBan ban;
+
     @ManyToOne
     @JoinColumn(name = "tagId", nullable = false)
     private Tag tag;
@@ -39,7 +45,7 @@ public class Post {
     private Shop shop;
 
     @OneToMany(mappedBy = "post")
-    private Set<Comment> comments;
+    private Set<PostComment> comments;
 
     public Post() {
     }
@@ -73,7 +79,6 @@ public class Post {
     }
 
     public void setTitle(String title) {
-        if (title.length() > 500) throw new DataTooLongException(title);
         this.title = title;
     }
 
@@ -82,7 +87,6 @@ public class Post {
     }
 
     public void setContent(String content) {
-        if (content.length() > 1500) throw new DataTooLongException(content);
         this.content = content;
     }
 
@@ -110,11 +114,20 @@ public class Post {
         this.user = user;
     }
 
-    public Set<Comment> getComments() {
+    public Set<PostComment> getComments() {
+        if(comments == null) return new HashSet<PostComment>();
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public PostBan getBan() {
+        return ban;
+    }
+
+    public void setBan(PostBan ban) {
+        this.ban = ban;
+    }
+
+    public void setComments(Set<PostComment> comments) {
         this.comments = comments;
     }
 
@@ -126,7 +139,7 @@ public class Post {
         }
     }
 
-    public String getCreation_date_formated() {
+    public String getCreateDateFormatted() {
         Format formatter = new SimpleDateFormat("dd.MM.yy");
         String s = formatter.format(this.createDate);
         return s;

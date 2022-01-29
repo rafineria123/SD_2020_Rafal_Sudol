@@ -3,6 +3,9 @@ package pl.okazje.project.services;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.Post;
+import pl.okazje.project.entities.bans.PostBan;
+import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.PostRepository;
 
 import javax.servlet.http.HttpSession;
@@ -15,22 +18,33 @@ public class PostService {
     private final TagService tagService;
     private final ShopService shopService;
     private final SessionService sessionService;
+    private final EmailService emailService;
 
-    public PostService(PostRepository postRepository, AuthenticationService authenticationService, TagService tagService, ShopService shopService, SessionService sessionService) {
+    public PostService(PostRepository postRepository, AuthenticationService authenticationService, TagService tagService, ShopService shopService, SessionService sessionService, EmailService emailService) {
         this.postRepository = postRepository;
         this.authenticationService = authenticationService;
         this.tagService = tagService;
         this.shopService = shopService;
         this.sessionService = sessionService;
+        this.emailService = emailService;
     }
 
     public void save(Post post){
         postRepository.save(post);
     }
 
-    public void deletePost(Long id){
+    public void deletePost(Long id, String reason){
         Post post = findById(id).get();
         post.setStatus(Post.Status.DELETED);
+        PostBan ban = new PostBan();
+        ban.setReason(reason);
+        post.setBan(ban);
+        postRepository.save(post);
+        emailService.sendEmail(post.getUser().getEmail(), "NORGIE - Post odrzucony",  "Twoj post nie spełnia wymogów naszej strony i" +
+                " został zablokowany przez moderatora.\n"+
+                "Tytuł posta:  "+post.getTitle() +"\n"+
+                "Powód: " +post.getBan().getReason()
+        );
         this.save(post);
     }
 
@@ -82,7 +96,15 @@ public class PostService {
             return false;
         }
         post.setUser(tempUser.get());
-        this.save(post);
+        try {
+            this.save(post);
+        }catch (Exception e){
+            if(e.toString().contains("MysqlDataTruncation")){
+                return false;
+            }
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 

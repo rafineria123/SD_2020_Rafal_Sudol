@@ -17,6 +17,11 @@
     <link type="text/css" href="/css/discount.css" rel="stylesheet"/>
 </head>
 <body>
+<style th:inline="text">
+    .modalonclick{
+    }
+
+</style>
 
 <nav class="navbar navbar-expand-xl navbar-light bg-light"
      style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);">
@@ -55,9 +60,9 @@
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
                 <a href="/settings">
-                    <button style="" class="btn add_button"
+                    <button style="min-width: 140px" class="btn add_button"
                             aria-haspopup="true" aria-expanded="false"
-                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span>TWOJE KONTO
+                    ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span><span th:text="${#authentication.getPrincipal().getUsername().toUpperCase()}">TWOJE KONTO</span>
                     </button>
                 </a>
             </div>
@@ -127,7 +132,7 @@
                         <div class="col-12" style="padding-left: 0;padding-right: 0">
                             <div class="bad_alert">
                                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                <strong>Ta promocja została usunięta przez Moderatora.</strong>
+                                <strong>Ta promocja została zablokowana przez Moderatora. Powód: <span th:text="${discount.getBan().getReason()}"></span></strong>
                             </div>
                         </div>
                     </div>
@@ -176,16 +181,16 @@
                         <button type="button" onclick="share()" class="remove_button popup" style=""> <span class="popuptext" id="myPopup">
                             Dodano do schowka!</span><span class="over_items far fa-share-square" style="padding-bottom: 5px"></span> </button>
 
+                    <form th:action="@{/discount/editdiscount}" sec:authorize="hasAnyAuthority('USER', 'ADMIN')" method="post" th:if="${discount.getUser().getLogin()==#authentication.getPrincipal().getUsername()}" >
+                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
+                        <button type="submit" class="remove_button" > <span class="over_items fas fa-edit" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
+                    </form>
 
                     <form th:action="@{/discount/acceptdiscount}" method="post" th:if="${discount.getStatus().equals('AWAITING')}" sec:authorize="hasAuthority('ADMIN')">
                         <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
-                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
+                        <button type="submit" class="remove_button" > <span class="over_items fas fa-check" style="padding-bottom: 5px;padding-right: 10px"></span> </button>
                     </form>
-
-                    <form th:action="@{/discount/removediscount}" method="post" sec:authorize="hasAuthority('ADMIN')">
-                        <input type="hidden" id="discount_id" name="discount_id" th:value="${discount.getDiscountId()}">
-                        <button type="submit" class="remove_button" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
-                    </form>
+                        <button type="submit" sec:authorize="hasAuthority('ADMIN')" class="remove_button" data-toggle="modal" data-target="#ban" style=""> <span class="over_items fas fa-times" style="padding-bottom: 5px"></span> </button>
 
 
 
@@ -233,7 +238,7 @@
 
                     </div>
                 <div class="col-3 d-flex justify-content-center align-self-start" style="padding-top: 8px;padding-bottom: 15px;padding-left:15px;padding-right: 15px;min-width: fit-content;">
-                    <img th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
+                    <img data-toggle="modal" data-target="#exampleModal" th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" class="item_image_discount">
                 </div>
                 <div class="col-xl-9" style="">
 
@@ -249,18 +254,7 @@
                         </div>
                     </div>
 
-                    <div class="row" style="padding-right: 25px;padding-left:25px">
-                        <div class="col-md-12" th:text="${discount.getContent()}" style="padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
-                             word-wrap: break-word;">
-                            Przetworniki neodymowe o średnicy 50 mm zapewniają szeroki i jednocześnie wiernie
-                            odwzorowany zakres dźwięków
 
-                            Każdy głośnik jest wybierany ręcznie z całą starannością, dostrajany i testowany przed
-                            dopasowaniem w celu zapewnienia najbardziej szczegółowego
-
-                        </div>
-
-                    </div>
                     <div class="row" style="padding-top: 10px;padding-right: 40px;padding-left:40px">
 
 
@@ -286,6 +280,18 @@
 
                         </div>
                     </div>
+                </div>
+                <div class="row" style="padding-right: 25px;padding-left:25px;width:100%;padding-top: 15px;padding-bottom: 15px">
+                    <div class="col-md-12" th:utext="${discount.getContent()}" style="padding-top: 5px;font-size: 15px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -o-pre-wrap;
+                             word-wrap: break-word;">
+                        Przetworniki neodymowe o średnicy 50 mm zapewniają szeroki i jednocześnie wiernie
+                        odwzorowany zakres dźwięków
+
+                        Każdy głośnik jest wybierany ręcznie z całą starannością, dostrajany i testowany przed
+                        dopasowaniem w celu zapewnienia najbardziej szczegółowego
+
+                    </div>
+
                 </div>
             </div>
 
@@ -448,6 +454,95 @@
 
 </div>
 
+<div sec:authorize="hasAuthority('ADMIN')" class="modal fade" id="ban" tabindex="-1" role="dialog" aria-labelledby="banTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form th:if="${discount.isAwaiting()}" th:action="@{/discount/removediscount}" method="post" class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                    <h5 class="modal-title" id="banLongTitle" style="padding-left: 15px">Odrzuć tę promocje </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row" style="padding-left: 36px">
+                            <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Powód</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="width:100%">
+                                <input type="hidden" name="discount_id" th:value="${discount.getDiscountId()}">
+                                <textarea rows="4" COLS="72" id="reason" maxlength="400" name="reason" WRAP="reason" placeholder="powod blokady" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px;background-color:#f80d57 ">Odrzuć promocje</button>
+                </div>
+            </div>
+        </form>
+        <form th:if="${!discount.isAwaiting()}" th:action="@{/discount/removediscount}" method="post" class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgba(82, 73, 98, 0.06);">
+                    <h5 class="modal-title" id="banLongTitle" style="padding-left: 15px">Zablokuj tę okazje </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row" style="padding-left: 36px">
+                            <div class="" style="width:auto;margin-bottom: -12px;z-index: 2;background-color: white;color: rgba(82,73,98,0.6)">Powód</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="width:100%">
+                                <input type="hidden" name="discount_id" th:value="${discount.getDiscountId()}">
+                                <textarea rows="4" COLS="72" id="reason" maxlength="400" name="reason" WRAP="reason" placeholder="powod blokady" style="border: 1px solid rgba(82,73,98,0.2);
+                            padding-left: 20px;padding-top:13px;padding-bottom:13px;border-radius: 10px;width:100%"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;border-radius: 20px;background-color:#f80d57 ">Zablokuj promocje</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade"
+     id="exampleModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true" style="width: 100%">
+    <div class="modal-dialog"
+         role="document">
+        <div th:inline="css" class="modal-content modalonclick">
+            <div class="modal-header" style="border: 0">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                            <span aria-hidden="true">
+                              ×
+                          </span>
+                </button>
+            </div>
+            <img src="" th:src="${discount.getImageUrl()}" onerror="this.src='/images/default_discount_image.png'" style="margin-top: -55px"></img>
+
+            <!--Modal body with image-->
+        </div>
+    </div>
+</div>
+
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <script
         src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
@@ -477,7 +572,7 @@
     function share(){
 
         const el = document.createElement('textarea');
-        el.value = "http://54.227.52.123/discount/"+"[[${discount.getDiscountId()}]]";
+        el.value = "[[${@environment.getProperty('HOST_ADDRESS')}]]"+"/discount/"+"[[${discount.getDiscountId()}]]";
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');

@@ -1,5 +1,6 @@
 package pl.okazje.project.events;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import pl.okazje.project.entities.User;
@@ -12,7 +13,8 @@ import java.util.UUID;
 public class RegistrationListener implements
         ApplicationListener<OnRegistrationCompleteEvent> {
 
-
+    @Value("${HOST_ADDRESS}")
+    private String hostAddress;
     private final UserService userService;
     private final EmailService mailSender;
 
@@ -33,6 +35,6 @@ public class RegistrationListener implements
         String recipientAddress = user.getEmail();
         String subject = "Norgie - Aktywuj swoje konto";
         String confirmationUrl = "/registrationConfirm?token=" + token;
-        mailSender.sendEmail(recipientAddress,subject,"Aby aktywowac swoje konto kliknij w poniższy link,\n http://54.227.52.123" + confirmationUrl);
+        mailSender.sendEmail(recipientAddress,subject,"Aby aktywowac swoje konto kliknij w poniższy link,\n http://localhost" + confirmationUrl);
     }
 }

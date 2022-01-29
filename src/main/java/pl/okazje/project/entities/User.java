@@ -3,7 +3,9 @@ package pl.okazje.project.entities;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.okazje.project.exceptions.DataTooLongException;
+import pl.okazje.project.entities.bans.UserBan;
+import pl.okazje.project.entities.comments.Comment;
+import pl.okazje.project.entities.ratings.Rating;
 
 import javax.persistence.*;
 import java.text.Format;
@@ -18,7 +20,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
-    @Column(unique = true,length = 25)
+    @Column(unique = true, length = 25)
     private String login;
     @Column(length = 700)
     private String password;
@@ -35,36 +37,36 @@ public class User implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "banId")
-    private Ban ban;
+    private UserBan ban;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tokenId", nullable = true)
     private Token token;
 
     @ManyToOne
-    @JoinColumn(name="rankId", nullable=true)
+    @JoinColumn(name = "rankId", nullable = true)
     private Rank rank;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private Set<Discount> discounts;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private Set<Post> posts;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private Set<Comment> comments;
 
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "User_Conversation",
             joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "conversationId")
     )
     private Set<Conversation> conversations;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private Set<Rating> ratings;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private Set<Message> messages;
 
     public User() {
@@ -73,7 +75,7 @@ public class User implements UserDetails {
         this.enabled = false;
     }
 
-    public Ban getBan() {
+    public UserBan getBan() {
         return ban;
     }
 
@@ -89,7 +91,7 @@ public class User implements UserDetails {
         this.token = token;
     }
 
-    public void setBan(Ban ban) {
+    public void setBan(UserBan ban) {
         this.ban = ban;
     }
 
@@ -106,7 +108,6 @@ public class User implements UserDetails {
     }
 
     public void setLogin(String login) {
-        if(login.length()>25) throw new DataTooLongException(login);
         this.login = login;
     }
 
@@ -125,7 +126,6 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
-        if(password.length()>700) throw new DataTooLongException(password);
         this.password = password;
     }
 
@@ -134,7 +134,6 @@ public class User implements UserDetails {
     }
 
     public void setEmail(String email) {
-        if(email.length()>50) throw new DataTooLongException(email);
         this.email = email;
     }
 
@@ -155,7 +154,7 @@ public class User implements UserDetails {
     }
 
     public Information getInformation() {
-        if(information==null){
+        if (information == null) {
             return new Information();
         }
         return information;
@@ -174,6 +173,7 @@ public class User implements UserDetails {
     }
 
     public Set<Discount> getDiscounts() {
+        if (discounts == null) return new HashSet<Discount>();
         return discounts;
     }
 
@@ -190,6 +190,7 @@ public class User implements UserDetails {
     }
 
     public Set<Comment> getComments() {
+        if (comments == null) return new HashSet<Comment>();
         return comments;
     }
 
@@ -198,6 +199,7 @@ public class User implements UserDetails {
     }
 
     public Set<Conversation> getConversations() {
+        if (conversations == null) return new HashSet<Conversation>();
         return conversations;
     }
 
@@ -230,13 +232,13 @@ public class User implements UserDetails {
     }
 
     public ArrayList<Conversation> getConversationsSorted() {
-        ArrayList<Conversation> list = new ArrayList<>(conversations);
-        Collections.sort(list, (o1, o2) -> o2.getNewestMessageObject().getCreateDate().compareTo(o1.getNewestMessageObject().getCreateDate()));
-        return list;
+        ArrayList<Conversation> conversations = new ArrayList<>(getConversations());
+        Collections.sort(conversations, (o1, o2) -> o2.getNewestMessage().getCreateDate().compareTo(o1.getNewestMessage().getCreateDate()));
+        return conversations;
     }
 
-    public int getCommentsAmount(){
-        return new ArrayList<Comment>(comments).size();
+    public int getCommentsAmount() {
+        return getComments().size();
     }
 
     public String getCreateDateFormatted() {
@@ -245,44 +247,30 @@ public class User implements UserDetails {
         return s;
     }
 
-    public int getDiscountsAmount(){
-        return new ArrayList<Discount>(discounts).size();
+    public int getDiscountsAmount() {
+        return getDiscounts().size();
     }
 
-    public boolean hasName(){
-        if(information!=null){
-            if(information.getName()!=null){
-                if(!information.getName().isEmpty()||!information.getName().equals("")){
-                    return true;
-                }
-            }
-        }
-        return false;
+    public boolean hasName() {
+        return information != null && information.getName() != null && !information.getName().isEmpty() && !information.getName().equals("");
     }
 
-    public boolean hasSurname(){
-        if(this.information!=null){
-            if(information.getSurname()!=null){
-                if(!information.getSurname().isEmpty()||!information.getSurname().equals("")){
-                    return true;
-                }
-            }
-        }
-        return false;
+    public boolean hasSurname() {
+        return information != null&&information.getSurname() != null&&!information.getSurname().isEmpty()&&!information.getSurname().equals("");
     }
 
-    public boolean hasDiscount(Long discount_id){
-        for (Discount d:discounts) {
-            if (d.getDiscountId()==discount_id){
+    public boolean hasDiscount(Long discount_id) {
+        for (Discount d : getDiscounts()) {
+            if (d.getDiscountId().equals(discount_id)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean hasPost(Long post_id){
-        for (Post p:posts) {
-            if (p.getPostId()==post_id){
+    public boolean hasPost(Long post_id) {
+        for (Post p : getPosts()) {
+            if (p.getPostId().equals(post_id)) {
                 return true;
             }
         }
@@ -302,10 +290,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        if (this.ban!=null){
-            return false;
-        }
-        return true;
+        return this.ban == null;
     }
 
     @Override
