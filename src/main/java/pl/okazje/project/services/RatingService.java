@@ -1,10 +1,11 @@
 package pl.okazje.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.okazje.project.entities.Comment;
+import pl.okazje.project.entities.comments.Comment;
 import pl.okazje.project.entities.Discount;
-import pl.okazje.project.entities.Rating;
+import pl.okazje.project.entities.ratings.CommentRating;
+import pl.okazje.project.entities.ratings.DiscountRating;
+import pl.okazje.project.entities.ratings.Rating;
 import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.RatingRepository;
 
@@ -34,7 +35,7 @@ public class RatingService {
             }
         }
         if(!isAlreadyRated) {
-            Rating newRating = new Rating();
+            DiscountRating newRating = new DiscountRating();
             newRating.setUser(user);
             newRating.setDiscount(discount);
             ratingRepository.save(newRating);
@@ -65,7 +66,7 @@ public class RatingService {
             }
         }
         if(!isAlreadyRated){
-            Rating newRating = new Rating();
+            CommentRating newRating = new CommentRating();
             newRating.setUser(user);
             newRating.setComment(comment);
             ratingRepository.save(newRating);

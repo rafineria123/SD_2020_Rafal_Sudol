@@ -1,8 +1,7 @@
 package pl.okazje.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.okazje.project.entities.Ban;
+import pl.okazje.project.entities.bans.Ban;
 import pl.okazje.project.repositories.BanRepository;
 
 @Service

@@ -39,7 +39,6 @@ INSERT INTO `tag` (`tagId`, `name`) VALUES
 (5, 'Sport i turystyka'),
 (6, 'Pozostałe');
 
-
 INSERT INTO `user` (`userId`, `role`, `createDate`, `email`, `login`, `password`, `status`, `informationId`, `rankId`, `enabled`) VALUES
 (1, 'USER', '2020-06-16 08:52:39', 'rafineria@gmail.com', 'rafineria', '$2a$10$09pC1fgfYgZPJBFhCRikOenf5uYnbP4E2kmsGUMofE9SzoAVz6EZy', 'Zatwierdzone', NULL, NULL, true ),
 (2, 'USER', '2020-06-16 08:52:39', 'rafineria123@gmail.com', 'rafineria123', '$2a$10$rehd0BIqzYtkm9KNGmZ8PuPgBqIIIfzGT/a29FCyHuNrtIZdIu1XS', 'Zatwierdzone', NULL, NULL, true),
@@ -138,9 +137,9 @@ Z góry dzięki','2020-06-17 08:52:39','ACCEPTED', 'Dlaczego warto VPN', 2, 6, 6
 (5, 'Ktoś może używał tego sprzętu Sharp UA-HG50E-L
 
 Prosze o konstruktywne opinie ','2020-06-19 08:52:39','ACCEPTED', 'OCZYSZCZACZ-NAWILŻACZ SHARP', 3, 6, 6);
-INSERT INTO `comment` (`commentId`,`status`, `content`, `createDate`, `discountId`, `postId`, `userId`) VALUES
-(1,'POSTED', 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', 3, NULL, 1),
-(2,'POSTED', 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', NULL, 1, 1);
+-- INSERT INTO `comment` (`commentId`,`status`, `content`, `createDate`, `discountId`, `postId`, `userId`) VALUES
+-- (1,'POSTED', 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', 3, NULL, 1),
+-- (2,'POSTED', 'Słownik podpowiedział nie to słowo co powinien. Moja wina że nie sprawdziłem. Ale nie zmienia to faktu że komentarze w tym stylu co napisałeś są bez sensu. Co to ma wnosić do obecnej sytuacji. Kiedyś może mogło być drożej, mogło być taniej. Dzisiaj taka cena jest najtańsza i na tym polega ten serwis.', '2020-06-16 08:52:39', NULL, 1, 1);
 
 
 INSERT INTO `conversation` (`conversationId`) VALUES
@@ -167,14 +166,6 @@ INSERT INTO `message` (`messageId`, `content`, `createDate`,	`status`, `conversa
 (8, '!', '2020-06-23 08:52:39', 'NEW', 2, 1);
 
 
-
-
-
-
-INSERT INTO `rating` (`ratingId`, `commentId`, `discountId`, `userId`) VALUES
-(1, NULL, 3, 1),
-(2, NULL, 3, 1),
-(3, 1, NULL, 1);
 
 
 

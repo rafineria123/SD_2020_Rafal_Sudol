@@ -1,11 +1,18 @@
-package pl.okazje.project.entities;
+package pl.okazje.project.entities.comments;
+
+import pl.okazje.project.entities.ratings.CommentRating;
+import pl.okazje.project.entities.ratings.Rating;
+import pl.okazje.project.entities.Discount;
+import pl.okazje.project.entities.Post;
+import pl.okazje.project.entities.User;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class Comment {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Comment {
     public enum Status{POSTED, DELETED}
 
     @Id
@@ -21,19 +28,11 @@ public class Comment {
     private Date createDate;
 
     @OneToMany(mappedBy="comment")
-    private Set<Rating> ratings;
+    private Set<CommentRating> ratings;
 
     @ManyToOne
     @JoinColumn(name="userId", nullable=false)
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name="discountId")
-    private Discount discount;
-
-    @ManyToOne
-    @JoinColumn(name="postId")
-    private Post post;
 
     public Comment() {
         createDate = new Date();
@@ -48,7 +47,9 @@ public class Comment {
     }
 
     public String getContent() {
-        // TODO: change content in view when comment status is DELETED
+        if(this.status == Status.DELETED){
+            return "Komentarz został zablokowany przez moderatora.";
+        }
             return content;
     }
 
@@ -64,11 +65,11 @@ public class Comment {
         this.createDate = createDate;
     }
 
-    public Set<Rating> getRatings() {
+    public Set<CommentRating> getRatings() {
         return ratings;
     }
 
-    public void setRatings(Set<Rating> ratings) {
+    public void setRatings(Set<CommentRating> ratings) {
         this.ratings = ratings;
     }
 
@@ -78,22 +79,6 @@ public class Comment {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Discount getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
     }
 
     public Status getStatus() {

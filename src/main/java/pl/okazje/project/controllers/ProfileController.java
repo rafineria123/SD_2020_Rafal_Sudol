@@ -1,18 +1,11 @@
 package pl.okazje.project.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import pl.okazje.project.entities.Ban;
-import pl.okazje.project.entities.User;
-import pl.okazje.project.repositories.*;
 import pl.okazje.project.services.*;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller

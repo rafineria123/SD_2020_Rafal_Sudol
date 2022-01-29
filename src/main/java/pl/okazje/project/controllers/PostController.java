@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.Post;
 import pl.okazje.project.services.*;
 
 import javax.servlet.http.HttpServletRequest;

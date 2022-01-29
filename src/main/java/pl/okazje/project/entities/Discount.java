@@ -1,6 +1,13 @@
 package pl.okazje.project.entities;
 
 import org.apache.commons.math3.util.Precision;
+import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.bans.DiscountBan;
+import pl.okazje.project.entities.comments.Comment;
+import pl.okazje.project.entities.comments.DiscountComment;
+import pl.okazje.project.entities.ratings.DiscountRating;
+import pl.okazje.project.entities.ratings.Rating;
+import pl.okazje.project.entities.User;
 
 import javax.persistence.*;
 import java.text.Format;
@@ -40,17 +47,17 @@ public class Discount {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "banId")
-    private Ban ban;
+    private DiscountBan ban;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "discount")
-    private Set<Comment> comments;
+    private Set<DiscountComment> comments;
 
     @OneToMany(mappedBy = "discount")
-    private Set<Rating> ratings;
+    private Set<DiscountRating> ratings;
 
     @ManyToOne
     @JoinColumn(name = "tagId", nullable = false)
@@ -89,11 +96,11 @@ public class Discount {
         }
         return "/" +this.imageUrl;
     }
-    public Ban getBan() {
+    public DiscountBan getBan() {
         return ban;
     }
 
-    public void setBan(Ban ban) {
+    public void setBan(DiscountBan ban) {
         this.ban = ban;
     }
 
@@ -210,20 +217,20 @@ public class Discount {
         this.user = user;
     }
 
-    public Set<Comment> getComments() {
-        if(comments == null) return new HashSet<Comment>();
+    public Set<DiscountComment> getComments() {
+        if(comments == null) return new HashSet<DiscountComment>();
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(Set<DiscountComment> comments) {
         this.comments = comments;
     }
 
-    public Set<Rating> getRatings() {
+    public Set<DiscountRating> getRatings() {
         return ratings;
     }
 
-    public void setRatings(Set<Rating> ratings) {
+    public void setRatings(Set<DiscountRating> ratings) {
         this.ratings = ratings;
     }
 

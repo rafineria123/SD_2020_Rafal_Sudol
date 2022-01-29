@@ -3,6 +3,9 @@ package pl.okazje.project.entities;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.okazje.project.entities.bans.UserBan;
+import pl.okazje.project.entities.comments.Comment;
+import pl.okazje.project.entities.ratings.Rating;
 
 import javax.persistence.*;
 import java.text.Format;
@@ -34,7 +37,7 @@ public class User implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "banId")
-    private Ban ban;
+    private UserBan ban;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tokenId", nullable = true)
@@ -72,7 +75,7 @@ public class User implements UserDetails {
         this.enabled = false;
     }
 
-    public Ban getBan() {
+    public UserBan getBan() {
         return ban;
     }
 
@@ -88,7 +91,7 @@ public class User implements UserDetails {
         this.token = token;
     }
 
-    public void setBan(Ban ban) {
+    public void setBan(UserBan ban) {
         this.ban = ban;
     }
 

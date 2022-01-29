@@ -1,6 +1,12 @@
 package pl.okazje.project.entities;
 
 
+import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.bans.PostBan;
+import pl.okazje.project.entities.comments.Comment;
+import pl.okazje.project.entities.User;
+import pl.okazje.project.entities.comments.PostComment;
+
 import javax.persistence.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -28,7 +34,7 @@ public class Post {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "banId")
-    private Ban ban;
+    private PostBan ban;
 
     @ManyToOne
     @JoinColumn(name = "tagId", nullable = false)
@@ -39,7 +45,7 @@ public class Post {
     private Shop shop;
 
     @OneToMany(mappedBy = "post")
-    private Set<Comment> comments;
+    private Set<PostComment> comments;
 
     public Post() {
     }
@@ -108,20 +114,20 @@ public class Post {
         this.user = user;
     }
 
-    public Set<Comment> getComments() {
-        if(comments == null) return new HashSet<Comment>();
+    public Set<PostComment> getComments() {
+        if(comments == null) return new HashSet<PostComment>();
         return comments;
     }
 
-    public Ban getBan() {
+    public PostBan getBan() {
         return ban;
     }
 
-    public void setBan(Ban ban) {
+    public void setBan(PostBan ban) {
         this.ban = ban;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(Set<PostComment> comments) {
         this.comments = comments;
     }
 

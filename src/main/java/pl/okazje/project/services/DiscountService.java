@@ -1,18 +1,18 @@
 package pl.okazje.project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.Discount;
+import pl.okazje.project.entities.bans.DiscountBan;
+import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.DiscountRepository;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -543,7 +543,7 @@ public class DiscountService {
     public void deleteDiscount(Long id, String reason){
         Discount disc = this.findById(id).get();
         disc.setStatus(Discount.Status.DELETED);
-        Ban ban = new Ban();
+        DiscountBan ban = new DiscountBan();
         ban.setReason(reason);
         disc.setBan(ban);
         discountRepository.save(disc);

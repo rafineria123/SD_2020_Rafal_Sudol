@@ -3,6 +3,9 @@ package pl.okazje.project.services;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import pl.okazje.project.entities.*;
+import pl.okazje.project.entities.Post;
+import pl.okazje.project.entities.bans.PostBan;
+import pl.okazje.project.entities.User;
 import pl.okazje.project.repositories.PostRepository;
 
 import javax.servlet.http.HttpSession;
@@ -33,7 +36,7 @@ public class PostService {
     public void deletePost(Long id, String reason){
         Post post = findById(id).get();
         post.setStatus(Post.Status.DELETED);
-        Ban ban = new Ban();
+        PostBan ban = new PostBan();
         ban.setReason(reason);
         post.setBan(ban);
         postRepository.save(post);

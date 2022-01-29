@@ -1,6 +1,5 @@
 package pl.okazje.project.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,10 +7,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
-import pl.okazje.project.entities.Ban;
 import pl.okazje.project.entities.Information;
 import pl.okazje.project.entities.Token;
 import pl.okazje.project.entities.User;
+import pl.okazje.project.entities.bans.UserBan;
 import pl.okazje.project.repositories.UserRepository;
 
 import java.text.MessageFormat;
@@ -112,7 +111,7 @@ public class UserService implements UserDetailsService {
 
     public void banUser(int userID, String reason){
         User user = userRepository.findFirstByUserIdEquals(userID);
-        Ban ban = new Ban();
+        UserBan ban = new UserBan();
         ban.setReason(reason);
         ban.setUser(user);
         banService.save(ban);

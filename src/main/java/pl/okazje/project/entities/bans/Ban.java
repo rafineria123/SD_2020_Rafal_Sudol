@@ -1,21 +1,16 @@
-package pl.okazje.project.entities;
+package pl.okazje.project.entities.bans;
 
 import javax.persistence.*;
 
 @Entity
-public class Ban {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Ban {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long banId;
     @Column(length = 300)
     private String reason;
-    @OneToOne(mappedBy = "ban")
-    private User user;
-    @OneToOne(mappedBy = "ban")
-    private Discount discount;
-    @OneToOne(mappedBy = "ban")
-    private Post post;
 
     public Ban() {
         this.reason = "Powód nie podany.";
@@ -39,21 +34,5 @@ public class Ban {
         }else{
             this.reason = reason;
         }
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Discount getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
     }
 }
