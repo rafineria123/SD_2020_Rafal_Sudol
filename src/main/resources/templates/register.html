@@ -47,7 +47,7 @@
                  aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
-                <a href="/login">
+                <a href="/auth/login">
                     <button type="button" style="" class="btn add_button"><span
                             class="fas fa-user"
                             style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
@@ -129,7 +129,7 @@
 
 <div class="container-fluid ">
     <div class="row">
-        <form th:action="@{/register}" class="w-100" method="post">
+        <form th:action="@{/auth/register}" class="w-100" method="post">
         <div class="col-xl-4 offset-xl-4">
 
             <div class="row" th:if="${good_status}!=null">

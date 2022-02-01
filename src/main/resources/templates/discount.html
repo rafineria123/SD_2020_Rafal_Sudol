@@ -51,7 +51,7 @@
                  aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
-                <a href="/login">
+                <a href="/auth/login">
                     <button type="button" style="" class="btn add_button"><span
                             class="fas fa-user"
                             style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
@@ -89,7 +89,7 @@
             <div class="row" style="padding-left: 20px;padding-right: 20px">
                 <div class="col-xl-2" th:each="shop : ${list_of_shops}"
                      style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
-                    <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+                    <a th:href="|/shops/${shop.getName().toLowerCase()}|">
                         <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
                                 th:text="${shop.getName()}">DODAJ KUPON
                         </button>

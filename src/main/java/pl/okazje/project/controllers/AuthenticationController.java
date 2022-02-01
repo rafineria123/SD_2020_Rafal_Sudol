@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
+@RequestMapping("/auth")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -44,10 +45,10 @@ public class AuthenticationController {
         Map map = registerService.registerUser(login, password, repeated_password, email, statute);
         RedirectView redirectView;
         if (map.containsKey("bad_status")) {
-            redirectView = new RedirectView("/register", true);
+            redirectView = new RedirectView("/auth/register", true);
             redir.addFlashAttribute("bad_status", map.get("bad_status"));
         } else {
-            redirectView = new RedirectView("/login", true);
+            redirectView = new RedirectView("/auth/login", true);
             redir.addFlashAttribute("good_status", map.get("good_status"));
         }
         return redirectView;
@@ -59,10 +60,10 @@ public class AuthenticationController {
         Map map = registerService.confirmRegistration(token);
         RedirectView redirectView;
         if (map.containsKey("bad_status")) {
-            redirectView = new RedirectView("/login", true);
+            redirectView = new RedirectView("/auth/login", true);
             redir.addFlashAttribute("bad_status", map.get("bad_status"));
         } else {
-            redirectView = new RedirectView("/login", true);
+            redirectView = new RedirectView("/auth/login", true);
             redir.addFlashAttribute("good_status", map.get("good_status"));
         }
         return redirectView;

@@ -47,7 +47,7 @@
                  aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
-                <a href="/login">
+                <a href="/auth/login">
                     <button type="button" style="" class="btn add_button"><span
                             class="fas fa-user"
                             style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
@@ -212,7 +212,7 @@
                         <h3 >LOGOWANIE</h3>
                     </div>
                     <div class="card-body">
-                        <form  action="/login" method="post">
+                        <form  action="/auth/login" method="post">
                             <div class="input-group form-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -239,7 +239,7 @@
                             Nie masz jeszcze swojego konta?
                         </div>
                         <div class="d-flex justify-content-center">
-                            <a href="/register" style="font-weight: 900;color: #005aff94">Zarejestruj sie!</a>
+                            <a href="/auth/register" style="font-weight: 900;color: #005aff94">Zarejestruj sie!</a>
                         </div>
                     </div>
                 </div>

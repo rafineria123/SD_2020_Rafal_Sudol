@@ -34,7 +34,7 @@ public class RegistrationListener implements
         userService.createVerificationToken(user,token);
         String recipientAddress = user.getEmail();
         String subject = "Norgie - Aktywuj swoje konto";
-        String confirmationUrl = "/registrationConfirm?token=" + token;
+        String confirmationUrl = "/auth/registrationConfirm?token=" + token;
         mailSender.sendEmail(recipientAddress,subject,"Aby aktywowac swoje konto kliknij w poniższy link,\n http://localhost" + confirmationUrl);
     }
 }

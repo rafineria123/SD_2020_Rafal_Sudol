@@ -2,10 +2,13 @@ package pl.okazje.project.utills;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.stereotype.Component;
 import pl.okazje.project.entities.Discount;
 import pl.okazje.project.repositories.DiscountRepository;
@@ -49,13 +52,11 @@ public class DiscountFinder {
 
             Thread t = new Thread(() -> {
                     Document allItemsPage = null;
-                    try {
-                        allItemsPage = Jsoup.connect("https://www.x-kom.pl/bestsellery?f%5BproductMarks%5D%5BCrossedPrice%5D=1&f%5BproductMarks%5D%5BPromotion%5D=1&f%5BproductMarks%5D%5BLastItems%5D=1").get();
-                    } catch (IOException e) {
-                        status = Status.ERROR;
-                        return;
-                    }
-                    Element allItemsContainer = allItemsPage.getElementById("listing-container");
+                WebDriver driver = new FirefoxDriver();
+                driver.get("https://www.x-kom.pl/bestsellery");
+                allItemsPage = Jsoup.parse(driver.getPageSource());
+                Element allItemsContainer = allItemsPage.getElementById("listing-container");
+
                     Elements allItems = allItemsContainer.children();
                     for (Element item : allItems) {
                         String itemLink = "https://www.x-kom.pl" + item.selectFirst("a[href]").attr("href");
