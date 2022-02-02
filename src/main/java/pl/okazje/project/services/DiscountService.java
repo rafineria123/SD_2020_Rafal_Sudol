@@ -190,6 +190,13 @@ public class DiscountService {
         return discounts;
     }
 
+    public List<Discount> removeAllBannedDiscounts(List<Discount> discounts){
+        for (Discount d:discounts) {
+
+        }
+        return null;
+    }
+
     public List<Discount> findAllByOrderByCreateDateDesc(){
         return discountRepository.findAllByOrderByCreateDateDesc();
     }

@@ -1,14 +1,16 @@
 package pl.okazje.project.utills;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
 import pl.okazje.project.entities.Discount;
 import pl.okazje.project.repositories.DiscountRepository;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.concurrent.TimeUnit;
 
 // TODO: bot to fetch discounts from other web pages.https://www.x-kom.pl/bestsellery?f%5BproductMarks%5D%5BCrossedPrice%5D=1&f%5BproductMarks%5D%5BPromotion%5D=1&f%5BproductMarks%5D%5BLastItems%5D=1
 @Component
@@ -52,8 +55,12 @@ public class DiscountFinder {
 
             Thread t = new Thread(() -> {
                     Document allItemsPage = null;
-                WebDriver driver = new FirefoxDriver();
+                    WebDriverManager.chromedriver().setup();
+                    ChromeOptions options = new ChromeOptions();
+                    ChromeDriver driver = new ChromeDriver(options);
                 driver.get("https://www.x-kom.pl/bestsellery");
+                WebDriverWait wait = new WebDriverWait(driver, 30);
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#listing-container")));
                 allItemsPage = Jsoup.parse(driver.getPageSource());
                 Element allItemsContainer = allItemsPage.getElementById("listing-container");
 
@@ -134,14 +141,15 @@ public class DiscountFinder {
         try {
             Thread t = new Thread(() -> {
                 Document docfirst = null;
-                try {
-                    docfirst = Jsoup.connect(linkToPage).get();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                WebDriverManager.chromedriver().setup();
+                ChromeOptions options = new ChromeOptions();
+                ChromeDriver driver = new ChromeDriver(options);
+                driver.get(linkToPage);
+                WebDriverWait wait = new WebDriverWait(driver, 20);
+                docfirst = Jsoup.parse(driver.getPageSource());
                 System.out.println(docfirst.nodeName());
-                Element div = docfirst.getElementById("zg-ordered-list");
-                Elements divy = div.children();
+                Element div;
+                Elements divy = docfirst.select("#gridItemRoot");
                 int counter = 0;
                 for (Element d : divy) {
                     try {
@@ -150,13 +158,13 @@ public class DiscountFinder {
                         //link to discount
                         String linktodiscount = "https://www.amazon.com" + d.select("a").first().attr("href");
                         String linktoimg = d.select("img").first().attr("src");
-                        String title = d.select("a").first().child(1).text();
+                        String title = d.select("img").first().attr("alt");
                         System.out.println(linktoimg);
                         System.out.println(linktodiscount);
 
-                        WebClient webClient = new WebClient();
-                        HtmlPage myPage = webClient.getPage(linktodiscount);
-                        docfirst = Jsoup.parse(myPage.asXml());
+                        driver.get(linktodiscount);
+                        wait = new WebDriverWait(driver, 20);
+                        docfirst = Jsoup.parse(driver.getPageSource());
                         div = docfirst.getElementById("productDescription");
                         String desc = div.select("p").first().text();
                         div = docfirst.getElementById("price_inside_buybox");
