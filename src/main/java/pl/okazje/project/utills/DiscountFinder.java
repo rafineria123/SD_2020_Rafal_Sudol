@@ -62,6 +62,7 @@ public class DiscountFinder {
                 WebDriverWait wait = new WebDriverWait(driver, 30);
                 wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#listing-container")));
                 allItemsPage = Jsoup.parse(driver.getPageSource());
+                driver.quit();
                 Element allItemsContainer = allItemsPage.getElementById("listing-container");
 
                     Elements allItems = allItemsContainer.children();
@@ -123,6 +124,7 @@ public class DiscountFinder {
 
                             }
                         }catch (Exception e){
+                            e.printStackTrace();
                             continue;
                         }
 
@@ -147,6 +149,7 @@ public class DiscountFinder {
                 driver.get(linkToPage);
                 WebDriverWait wait = new WebDriverWait(driver, 20);
                 docfirst = Jsoup.parse(driver.getPageSource());
+
                 System.out.println(docfirst.nodeName());
                 Element div;
                 Elements divy = docfirst.select("#gridItemRoot");
@@ -208,6 +211,7 @@ public class DiscountFinder {
 
 
                 }
+                driver.quit();
 
                 status = Status.SUCCESS;
             });

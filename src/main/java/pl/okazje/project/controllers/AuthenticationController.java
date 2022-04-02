@@ -69,6 +69,15 @@ public class AuthenticationController {
         return redirectView;
     }
 
+    @GetMapping("/regulations")
+    public ModelAndView getRegulationsPage() {
+        ModelAndView modelAndView;
+        modelAndView = new ModelAndView("regulations");
+        modelAndView.addObject("list_of_tags", tagService.findAll());
+        modelAndView.addObject("list_of_shops", shopService.findAll());
+        return modelAndView;
+    }
+
     private ModelAndView getBaseModelAndView(String viewName) {
         ModelAndView modelAndView;
         if (authenticationService.getCurrentUser().isPresent()) {

@@ -159,8 +159,7 @@
                                 <div class="col-8" style="padding-left: 15px;font-size:23px;font-weight: 600">
                                     <span th:if="${user.hasName()}" th:text="${user.getInformation().getName()}"></span>
                                     <span th:if="${user.hasSurname()}" th:text="${user.getInformation().getSurname()}"></span>
-                                    <span th:if="${user.hasName()||user.hasSurname()}"> aka </span>
-                                    <span th:text="${user.getLogin()}">rafineria123</span>
+                                    <span th:if="${!user.hasSurname()&&!user.hasName()}" th:text="${user.getLogin()}">rafineria123</span>
                                 </div>
                                 <div class="d-flex justify-content-end" style="padding-left: 0px;width: 30%" sec:authorize="isAuthenticated()">
                                     <button type="button" style="" data-toggle="modal" data-target="#dane" class="btn new_msg"><span class="far fa-envelope" style="font-size: 15px;font-weight: 600;padding-right: 0px;"></span></button>
@@ -288,7 +287,7 @@
             <div class="mix w-100" th:if="${comments_page}" th:each="comment : ${user.getComments()}">
                 <div class="col-12" style="height: 15px;"></div>
 
-                <a href="" class="sort_div_comm" th:href="@{|/discount/${comment.getDiscount().getDiscountId()}|}" th:if="${comment.getDiscount()!=null}">
+                <a href="" class="sort_div_comm" th:href="@{|/discount/${comment.getDiscount().getDiscountId()}|}" th:if="${comment.isDiscountComment()&&comment.getDiscount()!=null}">
                     <div class="sort_div_comm pink_shadow" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);width: 100%;padding-top: 15px;padding-bottom: 15px;
                     border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
                     <div class="row">
@@ -349,7 +348,7 @@
                     </div>
                 </a>
 
-                <a href="" class="sort_div_comm" th:href="@{|/post/${comment.getPost().getPostId()}|}" th:if="${comment.getPost()!=null}">
+                <a href="" class="sort_div_comm" th:href="@{|/post/${comment.getPost().getPostId()}|}" th:if="${!comment.isDiscountComment()&&comment.getPost()!=null}">
                     <div class="sort_div_comm pink_shadow" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);width: 100%;padding-top: 15px;padding-bottom: 15px;
                     border: 1px solid transparent;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;">
                         <div class="row">

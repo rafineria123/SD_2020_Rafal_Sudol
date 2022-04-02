@@ -156,6 +156,7 @@ public class DiscountService {
         }
 
         discounts = this.filter(discounts);
+        discounts = removeBannedDiscounts(discounts);
         return discounts;
     }
 
@@ -190,11 +191,12 @@ public class DiscountService {
         return discounts;
     }
 
-    public List<Discount> removeAllBannedDiscounts(List<Discount> discounts){
+    public List<Discount> removeBannedDiscounts(List<Discount> discounts){
+        List<Discount> filteredDiscounts = new ArrayList<>(discounts);
         for (Discount d:discounts) {
-
+            if(d.isDeleted()) filteredDiscounts.remove(d);
         }
-        return null;
+        return filteredDiscounts;
     }
 
     public List<Discount> findAllByOrderByCreateDateDesc(){
