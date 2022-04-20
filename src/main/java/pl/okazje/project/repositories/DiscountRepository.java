@@ -6,6 +6,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import pl.okazje.project.entities.Discount;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,14 @@ public interface DiscountRepository extends CrudRepository<Discount, Long>, Pagi
             " FROM discountrating GROUP BY discountId ) AS r ON d.discountId = r.discountId where d.createDate BETWEEN (NOW() - INTERVAL 7 DAY) AND NOW() ORDER BY r.disc_count DESC ",
             nativeQuery = true)
     List<Discount> findAllByCreateDateBetweenNowAndLastWeekOrderByRatingDesc();
+
+    //7200s = 120 min = database - app time diff
+    @Query(value = "select count(discountId) from discount where createDate BETWEEN (NOW() - INTERVAL 7210 SECOND) AND NOW()",
+            nativeQuery = true)
+    int countAllBetweenNowAndLastTenSeconds();
+    @Query(value = "select count(discountId) from discount where createDate BETWEEN ?2 AND ?1",
+            nativeQuery = true)
+    int countAllBetweenNowAndFunctionCall(Date now, Date functionCall);
 
     @Query(value = "SELECT d.* FROM discount AS d LEFT JOIN ( SELECT discountId, COUNT(*) AS disc_count" +
             " FROM discountcomment GROUP BY discountId ) AS c ON d.discountId = c.discountId ORDER BY  c.disc_count DESC ",

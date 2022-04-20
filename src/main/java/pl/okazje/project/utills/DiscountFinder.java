@@ -60,6 +60,8 @@ public class DiscountFinder {
                     ChromeDriver driver = new ChromeDriver(options);
                 driver.get("https://www.x-kom.pl/bestsellery");
                 WebDriverWait wait = new WebDriverWait(driver, 30);
+                By cookies_gotIt = By.xpath("//button[text()='W porządku']");
+                wait.until(ExpectedConditions.elementToBeClickable(cookies_gotIt)).click();
                 wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#listing-container")));
                 allItemsPage = Jsoup.parse(driver.getPageSource());
                 driver.quit();
@@ -170,11 +172,19 @@ public class DiscountFinder {
                         docfirst = Jsoup.parse(driver.getPageSource());
                         div = docfirst.getElementById("productDescription");
                         String desc = div.select("p").first().text();
-                        div = docfirst.getElementById("price_inside_buybox");
-                        String pricetofix = div.text();
-                        pricetofix = pricetofix.replaceAll("[^a-zA-Z0-9 .,]|(?<!\\d)[.,]|[.,](?!\\d)", "");
-                        pricetofix = pricetofix.replaceAll(",", ".");
-                        Double price = Double.parseDouble(pricetofix);
+                        div = docfirst.getElementById("corePrice_desktop");
+                        divy = div.select(":containsOwn(\\$)");
+                        if(divy.size()<6){
+                            continue;
+                        }
+                        String oldPriceToFix = divy.get(0).text();
+                        oldPriceToFix = oldPriceToFix.replaceAll("[^a-zA-Z0-9 .,]|(?<!\\d)[.,]|[.,](?!\\d)", "");
+                        oldPriceToFix = oldPriceToFix.replaceAll(",", ".");
+                        Double oldPrice = Double.parseDouble(oldPriceToFix) * 4.64;
+                        String newPriceToFix = divy.get(2).text();
+                        newPriceToFix = newPriceToFix.replaceAll("[^a-zA-Z0-9 .,]|(?<!\\d)[.,]|[.,](?!\\d)", "");
+                        newPriceToFix = newPriceToFix.replaceAll(",", ".");
+                        Double newPrice = Double.parseDouble(newPriceToFix) * 4.64;
                         if (!discountRepository.findFirstByTitleEquals(translate("en", "pl", title)).isPresent()) {
                             Discount discount = new Discount();
                             discount.setImageUrl(linktoimg);
@@ -195,8 +205,8 @@ public class DiscountFinder {
                             discount.setDiscountLink(linktodiscount);
                             String wronglyCodedContent = translate("en", "pl", desc);
                             discount.setContent(wronglyCodedContent);
-                            discount.setCurrentPrice(price);
-                            discount.setOldPrice(discount.getCurrentPrice() * 1.3);
+                            discount.setCurrentPrice(newPrice);
+                            discount.setOldPrice(oldPrice);
                             discountRepository.save(discount);
                         }
 

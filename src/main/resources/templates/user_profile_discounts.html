@@ -121,7 +121,72 @@
 
     <div class="row">
 
-        <div class="col-lg-3 media_large" style="font-weight: 400;font-size: 14px;padding-bottom: 50px">
+        <div class="d-flex flex-column media_small" style="font-weight: 400;font-size: 14px;padding-bottom: 50px;width: 25%">
+            <span style="" class="d-flex justify-content-center">Cześć,</span>
+            <a href="" class="d-flex justify-content-center" style="font-size: 20px;font-weight: 600;padding-bottom: 15px" th:href="@{|/profile/${user.getLogin()}|}"> <span style="" th:text="${user.getLogin()}">Rafał</span></a>
+
+            <a href="/settings" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-sliders-h" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+
+            <a href="/settings/discounts" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-clipboard" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/posts" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-blog" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+
+            <a href="/settings/messages" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-envelope" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+            <a href="/settings/liked/page/1" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fab fa-gratipay" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/admin/discounts" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-calendar-check" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+            <a href="/settings/admin/functions" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-tools" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+
+        </div>
+
+        <div class="col-3 media_large" style="font-weight: 400;font-size: 14px;padding-bottom: 50px">
             <div class="row">
                 <span style="padding-left: 25px">Cześć,</span>
             </div>
@@ -210,7 +275,7 @@
             </div>
 
         </div>
-        <div class="col-lg-8 padding_when_small" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
+        <div class="col-8 padding_when_small" style="border-left: 1px solid rgba(82,73,98,.2);padding-left: 50px">
             <div class="row" th:if="${good_status}!=null">
                 <div class="container-fluid" style="padding-right: 0;padding-left: 0;padding-bottom: 15px">
                     <div class="col-12" style="padding-left: 0px;padding-right: 0px">
