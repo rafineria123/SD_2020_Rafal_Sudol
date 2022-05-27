@@ -15,12 +15,8 @@ import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHtt
 @SpringBootApplication
 @EnableJdbcHttpSession
 public class ProjectApplication {
-
-    public static void main(String[] args) {
-        SpringApplicationBuilder app = new SpringApplicationBuilder(ProjectApplication.class)
-                .web(WebApplicationType.SERVLET);
-        app.build().addListeners(new ApplicationPidFileWriter("./bin/shutdown.pid"));
-        app.run();
+        public static void main(String[] args) {
+        SpringApplication.run(ProjectApplication.class, args);
     }
 
 
