@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+  <meta charset="UTF-8">
+  <title>Norgie - Rejstracja</title>
+
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+        crossorigin="anonymous">
+  <link type="text/css" href="/css/register.css" rel="stylesheet"/>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-xl navbar-light bg-light"
+     style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);">
+  <div class="navbar-brand" style="cursor: pointer;padding-left: 100px;" onclick="window.location='/';">
+    <div class="row">
+      <div class="col-4 dj text-center"><h1>NG</h1></div>
+      <div class="col-6">NORGIE</div>
+    </div>
+  </div>
+  <button class="navbar-toggler" id="navbar-toggler-button" type="button" data-target="#navbarTogglerDemo02"
+          aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="navbar-collapse collapse" id="navbarTogglerDemo02" style="padding-left: 155px">
+    <div class="nav navbar-nav d-flex justify-content-end" style="width: 90%;padding-bottom: 10px">
+      <div class="nav_items d-flex align-items-center" style="padding-top: 10px;"
+           aria-controls="navbarToggleExternalContent"
+      ><a href="/forum" class="nav_items_clickable" >Forum</a>
+      </div>
+      <div class="nav_items d-flex align-items-center" id="kategorie-button"
+           data-target="#kategorie" aria-controls="navbarToggleExternalContent"
+           aria-expanded="false" aria-label="Toggle navigation" style="padding-top: 10px"><a href="#" class="nav_items_clickable">Kategorie</a>
+      </div>
+      <div class="nav_items d-flex align-items-center" id="sklepy-button" style="padding-top: 10px;"
+           data-target="#sklepy" aria-controls="navbarToggleExternalContent"
+           aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
+      </div>
+      <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
+        <a href="/auth/login">
+          <button type="button" style="" class="btn add_button"><span
+                  class="fas fa-user"
+                  style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
+          </button>
+        </a>
+      </div>
+      <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="isAuthenticated()">
+        <a href="/settings">
+          <button style="min-width: 140px" class="btn add_button"
+                  aria-haspopup="true" aria-expanded="false"
+          ><span class="fas fa-user" style="font-size: 12px;padding-right: 3px;"></span><span th:text="${#authentication.getPrincipal().getUsername().toUpperCase()}">TWOJE KONTO</span>
+          </button>
+
+        </a>
+      </div>
+      <div class="d-flex align-items-center" style="padding-top: 10px">
+        <a href="/discount/add">
+          <button type="button"  class="btn add_button"><span
+                  class="fas fa-plus"
+                  style="font-size: 12px;padding-right: 3px;"></span>DODAJ OKAZJE
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+
+<div class="container-fluid" style="padding-right: 0px;padding-left: 0px">
+
+  <div class="row collapse" id="sklepy" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);
+         ;margin-top: 0px;margin-left: 0px">
+    <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+      <div class="row" style="padding-left: 20px;padding-right: 20px">
+        <div class="col-xl-2" th:each="shop : ${list_of_shops}"
+             style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+          <a th:href="|/shops/${shop.getName().toLowerCase()}|" href="/shops/biedronka">
+            <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                    th:text="${shop.getName()}">DODAJ KUPON
+            </button>
+          </a>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row collapse" id="kategorie" style="width:100%;background: linear-gradient(45deg,#e42d31,#ff0065);margin-top: 0px;margin-left: 0px">
+    <div class="col-lg-10 offset-lg-1" style="padding-bottom: 40px;padding-top: 30px;margin-top: -20px;">
+      <div class="row" style="padding-left: 20px;padding-right: 20px">
+        <div class="col-xl-2" th:each="tag : ${list_of_tags}"
+             style="padding-bottom: 5px;padding-left: 5px;padding-right: 5px">
+          <a th:href="|/categories/${tag.getName().toLowerCase()}|" href="/shops/biedronka">
+            <button type="button" style="width: 100%;padding-left: 3px;padding-right: 3px" class="btn category_button"
+                    th:text="${tag.getName()}">DODAJ KUPON
+            </button>
+          </a>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<div class="container-fluid">
+  <div class="col-md-6 offset-md-3" style="border-bottom: 1px solid rgba(82,73,98,.2); padding-top: 25px">
+    <span class="over_items">Regulamin platformy</span>
+  </div>
+  <div style="height: 15px"></div>
+</div>
+
+<div class="container-fluid ">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 sort_div" style="box-shadow: 0px 5px 7px 0px rgba(220,220,220,1);">
+      <span style="padding-top: 30px">
+      <h4 style="box-sizing: border-box; margin: 0px 0px 16px; padding-top: 30px; font-weight: 700; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Regulamin</h4>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Witamy w norgie!</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Niniejszy regulamin określa zasady korzystania ze Strony internetowej norgie, dostępnej pod adresem norgie.com.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Użytkownik wchodząc na Stronę internetową, akceptuje niniejsze warunki. W przypadku braku akceptacji niniejszych warunk&oacute;w Użytkownik powinien opuścić Stronę norgie.</p>
+      <h4 style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; font-weight: 700; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Pliki cookie:</h4>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Na tej Stronie internetowej wykorzystujemy pliki cookie, aby spersonalizować doświadczenia online naszych odbiorc&oacute;w. Wchodząc na Stronę norgie, wyrażasz zgodę na używanie wymaganych plik&oacute;w cookie.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Plik cookie to plik tekstowy, kt&oacute;ry jest umieszczany przez serwer strony internetowej na dysku twardym komputera Użytkownika. Pliki cookie nie mogą być wykorzystywane do uruchamiania program&oacute;w lub przenoszenia wirus&oacute;w na komputer Użytkownika. Pliki cookie są ściśle przypisane do danego użytkownika i mogą być odczytane tylko przez serwer internetowy w domenie, kt&oacute;ra wygenerowała plik cookie.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Pliki cookie mogą być wykorzystywane do zbierania, przechowywania i śledzenia informacji w celach statystycznych lub marketingowych związanych z prowadzeniem naszej Strony internetowej. Użytkownik ma prawo zaakceptować lub odm&oacute;wić zaakceptowania opcjonalnych plik&oacute;w cookie. Niekt&oacute;re pliki cookie są wymagane i niezbędne do prawidłowego funkcjonowania Strony internetowej. Takie pliki cookie nie wymagają zgody, ponieważ są aktywne przez cały czas. Pamiętaj , że akceptując wymagane pliki cookie, akceptujesz r&oacute;wnież pliki cookie stron trzecich, kt&oacute;re mogą być wykorzystywane przez inne podmioty podczas korzystania z usług świadczonych przez te podmioty.</p>
+      <h4 style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; font-weight: 700; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Licencja:</h4>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">O ile nie stwierdzono inaczej, firma norgie lub jej licencjodawcy są właścicielami praw własności intelektualnej wszystkich materiał&oacute;w zamieszczonych na Stronie norgie. Wszelkie prawa własności intelektualnej zostały zastrzeżone. Użytkownicy mogą uzyskać dostęp materiał&oacute;w dostępnych na Stronie norgie na własny użytek, z zastrzeżeniem ograniczeń określonych w niniejszym regulaminie.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Zabrania się:</p>
+      <ul style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; list-style-position: inside; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Kopiowania lub ponownego publikowania materiał&oacute;w umieszczonych na Stronie norgie</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Sprzedaży, wypożyczania lub udzielania sublicencji na materiały umieszczone na Stronie norgie</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Odtwarzania, powielania lub kopiowania materiał&oacute;w zamieszczonych na Stronie norgie</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Ponownego rozpowszechniania treści zamieszczonych na Stronie norgie</li>
+      </ul>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Niniejsza umowa zaczyna obowiązywać w dniu jej sporządzenia.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Użytkownicy mają możliwość zamieszczania i wymiany opinii oraz informacji w niekt&oacute;rych częściach niniejszej Strony internetowej. norgie} nie filtruje, nie edytuje, nie publikuje ani nie sprawdza komentarzy przed ich umieszczeniem na Stronie. Komentarze nie odzwierciedlają pogląd&oacute;w i opinii norgie, jej przedstawicieli ani podmiot&oacute;w stowarzyszonych. Zamieszczone komentarze odzwierciedlają poglądy i opinie osoby, kt&oacute;ra je zamieściła. W zakresie przewidzianym przez obowiązujące prawo norgie nie odpowiada za komentarze ani nie ponosi odpowiedzialności za jakiekolwiek zobowiązania, szkody lub wydatki spowodowane lub poniesione w wyniku wykorzystania, zamieszczenia lub pojawienia się komentarzy na niniejszej Stronie.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">norgie zastrzega sobie prawo do monitorowania wszystkich komentarzy i usuwania tych, kt&oacute;re można uznać za nieodpowiednie, obraźliwe lub naruszające niniejsze warunki.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Użytkownik zapewnia i oświadcza, że:</p>
+      <ul style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; list-style-position: inside; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Jest uprawniony do zamieszczania Komentarzy na naszej Stronie internetowej i posiada wszelkie niezbędne licencje i zgody, aby to robić;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Komentarze nie naruszają praw własności intelektualnej, w tym między innymi praw autorskich, patent&oacute;w lub znak&oacute;w towarowych stron trzecich;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Komentarze nie zawierają treści o charakterze oszczerczym, zniesławiającym, obraźliwym, nieprzyzwoitym lub w inny spos&oacute;b niezgodnym z prawem, stanowiącym naruszenie prywatności.</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Komentarze nie będą wykorzystywane do pozyskiwania lub promowania działalności biznesowej lub zwyczaj&oacute;w, ani do prezentowania działań komercyjnych lub niezgodnych z prawem.</li>
+      </ul>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Niniejszym Użytkownik udziela norgie niewyłącznej licencji na wykorzystywanie, powielanie, edytowanie i upoważnianie innych os&oacute;b do wykorzystywania, powielania i edytowania jego komentarzy w dowolnej formie i we wszystkich formatach lub mediach.</p>
+      <h4 style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; font-weight: 700; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Zamieszczanie odnośnik&oacute;w do naszych treści</h4>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Następujące podmioty mogą umieszczać odnośniki do naszych treści bez uprzedniej pisemnej zgody:</p>
+      <ul style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; list-style-position: inside; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Organy rządowe;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Wyszukiwarki internetowe;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Organizacje prasowe;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Podmioty zajmujące się rozpowszechnianiem katalog&oacute;w online mogą zamieszczać linki do naszej Strony w taki sam spos&oacute;b, w jaki zamieszczają hiperłącza do stron internetowych innych wymienionych podmiot&oacute;w; oraz</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Akredytowane przez system działalności, z wyjątkiem organizacji non-profit, punkt&oacute;w handlowych dla organizacji charytatywnych oraz grup zbierających fundusze na cele charytatywne, kt&oacute;re nie mogą zamieszczać hiperłączy do naszej Strony internetowej.</li>
+      </ul>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Organizacje te mogą zamieszczać odnośniki do naszej strony gł&oacute;wnej, publikacji lub innych materiał&oacute;w zamieszczonych na Stronie pod warunkiem, że odnośnik ten (a) nie wprowadza w błąd; (b) nie sugeruje, że jest sponsorowany, promowany lub uznany przez stronę linkującą oraz jej produkty i/lub usługi, jeśli nie jest to zgodne z prawdą ; oraz (c) pasuje do kontekstu strony linkującej.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Dopuszczamy możliwość rozważenia i zatwierdzenia innych pr&oacute;śb o link od następujących typ&oacute;w organizacji:</p>
+      <ul style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; list-style-position: inside; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">powszechnie znanych źr&oacute;deł informacji dla konsument&oacute;w lub podmiot&oacute;w gospodarczych;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">działalności internetowych typu dot-com;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">stowarzyszeń lub innych podmiot&oacute;w reprezentujących organizacje charytatywne;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">dystrybutor&oacute;w katalog&oacute;w internetowych;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">portali internetowych;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">firm księgowych, prawniczych i konsultingowych; oraz</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">instytucji edukacyjnych i stowarzyszeń handlowych.</li>
+      </ul>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Zaakceptujemy prośby o link od tych podmiot&oacute;w, jeśli uznamy, że: (a) link nie będzie nas stawiał w niekorzystnym świetle względem nas samych lub naszych akredytowanych działalności; (b) nie odnotowano u nas żadnych negatywnych zapis&oacute;w związanych z daną organizacją; (c) korzyść dla nas wynikająca z widoczności hiperłącza rekompensuje brak nazwy norgie; oraz (d) link występuje w kontekście informacji og&oacute;lnych zasob&oacute;w.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Podmioty te mogą zamieszczać linki do naszej strony gł&oacute;wnej pod warunkiem, że link ten (a) nie wprowadza w błąd; (b) fałszywie nie sugeruje sponsorowania, promowania lub zaakceptowania witryny linkującej i jej produkt&oacute;w lub usług; oraz (c) wpisuje się w kontekst witryny linkującej.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Jeśli należysz do organizacji wymienionych w punkcie 2 powyżej i jesteś zainteresowany umieszczeniem linku do naszej Strony internetowej, zgłoś nam to wysyłając e-mail na adres norgie. W e-mailu należy podać swoje imię i nazwisko, nazwę organizacji / podmiotu, informacje kontaktowe oraz adres URL swojej witryny, listę adres&oacute;w URL, z kt&oacute;rych zamierzasz linkować do naszej Strony, a także listę adres&oacute;w URL naszej witryny, do kt&oacute;rych chcesz linkować. Nasz czas odpowiedzi wynosi od 2 do 3 tygodni.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Zatwierdzone podmioty mogą zamieszczać odnośniki do naszej Strony w następujący spos&oacute;b:</p>
+      <ul style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; list-style-position: inside; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Używając naszej nazwy (firmy); lub</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Poprzez zastosowanie ujednoliconego identyfikatora zasob&oacute;w, do kt&oacute;rego prowadzi odnośnik; lub</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">Stosowanie innych opis&oacute;w naszej Strony internetowej, do kt&oacute;rej kieruje link, uzasadnionych z punktu widzenia kontekstu i formatu treści strony linkującej.</li>
+      </ul>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Nie wyrażamy zgody na wykorzystanie logo lub innych element&oacute;w graficznych norgie w celu umieszczenia linku bez umowy licencyjnej na wykorzystanie znaku towarowego.</p>
+      <h4 style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; font-weight: 700; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Odpowiedzialność za treść:</h4>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Nie ponosimy odpowiedzialności za jakiekolwiek treści, kt&oacute;re pojawiają się na innych stronach internetowych. Zobowiązujesz się do zapewnienia nam ochrony przed wszelkimi roszczeniami, kt&oacute;re zostaną postawione wobec Twojej Strony. Link(i) nie powinny być umieszczane na Stronie, kt&oacute;ra może być postrzegana jako oszczercza, nieprzyzwoita lub niezgodna z prawem, lub kt&oacute;ra w inny spos&oacute;b łamie, lub zachęca do łamania, prawa os&oacute;b trzecich.</p>
+      <h4 style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; font-weight: 700; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Zastrzeżenia praw:</h4>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Zastrzegamy sobie prawo do zażądania usunięcia wszystkich lub wybranych link&oacute;w kierujących do naszej Strony. Podmioty linkujące zobowiązują się do natychmiastowego usunięcia wszystkich link&oacute;w prowadzących do naszej Strony w przypadku otrzymania takiego żądania z naszej strony. Zastrzegamy sobie r&oacute;wnież prawo do zmiany niniejszych warunk&oacute;w i zasad linkowania w dowolnym momencie. Umieszczanie link&oacute;w do naszej Strony oznacza akceptację i zobowiązanie do przestrzegania niniejszych zasad i warunk&oacute;w.</p>
+      <h4 style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; font-weight: 700; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Usuwanie link&oacute;w z naszej Strony</h4>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Jeśli zauważysz na naszej Stronie link, kt&oacute;ry z jakichkolwiek powod&oacute;w jest obraźliwy, skontaktuj się z nami i poinformuj nas o tym w dowolnym momencie. Rozpatrzymy prośbę o usunięcie linku. Nie zobowiązujemy się jednak do usunięcia takiego linku, ani do udzielenia bezpośredniej odpowiedzi osobie zgłaszającej.</p>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Nie gwarantujemy, że informacje zawarte na tej stronie są poprawne. Nie zapewniamy ich kompletności ani dokładności, ani nie zobowiązujemy się do utrzymania dostępności strony lub aktualizacji materiał&oacute;w na niej zawartych.</p>
+      <h4 style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; font-weight: 700; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Wyłączenie odpowiedzialności:</h4>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">W maksymalnym zakresie dozwolonym przez obowiązujące prawo, nie udzielamy żadnych poręczeń, gwarancji i innych zobowiązań względem naszej strony internetowej i sposobu jej wykorzystywania. Żadne z postanowień niniejszej klauzuli wyłączenia odpowiedzialności nie będzie:</p>
+      <ul style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; list-style-position: inside; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">ograniczać lub wyłączać naszej lub Twojej odpowiedzialności za śmierć lub odniesione obrażenia ciała</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">ograniczać lub wyłączać naszej lub Twojej odpowiedzialność za oszustwa lub świadome wprowadzanie w błąd;</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">ograniczać odpowiedzialności naszej lub Twojej w jakikolwiek spos&oacute;b, kt&oacute;ry nie jest zgodny z obowiązującym prawem; lub</li>
+        <li style="box-sizing: border-box; margin: 0px; padding: 0px;">wyłączać odpowiedzialności naszej lub Twojej, kt&oacute;ra nie może zostać wyłączona na mocy obowiązującego prawa.</li>
+      </ul>
+      <p style="box-sizing: border-box; margin: 0px 0px 16px; padding: 0px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Ograniczenia i wyłączenia odpowiedzialności zawarte w tym ustępie oraz w innych miejscach tego wyłączenia odpowiedzialności: (a) nie naruszają postanowień poprzedniego ustępu; oraz (b) regulują wszystkie zobowiązania wynikające z tego wyłączenia odpowiedzialności, w tym zobowiązania wynikające z umowy, z czynu niedozwolonego oraz z tytułu naruszenia obowiązk&oacute;w ustawowych.</p>
+      <p style="box-sizing: border-box; margin: 0px; padding-bottom: 30px; color: rgb(71, 75, 79); font-family: Roboto, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;  text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Pod warunkiem, że strona internetowa oraz informacje i usługi na niej zawarte są udostępniane nieodpłatnie, nie ponosimy odpowiedzialności za powstanie jakichkolwiek strat lub szk&oacute;d o dowolnym charakterze.</p>
+    </span>
+    </div>
+  </div>
+</div>
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script
+        src="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script>
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  document.getElementById ("kategorie-button").addEventListener ("click", collapseSklepy, false);
+  document.getElementById ("sklepy-button").addEventListener ("click", collapseKategorie, false);
+  document.getElementById ("navbar-toggler-button").addEventListener ("click", collapseNavbar, false);
+
+
+  async function collapseKategorie() {
+    $('#kategorie').collapse('hide');
+    $('#navbarTogglerDemo02').collapse('hide');
+    await sleep(350);
+    $('#sklepy').collapse('toggle');
+  }
+  async function collapseSklepy() {
+    $('#sklepy').collapse('hide');
+    $('#navbarTogglerDemo02').collapse('hide');
+    await sleep(350);
+    $('#kategorie').collapse('toggle');
+
+  }
+  async function collapseNavbar() {
+    $('#sklepy').collapse('hide');
+    $('#kategorie').collapse('hide');
+    await sleep(350);
+    $('#navbarTogglerDemo02').collapse('toggle');
+  }
+</script>
+</body>
+</html>

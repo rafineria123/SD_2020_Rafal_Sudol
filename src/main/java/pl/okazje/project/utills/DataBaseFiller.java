@@ -63,9 +63,8 @@ public class DataBaseFiller {
         List<Discount> listOfDiscounts = new ArrayList<>();
         Random r = new Random();
         discountRepository.findAll().forEach(listOfDiscounts::add);
-        File commentsFile = new ClassPathResource("comment-data.txt", this.getClass().getClassLoader()).getFile();
         BufferedReader reader = new BufferedReader(
-                new FileReader(commentsFile));
+                new FileReader("C:/zdjeciaprojekt/comment-data.txt"));
         String line = reader.readLine();
         for(int i = 0;i<13;i++){
 
@@ -89,9 +88,8 @@ public class DataBaseFiller {
         postRepository.findAll().forEach(listOfPosts::add);
         Random r = new Random();
         List<PostComment> listOfPostComments = new ArrayList<>();
-        File commentsFile = new ClassPathResource("comment-data.txt", this.getClass().getClassLoader()).getFile();
         BufferedReader reader = new BufferedReader(
-                new FileReader(commentsFile));
+                new FileReader("C:/zdjeciaprojekt/comment-data.txt"));
         String line = reader.readLine();
         for(int i = 0;i<13;i++){
 

@@ -47,7 +47,7 @@
                  aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
-                <a href="/login">
+                <a href="/auth/login">
                     <button type="button" style="" class="btn add_button"><span
                             class="fas fa-user"
                             style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
@@ -397,7 +397,7 @@
                 }
                 if (obj[0] == "success") {
 
-                    document.getElementById("status_text").innerHTML="<span>Skanowanie zakończone sukcesem.</span>";
+                    document.getElementById("status_text").innerHTML="<span>Skanowanie zakończone sukcesem. Dodano "+ obj[1] +" nowych okazji.</span>";
                     document.getElementById("status_row").style.display = 'flex';
                     document.getElementById("loader").style.visibility = 'hidden';
                     document.getElementById("scanners").style.visibility = 'visible';

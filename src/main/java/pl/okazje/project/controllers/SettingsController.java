@@ -16,12 +16,15 @@ import pl.okazje.project.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.Optional;
 
 @Controller
 @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
 @RequestMapping("/settings")
 public class SettingsController {
+
+    private static Date botDate;
 
     private final int ITEMS_PER_PAGE = 4;
 
@@ -168,6 +171,7 @@ public class SettingsController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody
     void xkom() {
+        botDate = new Date();
         discountFinder.fetchXkom();
     }
 
@@ -175,6 +179,7 @@ public class SettingsController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public @ResponseBody
     void amazon() {
+        botDate = new Date();
         discountFinder.fetchAmazon("https://www.amazon.com/Best-Sellers-Womens-Fashion/zgbs/fashion/", "Moda");
     }
 
@@ -192,6 +197,7 @@ public class SettingsController {
         if(discountFinder.status == DiscountFinder.Status.SUCCESS){
 
             array[0] = "success";
+            array[1] = String.valueOf(discountService.countAllBetweenNowAndFunctionCall(new Date(), botDate));
             return array;
 
         }
