@@ -5,7 +5,7 @@ import pl.okazje.project.entities.Post;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
-@Entity
+@Entity(name = "postban")
 public class PostBan extends Ban {
 
     @OneToOne(mappedBy = "ban")

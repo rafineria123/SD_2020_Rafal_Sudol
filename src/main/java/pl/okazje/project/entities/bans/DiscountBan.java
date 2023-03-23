@@ -5,7 +5,7 @@ import pl.okazje.project.entities.Discount;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
-@Entity
+@Entity(name = "discountban")
 public class DiscountBan extends Ban {
 
     @OneToOne(mappedBy = "ban")

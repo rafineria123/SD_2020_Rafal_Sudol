@@ -6,7 +6,7 @@ import pl.okazje.project.entities.User;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "rating")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Rating {
 

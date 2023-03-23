@@ -12,7 +12,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Entity
+@Entity(name = "user")
 public class User implements UserDetails {
 
     private static final long serialVersionUID = -1113427347189094885L;
@@ -57,7 +57,7 @@ public class User implements UserDetails {
     private Set<Comment> comments;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "User_Conversation",
+    @JoinTable(name = "user_conversation",
             joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "conversationId")
     )

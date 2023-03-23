@@ -3,7 +3,7 @@ package pl.okazje.project.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@Entity(name = "information")
 public class Information implements Serializable {
 
     @Id

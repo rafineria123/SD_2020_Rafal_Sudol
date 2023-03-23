@@ -12,7 +12,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Entity
+@Entity(name = "post")
 public class Post {
 
     public enum Status {DELETED, AWAITING, ACCEPTED}

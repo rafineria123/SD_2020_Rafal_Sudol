@@ -10,7 +10,7 @@ import java.util.Date;
 
 
 
-@Entity
+@Entity(name = "token")
 public class Token implements Serializable {
 
     private static final int EXPIRATION = 60 * 24;

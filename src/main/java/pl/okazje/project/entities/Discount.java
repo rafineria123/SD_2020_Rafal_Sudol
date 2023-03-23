@@ -19,7 +19,7 @@ import java.util.*;
    kupon = przecena w gazetce/sklepie lokanlym
    kod = przecena online
 */
-@Entity
+@Entity(name = "discount")
 public class Discount {
 
     public enum Type{KUPONNORMALNY, KUPONPROCENT, KODPROCENT, KODNORMALNY, OBNIZKA}

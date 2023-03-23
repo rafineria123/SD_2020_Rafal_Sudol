@@ -3,7 +3,7 @@ package pl.okazje.project.entities;
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity
+@Entity(name = "shop")
 public class Shop {
 
     @Id

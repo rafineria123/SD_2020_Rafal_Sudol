@@ -12,7 +12,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     Optional<User> findFirstByLogin(String login);
 
-    @Query(value = "Select * from User WHERE userId=?1 LIMIT 1" ,
+    @Query(value = "Select * from user WHERE userId=?1 LIMIT 1" ,
             nativeQuery = true)
     User findFirstByUserIdEquals(int id);
 

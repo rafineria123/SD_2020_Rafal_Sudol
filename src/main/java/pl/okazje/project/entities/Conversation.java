@@ -3,7 +3,7 @@ package pl.okazje.project.entities;
 import javax.persistence.*;
 import java.util.*;
 
-@Entity
+@Entity(name = "conversation")
 public class Conversation {
 
     @Id

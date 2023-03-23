@@ -2,7 +2,7 @@ package pl.okazje.project.entities.bans;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "ban")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Ban {
 

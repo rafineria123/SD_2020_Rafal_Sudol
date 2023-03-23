@@ -1,9 +1,11 @@
 package pl.okazje.project.utills;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import pl.okazje.project.entities.Discount;
 import pl.okazje.project.entities.Post;
@@ -32,6 +34,8 @@ public class DataBaseFiller {
     @Autowired
     private RatingRepository ratingRepository;
 
+    @Value("file:/opt/comment-data.txt")
+    Resource resourceFile;
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
@@ -63,7 +67,7 @@ public class DataBaseFiller {
         List<Discount> listOfDiscounts = new ArrayList<>();
         Random r = new Random();
         discountRepository.findAll().forEach(listOfDiscounts::add);
-        File commentsFile = new ClassPathResource("comment-data.txt", this.getClass().getClassLoader()).getFile();
+        File commentsFile = resourceFile.getFile();
         BufferedReader reader = new BufferedReader(
                 new FileReader(commentsFile));
         String line = reader.readLine();
@@ -89,7 +93,7 @@ public class DataBaseFiller {
         postRepository.findAll().forEach(listOfPosts::add);
         Random r = new Random();
         List<PostComment> listOfPostComments = new ArrayList<>();
-        File commentsFile = new ClassPathResource("comment-data.txt", this.getClass().getClassLoader()).getFile();
+        File commentsFile = resourceFile.getFile();
         BufferedReader reader = new BufferedReader(
                 new FileReader(commentsFile));
         String line = reader.readLine();
