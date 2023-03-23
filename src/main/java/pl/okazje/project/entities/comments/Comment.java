@@ -107,4 +107,9 @@ public abstract class Comment {
         return new Date().getTime() - this.createDate.getTime();
     }
 
+    public boolean isDiscountComment(){
+        if(this instanceof DiscountComment)return true;
+        return false;
+    }
+
 }

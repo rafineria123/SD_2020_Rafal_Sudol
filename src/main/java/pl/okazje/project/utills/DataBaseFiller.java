@@ -69,7 +69,7 @@ public class DataBaseFiller {
         discountRepository.findAll().forEach(listOfDiscounts::add);
         File commentsFile = resourceFile.getFile();
         BufferedReader reader = new BufferedReader(
-                new FileReader(commentsFile));
+                new FileReader("C:/zdjeciaprojekt/comment-data.txt"));
         String line = reader.readLine();
         for(int i = 0;i<13;i++){
 
@@ -95,7 +95,7 @@ public class DataBaseFiller {
         List<PostComment> listOfPostComments = new ArrayList<>();
         File commentsFile = resourceFile.getFile();
         BufferedReader reader = new BufferedReader(
-                new FileReader(commentsFile));
+                new FileReader("C:/zdjeciaprojekt/comment-data.txt"));
         String line = reader.readLine();
         for(int i = 0;i<13;i++){
 

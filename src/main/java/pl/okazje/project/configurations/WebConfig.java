@@ -33,22 +33,22 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // resources access
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/register", "/resources/**", "/css/**", "/js/**", "/js/mixitup/dist/**", "/js/mixitup/**", "/images/**").permitAll()
+                .authorizeRequests().antMatchers("/auth/register", "/resources/**", "/css/**", "/js/**", "/js/mixitup/dist/**", "/js/mixitup/**", "/images/**").permitAll()
                 //set login page & exceptions
-                .and().formLogin().loginPage("/login")
+                .and().formLogin().loginPage("/auth/login")
                 .usernameParameter("login").passwordParameter("password").permitAll()
                 .failureHandler((req, res, exp) -> {
                     if (exp.getClass().isAssignableFrom(BadCredentialsException.class)) {
-                        res.sendRedirect("/login?error=true");
+                        res.sendRedirect("/auth/login?error=true");
                     } else if (exp.getClass().isAssignableFrom(DisabledException.class)) {
-                        res.sendRedirect("/login?token=true");
+                        res.sendRedirect("/auth/login?token=true");
                     } else {
-                        res.sendRedirect("/login?ban=true");
+                        res.sendRedirect("/auth/login?ban=true");
                     }
                 })
-                .and().logout().permitAll().and().logout().logoutSuccessUrl("/login?logout").permitAll()
+                .and().logout().permitAll().and().logout().logoutSuccessUrl("/auth/login?logout").permitAll()
                 // session
-                .and().sessionManagement().maximumSessions(3).expiredUrl("/login?session=true").and().invalidSessionUrl("/login?session=true");
+                .and().sessionManagement().maximumSessions(3).expiredUrl("/auth/login?session=true").and().invalidSessionUrl("/auth/login?session=true");
     }
 
     @Autowired

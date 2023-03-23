@@ -47,7 +47,7 @@
                  aria-expanded="false" aria-label="Toggle navigation"><a href="#" class="nav_items_clickable" >Sklepy</a>
             </div>
             <div class="d-flex align-items-center" style="padding-right: 50px;padding-top: 10px" sec:authorize="!isAuthenticated()">
-                <a href="/login">
+                <a href="/auth/login">
                     <button type="button" style="" class="btn add_button"><span
                             class="fas fa-user"
                             style="font-size: 12px;padding-right: 3px;"></span>ZALOGUJ SIĘ
@@ -122,17 +122,82 @@
 
     <div class="row">
 
-        <div class="col-3" style="font-weight: 400;font-size: 14px;">
+        <div class="d-flex flex-column media_small" style="font-weight: 400;font-size: 14px;padding-bottom: 50px;width: 25%">
+            <span style="" class="d-flex justify-content-center">Cześć,</span>
+            <a href="" class="d-flex justify-content-center" style="font-size: 20px;font-weight: 600;padding-bottom: 15px" th:href="@{|/profile/${user.getLogin()}|}"> <span style="" th:text="${user.getLogin()}">Rafał</span></a>
+
+            <a href="/settings" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-sliders-h" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+
+            <a href="/settings/discounts" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-clipboard" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/posts" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-blog" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/messages" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-envelope" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+            <a href="/settings/liked/page/1" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fab fa-gratipay" style="font-size: 16px;"></span>
+                    </div>
+
+                </button>
+            </a>
+
+            <a href="/settings/admin/discounts" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button_picked">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="far fa-calendar-check" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+            <a href="/settings/admin/functions" sec:authorize="hasAuthority('ADMIN')" style="width: 100%">
+                <button type="button" style="width: 100%" class="text-left left_menu_button">
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <span class="fas fa-tools" style="font-size: 16px;"></span>
+                    </div>
+                </button>
+            </a>
+
+        </div>
+
+        <div class="col-3 media_large" style="font-weight: 400;font-size: 14px;padding-bottom: 50px">
             <div class="row">
                 <span style="padding-left: 25px">Cześć,</span>
             </div>
             <div class="row" style="font-size: 20px;font-weight: 600;padding-bottom: 15px">
                 <a href="" th:href="@{|/profile/${user.getLogin()}|}"> <span style="padding-left: 25px" th:text="${user.getLogin()}">Rafał</span></a>
             </div>
+
             <div class="row">
                 <a href="/settings" style="width: 100%">
                     <button type="button" style="width: 100%" class="text-left left_menu_button">
-                        <div class="row">
+                        <div class="row d-flex justify-content-lg-center align-items-lg-center">
                             <div class="col-2 text-center"><span class="fas fa-sliders-h" style="font-size: 16px;padding-left:18px"></span></div>
                             <div class="col-10"><span>Ustawienia konta</span></div>
                         </div>
